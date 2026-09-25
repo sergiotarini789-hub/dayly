@@ -203,6 +203,16 @@
   --control-height-switch: 1.5rem;
   --control-height-select: var(--density-focused-control-height);
 
+  /* Application layout semantics */
+  --layout-sidebar-width: 16rem;
+  --layout-sidebar-rail-width: 4.5rem;
+  --layout-top-bar-height: 4rem;
+  --layout-mobile-navigation-height: 4rem;
+  --layout-content-max-narrow: 42rem;
+  --layout-content-max-default: 72rem;
+  --layout-content-max-wide: 90rem;
+  --layout-page-gutter: var(--primitive-space-6);
+
   /* Focus foundation */
   --focus-ring-color: var(--color-focus);
   --focus-ring-width: 3px;

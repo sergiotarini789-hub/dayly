@@ -63,6 +63,8 @@ import {
   Tooltip,
   useToast,
 } from "@/components/ui";
+import { AppTopBar, ApplicationShell } from "@/components/layout";
+import { LayoutShowcase } from "./LayoutShowcase";
 import "./showcase.css";
 
 function ShowcaseActions() {
@@ -101,9 +103,9 @@ function OverlaySection() {
 }
 
 function ShowcaseContent() {
-  return <main className="showcase-shell"><header className="showcase-header"><div><Badge variant="primary">Development only</Badge><h1>Dayly Core UI</h1><p>Reusable, domain-agnostic primitives for calm, accessible, information-rich interfaces.</p></div><ShowcaseActions /></header><div className="showcase-callout"><Alert variant="info" title="Scope boundary" description="This showcase demonstrates components only. It contains no product pages, domain records, persistence, API calls, or feature logic." /></div><ButtonSection /><FormSection /><FeedbackSection /><NavigationSection /><OverlaySection /></main>;
+  return <div className="showcase-shell"><header className="showcase-header"><div><Badge variant="primary">Development only</Badge><h1>Dayly Core UI</h1><p>Reusable, domain-agnostic primitives for calm, accessible, information-rich interfaces.</p></div><ShowcaseActions /></header><div className="showcase-callout"><Alert variant="info" title="Scope boundary" description="This showcase demonstrates components only. It contains no product pages, domain records, persistence, API calls, or feature logic." /></div><ButtonSection /><FormSection /><FeedbackSection /><NavigationSection /><OverlaySection /></div>;
 }
 
 export function ComponentShowcase() {
-  return <ToastProvider><ShowcaseContent /><div className="showcase-toast-anchor"><ToastViewport /></div></ToastProvider>;
+  return <ToastProvider><ApplicationShell initialActiveNavigationId="today" topBar={<AppTopBar title="Dayly layout showcase" aria-label="Layout showcase top bar" />}><LayoutShowcase /><ShowcaseContent /></ApplicationShell><div className="showcase-toast-anchor"><ToastViewport /></div></ToastProvider>;
 }

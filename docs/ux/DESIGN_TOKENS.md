@@ -1,7 +1,7 @@
 # Dayly Design Token Foundation
 
 **Phase:** 1B — Design Tokens & Theme Foundation
-**Status:** Foundation implemented; phase remains in progress pending review
+**Status:** Foundation implemented; consumed by PHASE 1C and PHASE 1D
 **Implementation:** [`src/styles/tokens.css`](../../src/styles/tokens.css)
 **Validation:** [`src/lib/design-system/validate-tokens.mjs`](../../src/lib/design-system/validate-tokens.mjs)
 
@@ -61,7 +61,7 @@ Theme values are held by private `--dayly-*` backing variables and surfaced thro
 
 ### 1.3 Component tokens
 
-No component token declarations are needed yet because PHASE 1B creates no components. When a future component needs a local relationship, it may introduce a component token only if a semantic token cannot express it. For example, a future task-row implementation could use a relationship such as `--component-task-row-selected-background`, mapped to `--color-surface-selected`; it must not introduce a new task-specific hex value.
+The PHASE 1B foundation remains feature-neutral, while PHASE 1C core components and PHASE 1D layout primitives consume its semantic contract. A component or layout relationship may introduce a token only if an existing semantic token cannot express it. For example, the application shell uses `--layout-sidebar-width` and `--layout-content-max-default` for reusable structure; it must not introduce page-specific spacing or feature-specific hex values.
 
 Component tokens must:
 
@@ -307,6 +307,21 @@ Responsive bands are intentionally few:
 
 They correspond to the approved mobile, tablet, desktop, and wide-desktop composition bands. They do not authorize a scaled-down desktop layout on mobile.
 
+The PHASE 1D shell adds these semantic layout values:
+
+```text
+--layout-sidebar-width              = 16rem
+--layout-sidebar-rail-width         = 4.5rem
+--layout-top-bar-height             = 4rem
+--layout-mobile-navigation-height   = 4rem
+--layout-content-max-narrow         = 42rem
+--layout-content-max-default        = 72rem
+--layout-content-max-wide           = 90rem
+--layout-page-gutter                = space-6
+```
+
+These values describe reusable shell/content relationships. Mobile gutters and safe-area padding remain responsive composition rules; they do not create additional breakpoints.
+
 Layer values are:
 
 ```text
@@ -334,7 +349,7 @@ The global foundation provides:
 --focus-ring-inset  = 0px
 ```
 
-The `:focus-visible` rule uses a visible outline in both themes. Focus is not dependent on hover or color alone and is available to future buttons, inputs, and custom controls.
+The `:focus-visible` rule uses a visible outline in both themes. Focus is not dependent on hover or color alone and is used by the core components, application shell, layout primitives, and future controls.
 
 ### Control dimensions
 

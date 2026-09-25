@@ -16,11 +16,31 @@
   .showcase-control-stack { padding: var(--space-4); background: var(--color-surface-hover); border-radius: var(--radius-md); }
   .showcase-section .dayly-card { padding: var(--space-4); }
 
+  .layout-showcase { padding-block: var(--space-4) var(--space-8); }
+  .layout-showcase__section { margin-block-start: var(--space-8); }
+  .layout-showcase__placeholder { display: grid; gap: var(--space-2); min-block-size: 6rem; padding: var(--space-4); }
+  .layout-showcase__placeholder span,
+  .layout-showcase__muted,
+  .layout-showcase__shell-note p,
+  .layout-showcase__timeline-placeholder { color: var(--color-text-secondary); font-size: var(--font-size-body-small); }
+  .layout-showcase__shell-note { overflow: hidden; }
+  .layout-showcase__shell-note .dayly-top-bar { margin: calc(var(--space-4) * -1); margin-block-end: var(--space-4); }
+  .layout-showcase__slot-label { color: var(--color-text-secondary); font-size: var(--font-size-caption); }
+  .layout-showcase__shell-note p { margin: 0; padding-inline: var(--space-4); padding-block-end: var(--space-4); }
+  .layout-showcase__timeline-placeholder { display: grid; gap: var(--space-3); min-block-size: 14rem; padding: var(--space-4); background: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--space-6) - var(--border-width-default)), var(--color-border-subtle) var(--space-6), var(--color-border-subtle) calc(var(--space-6) + var(--border-width-default))); }
+  .layout-showcase__scroll-panel { max-block-size: 13rem; padding: var(--space-4); }
+  .layout-showcase__long-placeholder { min-block-size: 26rem; background: linear-gradient(var(--color-primary-subtle), transparent); border-radius: var(--radius-md); }
+
   @media (max-width: 47.999rem) {
     .showcase-shell { padding: var(--space-3); }
     .showcase-header { display: grid; padding-block: var(--space-5); }
     .showcase-actions { justify-content: flex-start; }
     .showcase-section { padding: var(--space-4); }
     .showcase-grid--forms { grid-template-columns: 1fr; }
+    .layout-showcase { padding-block: 0 var(--space-6); }
+    .layout-showcase__section { margin-block-start: var(--space-6); }
+    .layout-showcase__shell-note .dayly-top-bar { grid-template-columns: 1fr; justify-items: start; gap: var(--space-2); }
+    .layout-showcase__shell-note .dayly-top-bar__slot--center,
+    .layout-showcase__shell-note .dayly-top-bar__slot--right { justify-content: flex-start; text-align: start; }
   }
 }

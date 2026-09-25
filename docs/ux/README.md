@@ -1,9 +1,9 @@
 # Dayly UX Documentation
 
-**Current phase:** PHASE 1C — Core UI Component System
+**Current phase:** PHASE 1D — Layout System & Application Shell
 **Status:** In progress
 
-The UX documentation contains the approved PHASE 0B architecture, the reviewed PHASE 1A visual language, the PHASE 1B token foundation, and the PHASE 1C domain-agnostic component system. PHASE 1D layout work has not started.
+The UX documentation contains the approved PHASE 0B architecture, the reviewed PHASE 1A visual language, the PHASE 1B token foundation, the PHASE 1C domain-agnostic component system, and the PHASE 1D application shell/layout system. PHASE 1E has not started.
 
 ## Approved PHASE 0B UX architecture
 
@@ -32,6 +32,15 @@ The UX documentation contains the approved PHASE 0B architecture, the reviewed P
 - [`../../src/components/ui/primitives.tsx`](../../src/components/ui/primitives.tsx) — native controls, visual primitives, feedback, and data foundations.
 - [`../../src/components/ui/navigation.tsx`](../../src/components/ui/navigation.tsx) — tabs, collapsible, and accordion.
 - [`../../src/components/ui/overlays.tsx`](../../src/components/ui/overlays.tsx) — overlays, menus, sheets, tooltips, and toast feedback.
-- [`../../src/showcase/ComponentShowcase.tsx`](../../src/showcase/ComponentShowcase.tsx) — development-only component showcase at `/showcase`.
 
-The component system remains domain-agnostic and consumes the PHASE 1B token contract. It contains no product screens, feature logic, data access, integrations, or PHASE 1D layout work.
+## PHASE 1D implementation
+
+- [`LAYOUT_SYSTEM.md`](LAYOUT_SYSTEM.md) — application shell, navigation bands, breakpoints, page containers, layout primitives, panels, scroll behavior, accessibility, showcase, and forbidden patterns.
+- [`../../src/components/layout/index.ts`](../../src/components/layout/index.ts) — public layout composition barrel.
+- [`../../src/components/layout/application-shell.tsx`](../../src/components/layout/application-shell.tsx) — shell landmarks, skip link, navigation frame, top bar, and main content boundary.
+- [`../../src/components/layout/responsive-navigation.tsx`](../../src/components/layout/responsive-navigation.tsx) — single-registry desktop, tablet, and mobile navigation composition.
+- [`../../src/components/layout/primitives.tsx`](../../src/components/layout/primitives.tsx) — page/header/section/layout/panel/master-detail/calendar structural primitives.
+- [`../../src/styles/layout.css`](../../src/styles/layout.css) — responsive shell and layout behavior using approved tokens and safe-area values.
+- [`../../src/showcase/LayoutShowcase.tsx`](../../src/showcase/LayoutShowcase.tsx) — development-only layout showcase content inside `/showcase`.
+
+The shell and layout system remain structural and domain-agnostic. There are no product screens, records, feature logic, data access, integrations, or PHASE 1E interaction/motion work.

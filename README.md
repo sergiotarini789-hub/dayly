@@ -4,18 +4,19 @@ Dayly is a personal productivity platform designed to help a user understand the
 
 ## Current phase
 
-**PHASE 1B — Design Tokens & Theme Foundation**
+**PHASE 1D — Layout System & Application Shell**
 
 **Status: IN PROGRESS**
 
-PHASE 1A visual direction has been completed and reviewed. The repository now contains the shared design-token foundation only: CSS custom properties, light/dark theme mappings, Tailwind CSS v4 semantic utilities, accessibility/focus values, responsive/layer values, and a dependency-free validator. No application UI, feature components, screens, business logic, or unnecessary dependencies have been implemented.
+PHASE 1A visual direction, PHASE 1B design tokens, and PHASE 1C core components are complete. The repository now contains the token-driven core UI system plus a structural application shell, responsive navigation model, page containers, generic layout primitives, panels, master/detail and calendar foundations, and a development-only showcase. No product functionality, feature data, business logic, database, API routes, authentication, or integrations have been implemented.
 
 ## Source of truth
 
 - [Product specification](PRODUCT_SPEC.md)
 - [Project state](PROJECT_STATE.md)
-- [UX architecture, visual direction, and token contract](docs/ux/)
+- [UX architecture, visual direction, token, component, and layout documentation](docs/ux/)
 - [Design-token CSS foundation](src/styles/tokens.css)
+- [Application shell and layout implementation](src/components/layout/)
 - [Domain, integration, and technical architecture](docs/architecture/)
 - [Architecture decision index](docs/decisions/ADR_INDEX.md)
 
@@ -33,9 +34,11 @@ Future implementation is contractually based on Next.js 15 App Router, TypeScrip
 4. **PHASE 0D — Integration Architecture** — completed and approved.
 5. **PHASE 0E — Technical Specification & Engineering Contract** — completed and approved.
 6. **PHASE 1A — Visual Direction & Design Language** — completed and reviewed.
-7. **PHASE 1B — Design Tokens & Theme Foundation** — in progress.
-8. **PHASE 1C — Core Components** — begins only after PHASE 1B has been reviewed and explicitly approved.
+7. **PHASE 1B — Design Tokens & Theme Foundation** — completed.
+8. **PHASE 1C — Core Components** — completed.
+9. **PHASE 1D — Layout System & Application Shell** — in progress.
+10. **PHASE 1E — Interaction & Motion** — not started.
 
 ## Project status
 
-Dayly remains pre-application implementation. PHASE 1B defines the shared visual foundation only; it does not authorize feature components, application screens, production business logic, or automatically start PHASE 1C. See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the current phase and approval rule.
+Dayly is in structural application implementation. PHASE 1D establishes the shell and layout system only. The development-only `/showcase` route demonstrates representative placeholder layouts and core components; it is not a production dashboard. See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the current phase and approval rule.
