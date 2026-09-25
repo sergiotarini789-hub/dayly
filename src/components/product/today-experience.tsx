@@ -138,13 +138,11 @@ export function TodayExperience() {
     >
       <div className="dayly-product-page" data-ready={!isPreparing || undefined} data-time-of-day={timeOfDay}>
         <PageContainer width="default">
-          <CurrentMoment greeting={greeting} todayLabel={todayLabel} timeLabel={timeLabel} timeOfDay={timeOfDay} isPreparing={isPreparing} sessionContext={sessionContext} planningStyle={planningStyle} daySummary={daySummary} />
-          <TodayLoadingCue isPreparing={isPreparing} />
-          <div className="dayly-product-layout">
-            <div className="dayly-product-primary">
-              <NextUsefulAction nextTask={nextTask} onComplete={(id) => toggleTask(id, true)} />
-              <TodayPlan tasks={tasks} openTasks={openTasks} completedTasks={completedTasks} newTaskId={newTaskId} progressLabel={progressLabel} taskTitle={taskTitle} notice={notice} onTaskTitleChange={setTaskTitle} onAddTask={addTask} onToggleTask={toggleTask} />
-            </div>
+          <CurrentMoment greeting={greeting} todayLabel={todayLabel} timeLabel={timeLabel} timeOfDay={timeOfDay} isPreparing={isPreparing} sessionContext={sessionContext} planningStyle={planningStyle} daySummary={daySummary} completedCount={completedTasks.length} taskCount={tasks.length} progressLabel={progressLabel} />
+          <div className="dayly-product-canvas">
+            <TodayLoadingCue isPreparing={isPreparing} />
+            <NextUsefulAction nextTask={nextTask} onComplete={(id) => toggleTask(id, true)} />
+            <TodayPlan tasks={tasks} openTasks={openTasks} completedTasks={completedTasks} newTaskId={newTaskId} taskTitle={taskTitle} notice={notice} onTaskTitleChange={setTaskTitle} onAddTask={addTask} onToggleTask={toggleTask} />
             <SupportingContext sessionContext={sessionContext} planningStyle={planningStyle} hasPlanningContext={hasPlanningContext} />
           </div>
           <p className="dayly-product-disclosure">Preview session only · tasks and setup changes stay in memory and are not saved.</p>
