@@ -10,10 +10,10 @@ This visual system supersedes the initial PHASE 1F dashboard-like composition an
 
 1. **Today is a quiet editorial surface.** Lead with context, one next action, progress, and only then supporting detail.
 2. **Typography carries hierarchy.** Use scale, weight, measure, and whitespace before adding borders, badges, or containers.
-3. **One focal moment per view.** The next useful action may have a soft tonal emphasis, but it should not become a dashboard hero card.
+3. **One focal moment per view.** The next useful action gets typographic emphasis and one restrained accent rule, never a dashboard hero card.
 4. **Calm density.** Keep important information visible while allowing generous separation between decisions.
 5. **Neutral first, accent second.** Use the existing primary color for focus, progress, selected navigation, and completion—not as a page-wide fill.
-6. **Surfaces are structural, not decorative.** Prefer the page canvas, hairline separators, and tonal bands over card grids and shadows.
+6. **Surfaces are structural, not decorative.** Prefer the page canvas, hairline separators, alignment, and rhythm over cards, grids, and shadows.
 7. **Personal context is visible and honest.** Use onboarding/session values when present and label all preview-only state clearly.
 8. **Mobile is the source composition.** Desktop adds measure and breathing room to the same hierarchy; it does not introduce an admin dashboard layout.
 
@@ -48,14 +48,15 @@ Product styling consumes semantic tokens from `src/styles/tokens.css` only. The 
 
 ## 5. Surface and card strategy
 
-The default product surface is transparent on the page canvas. Use:
+The default Today surface is transparent on the page canvas. Use:
 
-- hairline separators for task groups and supporting sections;
-- one soft tonal focus lane for the next action;
+- hairline separators for the task list, progress line, and supporting context;
+- one small accent rule and generous spacing to distinguish the next action;
+- compact task rows with typography and alignment doing most of the work;
 - a quiet onboarding form surface without a floating card shell;
-- subtle elevation only for existing overlays and the floating mobile navigation.
+- the existing mobile navigation as a lightweight safe-area bar, not a floating card.
 
-Avoid repeated bordered panels, badge clusters, shadowed cards, and large colored hero blocks.
+Avoid repeated bordered panels, badge clusters, shadowed cards, gradients, and large colored hero blocks.
 
 ## 6. Motion principles
 
