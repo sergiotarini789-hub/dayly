@@ -1,9 +1,9 @@
 # Dayly UX Documentation
 
-**Current phase:** PHASE 1F — Product-facing onboarding & Today preview
+**Current phase:** PHASE 1G — Product experience & motion
 **Status:** Complete
 
-The UX documentation contains the approved PHASE 0B architecture, the reviewed PHASE 1A visual language, the PHASE 1B token foundation, the PHASE 1C domain-agnostic component system, the PHASE 1D application shell/layout system, the PHASE 1E interaction/motion system, and the bounded PHASE 1F product-facing preview. PHASE 1G has not started.
+The UX documentation contains the approved PHASE 0B architecture, the reviewed PHASE 1A visual language, the PHASE 1B token foundation, the PHASE 1C domain-agnostic component system, the PHASE 1D application shell/layout system, the PHASE 1E interaction/motion system, the bounded PHASE 1F product-facing preview, and the incremental PHASE 1G product experience pass. PHASE 1H has not started.
 
 ## Approved PHASE 0B UX architecture
 
@@ -51,7 +51,7 @@ The UX documentation contains the approved PHASE 0B architecture, the reviewed P
 - [`../../src/components/layout/primitives.tsx`](../../src/components/layout/primitives.tsx) — generic `MotionList`, `MotionListItem`, and master/detail continuity.
 - [`../../src/showcase/ComponentShowcase.tsx`](../../src/showcase/ComponentShowcase.tsx) — interaction/motion states, controls, menus, overlays, loading, feedback, navigation, and reduced-motion preview.
 
-## PHASE 1F product-facing implementation
+## PHASE 1F/1G product-facing implementation
 
 - [`PRODUCT_SURFACE_IMPLEMENTATION.md`](PRODUCT_SURFACE_IMPLEMENTATION.md) — route map, onboarding/Today behavior, local-only state boundary, applicable UX states, accessibility contract, validation, and non-goals.
 - [`PRODUCT_VISUAL_SYSTEM.md`](PRODUCT_VISUAL_SYSTEM.md) — mobile-first visual principles, typography, spacing, color strategy, surfaces, motion, navigation, and Today hierarchy.
@@ -61,4 +61,10 @@ The UX documentation contains the approved PHASE 0B architecture, the reviewed P
 - [`../../src/app/page.tsx`](../../src/app/page.tsx) and [`../../src/app/today/page.tsx`](../../src/app/today/page.tsx) — Today launch and explicit routes.
 - [`../../src/app/onboarding/page.tsx`](../../src/app/onboarding/page.tsx) — focused onboarding route.
 
-The shell, layout, and interaction/motion systems remain reusable and domain-agnostic. PHASE 1F composes them into bounded product workflows without adding product persistence, data access, backend services, authentication, integrations, fake server behavior, or PHASE 1G work. `/showcase` remains a development-only design-system reference and is not the product surface.
+## PHASE 1G product experience & motion pass
+
+- [`PRODUCT_SURFACE_IMPLEMENTATION.md`](PRODUCT_SURFACE_IMPLEMENTATION.md) — the preserved frontend-only route/state contract plus the PHASE 1G hierarchy, interaction, motion, responsive, safe-area, and validation notes.
+- [`PRODUCT_VISUAL_SYSTEM.md`](PRODUCT_VISUAL_SYSTEM.md) — the product visual system with reusable stagger, task-entry, completion, time-of-day, and reduced-motion decisions.
+- [`../../src/components/product/product.test.tsx`](../../src/components/product/product.test.tsx) — task add, direct completion, reopen, progress, Next action, onboarding context, and keyboard-operable flow coverage.
+
+The shell, layout, navigation registry, and interaction/motion primitives remain reusable and domain-agnostic. PHASE 1F/1G composes them into bounded product workflows without adding product persistence, data access, backend services, authentication, integrations, fake server behavior, or PHASE 1H work. `/showcase` remains a development-only design-system reference and is not the product surface.

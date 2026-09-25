@@ -1,11 +1,11 @@
 # Dayly Product Surface Implementation
 
-**Phase:** 1F — Product-facing onboarding and Today preview
+**Phase:** 1G — Product experience & motion pass
 **Status:** Completed
 **Scope:** Frontend-only, in-memory preview
 **Source of truth:** [`PRODUCT_SPEC.md`](../../PRODUCT_SPEC.md), [`SCREEN_MAP.md`](SCREEN_MAP.md), [`USER_FLOWS.md`](USER_FLOWS.md), and [`UX_PRINCIPLES.md`](UX_PRINCIPLES.md)
 
-> This document records the bounded PHASE 1F implementation. It does not authorize persistence, backend services, authentication, integrations, or the next phase.
+> This document records the bounded PHASE 1F product surface and its incremental PHASE 1G experience pass. It does not authorize persistence, backend services, authentication, integrations, or PHASE 1H work.
 
 ## Routes and responsibilities
 
@@ -45,9 +45,12 @@ Today is composed as one daily decision surface rather than a dashboard of unrel
 - in-memory open and completed task states;
 - explicit checkbox completion and reopen behavior;
 - planning context, coming-next, and focus guidance that are visibly unconfigured rather than fabricated;
-- status messaging that explains local preview behavior.
+- status messaging that explains local preview behavior;
+- a direct Next action with complete and in-page plan affordances;
+- task-aware greeting context, time-of-day marker, explicit zero-progress copy, and open/completed task descriptions;
+- non-blocking boot/readiness cue and task-entry feedback that remain local and removable under reduced motion.
 
-No server loading, offline sync, provider permission, or remote error state is simulated because this phase has no remote boundary. The implemented states are first use/empty, populated, completion success, validation feedback for a missing title, and local preview disclosure.
+No server loading, offline sync, provider permission, or remote error state is simulated because this phase has no remote boundary. The implemented states are first use/empty, populated, completion success, reopen, validation feedback for a missing title, local preview disclosure, and a short client-only preparation cue.
 
 ## Foundation and accessibility contract
 
@@ -69,6 +72,12 @@ Validation is covered by [`src/components/product/product.test.tsx`](../../src/c
 
 The initial PHASE 1F dashboard-like composition was refined into the mobile-first editorial system documented in [`PRODUCT_VISUAL_SYSTEM.md`](PRODUCT_VISUAL_SYSTEM.md). Today now leads with greeting/context, one next useful action, progress, a low-chrome task plan, upcoming items, and supporting planning context. The redesign removes repeated elevated cards and heavy hero treatment, adds personalized session context from onboarding, refines the shared product shell and compact bottom navigation, and adds restrained entrance, completion, progress, and skeleton transitions while preserving reduced-motion behavior.
 
+## PHASE 1G experience contract
+
+PHASE 1G treats `/` and `/today` as the same personal daily companion surface and preserves the hierarchy: greeting/time context, next useful action, progress, Today tasks, upcoming, then supporting context. It extends the existing product CSS with reusable entrance, task-entry, completion, control, navigation, focus, success, safe-area, and reduced-motion behavior. Mobile remains the source composition; tablet and desktop add measure and breathing room without introducing a dashboard grid, oversized hero, gradients, decorative illustrations, or new domains.
+
+All state remains frontend-only and session/in-memory. The onboarding query handoff is still cleaned from the URL, task changes remain disclosed as temporary, the navigation registry and interaction primitives are unchanged, and `/showcase` remains untouched.
+
 ## Deliberate non-goals
 
-PHASE 1F does not implement task records, scheduling, calendar data, habits, focus timers, analytics, settings persistence, authentication, database access, API routes, provider integrations, fake server behavior, or PHASE 1G work. Those boundaries remain governed by the product and architecture specifications.
+PHASE 1F/1G does not implement task records, scheduling, calendar data, habits, focus timers, analytics, settings persistence, authentication, database access, API routes, provider integrations, fake server behavior, or PHASE 1H work. Those boundaries remain governed by the product and architecture specifications.

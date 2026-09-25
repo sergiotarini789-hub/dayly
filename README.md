@@ -4,11 +4,11 @@ Dayly is a personal productivity platform designed to help a user understand the
 
 ## Current phase
 
-**PHASE 1F — Product-facing onboarding & Today preview**
+**PHASE 1G — Product experience & motion**
 
 **Status: COMPLETE**
 
-PHASE 1A visual direction, PHASE 1B design tokens, PHASE 1C core components, PHASE 1D layout foundations, and PHASE 1E interaction/motion foundations are complete. PHASE 1F composes those foundations into a cohesive frontend-only product surface: `/` and `/today` provide Today, while `/onboarding` provides a short welcome, planning context, optional profile, and optional first-task flow. The product surface now uses a mobile-first editorial visual system with restrained surfaces, personalized session context, polished state transitions, skeleton cues, and a compact bottom navigation treatment. Onboarding and Today interactions use local React state only and explicitly disclose that preview values are temporary. No backend, database, authentication, integrations, persistence, or fake server functionality is included.
+PHASE 1A visual direction, PHASE 1B design tokens, PHASE 1C core components, PHASE 1D layout foundations, PHASE 1E interaction/motion foundations, and PHASE 1F product-facing onboarding/Today preview are complete. PHASE 1G refines `/` and `/today` as one personal daily companion: greeting and time context lead to a direct Next action, progress, Today tasks, upcoming context, and supporting planning context. The pass adds restrained reusable motion, time-aware personalization, task-entry/completion feedback, refined mobile composition, and explicit reduced-motion coverage while preserving the existing shell, navigation registry, interaction primitives, accessibility behavior, and frontend-only disclosure. No backend, database, authentication, integrations, persistence, or fake server functionality is included.
 
 ## Source of truth
 
@@ -40,8 +40,9 @@ Future implementation is contractually based on Next.js 15 App Router, TypeScrip
 9. **PHASE 1D — Layout System & Application Shell** — completed.
 10. **PHASE 1E — Interaction & Motion** — completed.
 11. **PHASE 1F — Product-facing onboarding & Today preview** — completed.
-12. **PHASE 1G** — not started; scope requires explicit approval.
+12. **PHASE 1G — Product experience & motion** — completed.
+13. **PHASE 1H** — not started; scope requires explicit approval.
 
 ## Project status
 
-Dayly now has a bounded product-facing preview while the development-only `/showcase` route remains a separate design-system reference and is not the product. The Today surface supports first-use guidance, title-only in-memory task capture, explicit completion/reopen behavior, planning-context entry points, and clear local-state disclosure. Onboarding supports welcome, planning preferences, optional display name, and first-task-or-do-later flow. See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase and approval rule.
+Dayly now has a bounded product-facing preview while the development-only `/showcase` route remains a separate design-system reference and is not the product. The Today surface supports first-use guidance, title-only in-memory task capture, explicit completion/reopen behavior, a direct Next action, time-aware context, planning-context entry points, and clear local-state disclosure. Onboarding supports welcome, planning preferences, optional display name, and first-task-or-do-later flow. See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase and approval rule; PHASE 1H has not started.

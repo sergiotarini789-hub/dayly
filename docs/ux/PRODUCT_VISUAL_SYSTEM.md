@@ -1,10 +1,10 @@
 # Dayly Product Visual System
 
-**Phase:** 1F — Product visual redesign
+**Phase:** 1G — Product experience & motion
 **Status:** Implemented
 **Scope:** Frontend-only product surface; no new product domains or persistence
 
-This visual system supersedes the initial PHASE 1F dashboard-like composition. It keeps the existing tokens, shell, controls, motion foundations, and information architecture, but gives the real product surface a distinct mobile-first visual language. `/showcase` remains the development reference for the underlying system and is not the product visual target.
+This visual system supersedes the initial PHASE 1F dashboard-like composition and records the incremental PHASE 1G experience pass. It keeps the existing tokens, shell, controls, motion foundations, and information architecture, while making `/` and `/today` one personal, mobile-first daily companion experience. `/showcase` remains the development reference for the underlying system and is not the product visual target.
 
 ## 1. Visual principles
 
@@ -67,6 +67,15 @@ Avoid repeated bordered panels, badge clusters, shadowed cards, and large colore
 - `prefers-reduced-motion: reduce` disables product keyframes and leaves state changes immediate.
 
 Motion communicates hierarchy or state change; it never delays a local action.
+
+### PHASE 1G motion and experience additions
+
+- Boot readiness uses a small, non-blocking preparation cue; content remains usable without waiting on a fake remote state.
+- Greeting, focus, progress, plan, and supporting sections use a restrained stagger from reusable product timing aliases.
+- Task addition uses a short entry cue, completion uses a success wash, and progress updates through the existing semantic progress primitive.
+- The next-action lane exposes a direct completion action and an in-page plan link without introducing another dashboard module.
+- Time-of-day context uses the existing semantic warning, focus, and info tokens for a small marker and tonal focus-lane variation; it does not introduce gradients or a large hero.
+- New controls remain shared `Button`, `Link`, `Input`, `Checkbox`, `Progress`, and shell/navigation primitives, so focus, keyboard, touch-target, and reduced-motion behavior stays centralized.
 
 ## 7. Mobile navigation strategy
 

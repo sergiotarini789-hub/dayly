@@ -18,6 +18,8 @@ interface PreviewSession {
   planningStyle: string;
 }
 
+type TimeOfDay = "morning" | "afternoon" | "evening" | "night";
+
 const EMPTY_SESSION: PreviewSession = { displayName: "", timeZone: "", availability: "", planningStyle: "" };
 
 const AVAILABILITY_LABELS: Record<string, string> = {
@@ -40,10 +42,24 @@ function formatTime(date: Date) {
   return new Intl.DateTimeFormat("en", { hour: "numeric", minute: "2-digit" }).format(date);
 }
 
-function formatGreeting(date: Date, displayName: string) {
+function getTimeOfDay(date: Date): TimeOfDay {
   const hour = date.getHours();
-  const salutation = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  if (hour < 12) return "morning";
+  if (hour < 18) return "afternoon";
+  if (hour < 21) return "evening";
+  return "night";
+}
+
+function formatGreeting(date: Date, displayName: string) {
+  const timeOfDay = getTimeOfDay(date);
+  const salutation = timeOfDay === "morning" ? "Good morning" : timeOfDay === "afternoon" ? "Good afternoon" : timeOfDay === "evening" ? "Good evening" : "Good night";
   return displayName ? `${salutation}, ${displayName}` : salutation;
+}
+
+function formatDaySummary(taskCount: number, openTaskCount: number) {
+  if (taskCount === 0) return "A small start is enough today.";
+  if (openTaskCount === 0) return "You have moved everything planned today.";
+  return `${openTaskCount} ${openTaskCount === 1 ? "thing" : "things"} worth moving forward today.`;
 }
 
 function readPreviewSession(params: URLSearchParams): PreviewSession {
@@ -62,7 +78,9 @@ export function TodayExperience() {
   const [todayLabel, setTodayLabel] = React.useState("Today");
   const [timeLabel, setTimeLabel] = React.useState("");
   const [greeting, setGreeting] = React.useState("Good morning");
+  const [timeOfDay, setTimeOfDay] = React.useState<TimeOfDay>("morning");
   const [session, setSession] = React.useState<PreviewSession>(EMPTY_SESSION);
+  const [newTaskId, setNewTaskId] = React.useState<number | null>(null);
   const [isPreparing, setIsPreparing] = React.useState(true);
 
   React.useEffect(() => {
@@ -73,15 +91,24 @@ export function TodayExperience() {
 
     setTodayLabel(formatToday(now));
     setTimeLabel(formatTime(now));
+    setTimeOfDay(getTimeOfDay(now));
     setGreeting(formatGreeting(now, nextSession.displayName));
     setSession(nextSession);
     if (firstTask) {
-      setTasks([{ id: Date.now(), title: firstTask, completed: false }]);
+      const id = Date.now();
+      setTasks([{ id, title: firstTask, completed: false }]);
+      setNewTaskId(id);
       setNotice(`“${firstTask}” was added for this preview session. Changes remain in memory only.`);
     }
     setIsPreparing(false);
     if (window.location.search) window.history.replaceState(null, "", "/today");
   }, []);
+
+  React.useEffect(() => {
+    if (newTaskId === null) return;
+    const timeoutId = window.setTimeout(() => setNewTaskId(null), 720);
+    return () => window.clearTimeout(timeoutId);
+  }, [newTaskId]);
 
   function addTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -90,9 +117,11 @@ export function TodayExperience() {
       setNotice("Add a short task title before saving.");
       return;
     }
-    setTasks((current) => [...current, { id: Date.now(), title, completed: false }]);
+    const id = Date.now();
+    setTasks((current) => [...current, { id, title, completed: false }]);
+    setNewTaskId(id);
     setTaskTitle("");
-    setNotice(`“${title}” is on your day. This preview keeps changes in memory only.`);
+    setNotice(`“${title}” is part of today. This preview keeps changes in memory only.`);
   }
 
   function toggleTask(id: number, completed: boolean) {
@@ -102,9 +131,11 @@ export function TodayExperience() {
 
   const openTasks = tasks.filter((task) => !task.completed);
   const completedTasks = tasks.filter((task) => task.completed);
+  const nextTask = openTasks[0];
   const sessionContext = session.availability ? AVAILABILITY_LABELS[session.availability] : "Planning context not set";
   const planningStyle = session.planningStyle ? PLANNING_STYLE_LABELS[session.planningStyle] : "Choose a pace that fits";
-  const progressLabel = tasks.length === 0 ? "Ready when you are" : `${completedTasks.length} of ${tasks.length} complete`;
+  const progressLabel = tasks.length === 0 ? "0 of 0 complete" : `${completedTasks.length} of ${tasks.length} complete`;
+  const daySummary = formatDaySummary(tasks.length, openTasks.length);
 
   return (
     <ApplicationShell
@@ -112,13 +143,13 @@ export function TodayExperience() {
       initialActiveNavigationId="today"
       topBar={<AppTopBar title="Today" aria-label="Today application bar" right={<Link className="dayly-product-top-link" href="/onboarding">Personalize</Link>} />}
     >
-      <div className="dayly-product-page">
+      <div className="dayly-product-page" data-ready={!isPreparing || undefined} data-time-of-day={timeOfDay}>
         <PageContainer width="default">
           <header className="dayly-product-greeting">
             <div className="dayly-product-greeting__copy">
-              <p className="dayly-product-eyebrow">{todayLabel}{timeLabel ? ` · ${timeLabel}` : ""}</p>
+              <p className="dayly-product-eyebrow"><span className="dayly-product-time-mark" data-time-of-day={timeOfDay} aria-hidden="true" />{todayLabel}{timeLabel ? ` · ${timeLabel}` : ""}</p>
               <h1>{greeting}</h1>
-              <p>{session.displayName ? "Here is a clear place to start, with enough room to change your mind." : "A clear place to start, with enough room to change your mind."}</p>
+              <p>{daySummary}</p>
             </div>
             <div className="dayly-product-context-line" aria-label="Planning context">
               {isPreparing ? <span className="dayly-product-skeleton dayly-product-skeleton--context" aria-hidden="true" /> : <><span>{sessionContext}</span><strong>{planningStyle}</strong></>}
@@ -131,11 +162,11 @@ export function TodayExperience() {
 
           <section className="dayly-product-focus-lane" aria-labelledby="next-action-heading">
             <div className="dayly-product-focus-lane__copy">
-              <p className="dayly-product-eyebrow">Next useful step</p>
-              <h2 id="next-action-heading">{openTasks[0]?.title ?? "Choose one thing to move forward."}</h2>
-              <p>{openTasks[0] ? "Keep the first step visible, then let the rest of the day follow." : "Start with a task that can be captured in a few words. You can organize it later."}</p>
+              <p className="dayly-product-eyebrow">Next</p>
+              <h2 id="next-action-heading">{nextTask?.title ?? "Choose one thing to move forward."}</h2>
+              <p>{nextTask ? "A clear place to begin. The rest of the day can follow." : "Start with a task that can be captured in a few words. You can organize it later."}</p>
             </div>
-            {openTasks[0] ? <Button className="dayly-product-focus-lane__action" onClick={() => toggleTask(openTasks[0].id, true)}>Complete next task</Button> : <Link className="dayly-button dayly-product-focus-lane__action" data-variant="primary" href="#today-plan">Add first task</Link>}
+            {nextTask ? <Cluster className="dayly-product-focus-lane__actions"><Button className="dayly-product-focus-lane__action" onClick={() => toggleTask(nextTask.id, true)}>Complete task</Button><Link className="dayly-product-text-link" href="#today-plan">Open in plan →</Link></Cluster> : <Link className="dayly-button dayly-product-focus-lane__action" data-variant="primary" href="#today-plan">Add first task</Link>}
           </section>
 
           <section className="dayly-product-progress" aria-labelledby="progress-heading">
@@ -161,8 +192,8 @@ export function TodayExperience() {
               </div>
             ) : (
               <div className="dayly-product-task-list" aria-label="Today tasks">
-                {openTasks.map((task, index) => <div className="dayly-product-task-row" data-completed={task.completed || undefined} key={task.id}><span className="dayly-product-task-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><Checkbox label={task.title} checked={task.completed} onChange={(event) => toggleTask(task.id, event.target.checked)} /></div>)}
-                {completedTasks.length > 0 ? <><p className="dayly-product-list-label">Completed</p>{completedTasks.map((task, index) => <div className="dayly-product-task-row" data-completed="true" key={task.id}><span className="dayly-product-task-index" aria-hidden="true">{String(openTasks.length + index + 1).padStart(2, "0")}</span><Checkbox label={task.title} checked={task.completed} onChange={(event) => toggleTask(task.id, event.target.checked)} /></div>)}</> : null}
+                {openTasks.map((task, index) => <div className="dayly-product-task-row" data-completed={task.completed || undefined} data-new={newTaskId === task.id || undefined} key={task.id}><span className="dayly-product-task-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><Checkbox label={task.title} checked={task.completed} onChange={(event) => toggleTask(task.id, event.target.checked)} description="Open · preview session" /></div>)}
+                {completedTasks.length > 0 ? <><p className="dayly-product-list-label">Completed</p>{completedTasks.map((task, index) => <div className="dayly-product-task-row" data-completed="true" data-new={newTaskId === task.id || undefined} key={task.id}><span className="dayly-product-task-index" aria-hidden="true">{String(openTasks.length + index + 1).padStart(2, "0")}</span><Checkbox label={task.title} checked={task.completed} onChange={(event) => toggleTask(task.id, event.target.checked)} description="Completed · preview session" /></div>)}</> : null}
               </div>
             )}
             <form className="dayly-product-capture" onSubmit={addTask}>
