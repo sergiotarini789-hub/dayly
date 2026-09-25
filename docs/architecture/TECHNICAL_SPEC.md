@@ -25,7 +25,7 @@ The detailed contracts are split into the documents in this directory. This docu
 |---|---|---|
 | Full-stack framework | Next.js 15 | Use the App Router. Server-first rendering is the default. |
 | Language | TypeScript | Strict mode is required. Domain and application types are explicit. |
-| Styling | Tailwind CSS v4 | Use for styling and responsive composition; final design tokens remain a later Design System concern. |
+| Styling | Tailwind CSS v4 | Use for styling and responsive composition; consume the PHASE 1B token foundation in [`docs/ux/DESIGN_TOKENS.md`](../ux/DESIGN_TOKENS.md) and [`src/styles/tokens.css`](../../src/styles/tokens.css) rather than raw feature values. |
 | Backend/platform | Supabase | Use Supabase Auth, PostgreSQL, and Realtime only where justified. |
 | Database | PostgreSQL through Supabase | Repositories and RLS own access; UI components do not issue arbitrary queries. |
 | Runtime validation | Zod or an equivalent strongly typed schema approach | The selected library must infer/use TypeScript types at trust boundaries; default recommendation is Zod. |

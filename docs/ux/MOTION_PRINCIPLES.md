@@ -1,7 +1,7 @@
 # Dayly Motion Principles
 
 **Phase:** 1A — Visual Direction & Design Language
-**Status:** In progress
+**Status:** Completed and reviewed
 **Related documents:** [`VISUAL_DIRECTION.md`](VISUAL_DIRECTION.md), [`DESIGN_TOKENS.md`](DESIGN_TOKENS.md), [`VISUAL_STATES.md`](VISUAL_STATES.md), [`ACCESSIBILITY.md`](../architecture/ACCESSIBILITY.md)
 
 > This document defines motion intent and timing categories. It does not implement animations, transitions, CSS, or components.
@@ -34,7 +34,7 @@ Use opacity, small translation, surface emphasis, and height changes before larg
 
 ## 3. Duration categories
 
-These are starting categories for validation in PHASE 1B, not final CSS values:
+These categories are implemented as CSS custom-property tokens in [`DESIGN_TOKENS.md`](DESIGN_TOKENS.md) and [`src/styles/tokens.css`](../../src/styles/tokens.css). They remain subject to usability validation before any future component motion is added:
 
 | Category | Approximate range | Use |
 |---|---:|---|

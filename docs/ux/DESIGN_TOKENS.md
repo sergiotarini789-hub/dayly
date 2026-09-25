@@ -1,341 +1,449 @@
-# Dayly Design Token Architecture
+# Dayly Design Token Foundation
 
-**Phase:** 1A — Visual Direction & Design Language
-**Status:** In progress
-**Related documents:** [`VISUAL_DIRECTION.md`](VISUAL_DIRECTION.md), [`VISUAL_STATES.md`](VISUAL_STATES.md), [`MOTION_PRINCIPLES.md`](MOTION_PRINCIPLES.md), [`UX_PRINCIPLES.md`](UX_PRINCIPLES.md)
+**Phase:** 1B — Design Tokens & Theme Foundation
+**Status:** Foundation implemented; phase remains in progress pending review
+**Implementation:** [`src/styles/tokens.css`](../../src/styles/tokens.css)
+**Validation:** [`src/lib/design-system/validate-tokens.mjs`](../../src/lib/design-system/validate-tokens.mjs)
 
-> This document defines the conceptual token system. It does not create CSS variables, Tailwind configuration, component code, or final values.
+This document is the implementation contract for the conceptual architecture defined in PHASE 1A. The token foundation contains no application screens, feature components, business logic, or feature-specific styling.
 
 ## 1. Token architecture
 
-Dayly should use three token layers:
+Dayly uses three layers:
 
 ```text
 Primitive tokens
-        ↓
+      ↓
 Semantic tokens
-        ↓
-Component tokens
+      ↓
+Future component tokens
 ```
 
 ### 1.1 Primitive tokens
 
-Primitive tokens describe raw palette, type, spacing, radius, shadow, motion, and breakpoint values. They are not used directly throughout feature UI.
-
-Examples:
+Primitive values live in `src/styles/tokens.css` under names such as:
 
 ```text
-color.neutral.0
-color.neutral.50
-color.blue.500
-space.1
-radius.md
-shadow.overlay
-motion.duration.standard
+--primitive-color-neutral-50
+--primitive-color-indigo-600
+--primitive-font-size-body
+--primitive-space-4
+--primitive-radius-md
+--primitive-shadow-sm
+--primitive-duration-fast
+--primitive-breakpoint-tablet
+--primitive-z-modal
 ```
 
-Primitive names describe the value family, not its meaning in a Task or Calendar. Exact colors and scale values remain subject to contrast and visual validation.
+They describe raw palette, typography, spacing, shape, elevation, motion, responsive, and layer values. Future feature components should not consume them directly.
 
-### 1.2 Semantic tokens
+### 1.2 Semantic runtime tokens
 
-Semantic tokens express meaning and theme behavior:
+Semantic tokens describe meaning and are exposed as CSS custom properties:
 
 ```text
-color.background.canvas
-color.surface.default
-color.surface.elevated
-color.content.primary
-color.content.secondary
-color.content.muted
-color.border.default
-color.border.focus
-color.action.primary
-color.action.primary.hover
-color.state.success
-color.state.warning
-color.state.danger
-color.state.info
-color.productivity.task
-color.productivity.schedule
-color.productivity.event
-color.productivity.external
-color.productivity.habit
-color.productivity.focus
-color.productivity.overdue
-color.productivity.completed
+--color-background
+--color-surface
+--color-surface-elevated
+--color-text-primary
+--color-text-secondary
+--color-text-muted
+--color-border
+--color-primary
+--color-success
+--color-warning
+--color-danger
+--color-info
+--color-focus
 ```
 
-Semantic tokens are the main contract consumed by components. Themes map primitives to semantic roles without changing markup or product meaning.
+Theme values are held by private `--dayly-*` backing variables and surfaced through the public semantic aliases. This keeps the runtime theme layer separate from the Tailwind `@theme inline` bridge without recursive custom-property references.
 
 ### 1.3 Component tokens
 
-Component tokens describe local relationships and should be introduced only when semantic tokens cannot express the component's behavior:
+No component token declarations are needed yet because PHASE 1B creates no components. When a future component needs a local relationship, it may introduce a component token only if a semantic token cannot express it. For example, a future task-row implementation could use a relationship such as `--component-task-row-selected-background`, mapped to `--color-surface-selected`; it must not introduce a new task-specific hex value.
+
+Component tokens must:
+
+- map to semantic tokens wherever possible;
+- describe a reusable relationship rather than a one-off visual adjustment;
+- remain local to the component contract;
+- avoid duplicating semantic meanings or creating feature palettes.
+
+## 2. CSS runtime and theme selection
+
+The runtime stylesheet is `src/styles/tokens.css`. It:
+
+1. imports Tailwind CSS v4;
+2. defines primitive values;
+3. maps primitive values into semantic light-theme backing values;
+4. provides explicit dark-theme values through `html[data-theme="dark"]`;
+5. provides an independent dark mapping from `prefers-color-scheme: dark` when no explicit theme is set;
+6. exposes semantic names to Tailwind through `@theme inline`;
+7. provides the shared `dark:` variant through `@custom-variant dark`;
+8. declares the global focus-visible token treatment and reduced-motion overrides.
+
+Theme behavior is therefore:
 
 ```text
-component.button.primary.background
-component.button.primary.content
-component.button.primary.focus-ring
-component.task-row.padding
-component.task-row.selected.background
-component.calendar-block.schedule.border
-component.calendar-block.external.pattern
-component.focus-timer.active.content
-component.dialog.surface
-component.input.error.border
+Tailwind utility
+      ↓
+@theme inline semantic name
+      ↓
+--dayly-* semantic backing variable
+      ↓
+light or dark theme value
+      ↓
+primitive value
 ```
 
-Component tokens must not become a hidden feature palette. A component token should refer back to semantic roles and remain reusable across contexts.
+The system preference is the default. Future user preference storage can set `data-theme="light"` or `data-theme="dark"` without changing component styles.
 
-## 2. Color token groups
+## 3. Color tokens
 
-### 2.1 Primitive palette direction
+### 3.1 Neutral and surface tokens
 
-The primitive palette should include:
-
-- neutral canvas/surface/content scales;
-- a restrained brand blue-indigo or blue-violet family;
-- calm success green/teal family;
-- controlled warning amber family;
-- restrained danger red/coral family;
-- informative blue/cyan family;
-- optional provider-neutral external accent that remains subordinate.
-
-The exact brand hue, palette steps, and light/dark values are open. No feature may select an arbitrary hex value outside the token system.
-
-### 2.2 Light-theme semantic mapping
-
-Light mode should map:
-
-- canvas to a quiet high-lightness neutral;
-- default surfaces to a clearly readable but near-canvas neutral;
-- elevated surfaces to a stronger contrast step with restrained shadow;
-- primary content to a high-contrast ink;
-- secondary/muted content to accessible reduced contrast;
-- borders to subtle neutral lines;
-- semantic accents to muted, readable fills and stronger text/icon variants;
-- selected states to a light semantic tint plus border/focus cue.
-
-### 2.3 Dark-theme semantic mapping
-
-Dark mode should map independently rather than invert:
-
-- canvas to a deep charcoal/ink primitive;
-- default/elevated surfaces to progressively lighter dark neutrals;
-- primary content to comfortable off-white/near-white text;
-- secondary/muted content to accessible dimmer text;
-- borders to restrained luminance edges;
-- semantic accents to lower-saturation tones with readable foreground variants;
-- selected states to a controlled surface lift plus border/focus cue;
-- shadows to minimal/limited use.
-
-### 2.4 Productivity token rules
-
-Productivity tokens are semantic, not feature-specific colors:
-
-| Semantic token family | Meaning | Additional cue |
+| Token | Light direction | Dark direction |
 |---|---|---|
-| `productivity.task` | Actionable work | Task icon/row structure. |
-| `productivity.schedule` | Planned Task Block | Schedule/task label and block geometry. |
-| `productivity.event` | Dayly Calendar Event | Event icon and solid time block. |
-| `productivity.external` | Provider-owned context | External badge and source/provenance. |
-| `productivity.habit` | Recurring behavior | Occurrence control and recurrence text. |
-| `productivity.focus` | Actual effort session | Clock/session treatment. |
-| `productivity.overdue` | Past incomplete deadline | “Overdue” text and deadline treatment. |
-| `productivity.completed` | Explicitly completed work | Completion control and settled typography. |
+| `background` | Slate 50 reading canvas | Slate 950 charcoal/ink canvas |
+| `surface` | White primary surface | Slate 900 surface |
+| `surface-elevated` | White with elevation | Slate 800 elevated surface |
+| `surface-hover` | Slate 100 | Slate 700 |
+| `surface-selected` | Indigo 50 | Indigo 900 |
+| `border` | Slate 300 | Slate 700 |
+| `border-subtle` | Slate 200 | Slate 800 |
+| `border-strong` | Slate 400 | Slate 500 |
+| `text-primary` | Slate 900 | Slate 50 |
+| `text-secondary` | Slate 700 | Slate 200 |
+| `text-muted` | Slate 600 | Slate 400 |
+| `text-disabled` | Slate 500 | Slate 500 |
 
-## 3. Typography tokens
+Public names are `--color-background`, `--color-surface`, `--color-surface-elevated`, `--color-surface-hover`, `--color-surface-selected`, `--color-border`, `--color-border-subtle`, `--color-border-strong`, `--color-text-primary`, `--color-text-secondary`, `--color-text-muted`, and `--color-text-disabled`.
 
-Conceptual groups:
+### 3.2 Brand and semantic state tokens
 
-```text
-type.family.interface
-type.family.mono-or-tabular
-type.size.display
-type.size.page
-type.size.section
-type.size.item
-type.size.body
-type.size.label
-type.size.meta
-type.weight.regular
-type.weight.medium
-type.weight.semibold
-type.line-height.tight
-type.line-height.body
-type.line-height.relaxed
-type.letter-spacing.normal
-type.letter-spacing.label
-```
-
-Rules:
-
-- Use an interface sans family with accessible fallback stack.
-- Use tabular/clear numerals for durations and statistics when comparison benefits.
-- Keep page/display sizes restrained to preserve vertical space.
-- Use weight and spacing before all-caps or extreme size changes.
-- Metadata remains readable under zoom and localization.
-- Final family, weight availability, and exact scale are open for PHASE 1B.
-
-## 4. Spacing tokens
-
-The proposed conceptual rhythm uses a 4-unit base:
+The implemented brand direction is restrained blue-indigo:
 
 ```text
-space.1  = 4
-space.2  = 8
-space.3  = 12
-space.4  = 16
-space.5  = 20
-space.6  = 24
-space.8  = 32
-space.10 = 40
-space.12 = 48
-space.16 = 64
+--color-primary
+--color-primary-hover
+--color-primary-active
+--color-primary-subtle
+--color-primary-foreground
 ```
 
-Semantic usage examples:
+State tokens are available in the same structure where a foreground or subtle surface is needed:
 
 ```text
-layout.page-padding
-layout.section-gap
-layout.card-padding
-layout.list-row-gap
-layout.form-field-gap
-layout.mobile-action-inset
-layout.sidebar-width
+--color-success
+--color-success-subtle
+--color-success-foreground
+--color-warning
+--color-warning-subtle
+--color-warning-foreground
+--color-danger
+--color-danger-subtle
+--color-danger-foreground
+--color-info
+--color-info-subtle
+--color-info-foreground
+--color-focus
 ```
 
-A component should use a semantic/layout token where a relationship matters, not repeat arbitrary values. Exact values are proposed starting points, not locked implementation values.
+Light and dark values are selected independently. Dark semantic accents use lighter, lower-saturation foregrounds and darker subtle surfaces; they are not inverted light values.
 
-## 5. Radius tokens
+### 3.3 Productivity tokens
 
-Conceptual values:
+The foundation defines semantic base, subtle, and foreground tokens for:
 
 ```text
-radius.none
-radius.xs
-radius.sm
-radius.md
-radius.lg
-radius.xl
-radius.full
+--color-task
+--color-scheduled-task
+--color-calendar-event
+--color-external-event
+--color-habit
+--color-focus
+--color-overdue
+--color-completed
 ```
 
-Rules:
+Each also has `-subtle` and `-foreground` forms. They are intentionally paired with labels, icons, geometry, patterns, or source markers. Color is never the only signal for ownership, completion, overdue state, external provenance, or Focus.
 
-- `radius.md` is the likely default for buttons, inputs, and moderate cards.
-- `radius.lg`/`xl` is reserved for elevated panels, dialogs, and focused mobile surfaces.
-- `radius.full` is primarily for badges/status markers, not every button.
-- Calendar time blocks keep functional rectangular geometry.
-- Exact radius values remain open.
+### 3.4 Chart/data visualization tokens
 
-## 6. Border and elevation tokens
+The future analytics palette is exposed as `--color-chart-1` through `--color-chart-8`, with independent light and dark values. Chart use must also provide:
+
+- a legend or direct series label;
+- order, marker, line style, pattern, or text alternatives where color alone would be ambiguous;
+- a period and definition for derived values;
+- enough contrast against the theme surface.
+
+These tokens do not create charts or select a charting library. The final chart language remains a future UX/product decision.
+
+## 4. Typography
+
+The implementation uses a platform-first interface stack so Dayly has no font download or dependency requirement during the foundation phase:
 
 ```text
-border.width.hairline
-border.width.default
-border.color.default
-border.color.subtle
-border.color.focus
-border.color.error
-shadow.none
-shadow.raised
-shadow.overlay
-shadow.dialog
+ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
 ```
 
-- Most page structure comes from surface and spacing.
-- `shadow.raised` is for a selected/raised panel only where necessary.
-- `shadow.overlay` and `shadow.dialog` distinguish temporary layers.
-- Semantic focus/error borders must pass contrast requirements.
-- There should be no per-feature shadow palette.
-
-## 7. Motion tokens
-
-Motion is defined further in [`MOTION_PRINCIPLES.md`](MOTION_PRINCIPLES.md). Conceptual token groups are:
+Numeric and timer contexts may use:
 
 ```text
-motion.duration.instant
-motion.duration.fast
-motion.duration.standard
-motion.duration.emphasis
-motion.easing.standard
-motion.easing.enter
-motion.easing.exit
-motion.easing.spring
-motion.distance.small
-motion.distance.panel
+ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace
 ```
 
-Reduced-motion behavior maps non-essential motion to no motion or a quick opacity/state change.
+This is a deliberate baseline rather than a branded web-font commitment. A future font choice can replace the primitive family token without changing semantic type names.
 
-## 8. Responsive tokens
+| Token | Size | Line height | Intended use |
+|---|---:|---:|---|
+| `display` | 32px | 1.15 | Restrained date/context orientation |
+| `h1` | 28px | 1.25 | Page heading |
+| `h2` | 22px | 1.25 | Section heading |
+| `h3` | 18px | 1.25 | Local heading |
+| `body` | 16px | 1.5 | Primary reading text and item titles |
+| `body-small` | 14px | 1.5 | Supporting content |
+| `label` | 14px | 1.35 | Controls, tabs, state/source labels |
+| `caption` | 12px | 1.4 | Dense metadata that remains accessible |
+| `numeric` | 24px | 1.25 | Timer/count context with a unit or label |
 
-Responsive tokens express composition changes rather than merely scaling:
+Weight tokens are `regular` 400, `medium` 500, and `semibold` 600. Letter spacing is near-normal; labels and captions use only a small positive adjustment. The scale avoids oversized dashboard headings and tiny metadata.
+
+## 5. Spacing
+
+The implementation uses a 4px composable rhythm:
+
+| Token | Value | Typical relationship |
+|---|---:|---|
+| `space-0` | 0px | Reset/no gap |
+| `space-1` | 4px | Icon/label or tight metadata gap |
+| `space-2` | 8px | Compact control/row gap |
+| `space-3` | 12px | Related content gap |
+| `space-4` | 16px | Standard padding and field gap |
+| `space-5` | 20px | Comfortable local grouping |
+| `space-6` | 24px | Section or panel interior gap |
+| `space-8` | 32px | Page section gap |
+| `space-10` | 40px | Large composition separation |
+| `space-12` | 48px | Major orientation separation |
+| `space-16` | 64px | Wide desktop composition space |
+
+Tailwind utilities use the corresponding `spacing-*` bridge. Feature code should not introduce arbitrary spacing values when an existing token expresses the relationship.
+
+## 6. Radius, borders, and elevation
+
+### Radius
+
+The implemented radius scale is:
 
 ```text
-breakpoint.mobile
-breakpoint.tablet
-breakpoint.desktop
-layout.navigation.desktop-sidebar
-layout.navigation.mobile-bottom-bar
-layout.navigation.mobile-more-sheet
-layout.calendar.mobile-agenda
-layout.calendar.desktop-timeline
+--radius-none = 0
+--radius-sm   = 4px
+--radius-md   = 8px
+--radius-lg   = 12px
+--radius-xl   = 16px
+--radius-full = 9999px
 ```
 
-Use the approved planning bands:
+`md` is the default for controls and moderate surfaces. `full` is primarily for badges and status markers, not every button. Calendar blocks retain functional rectangular geometry.
 
-- Mobile: approximately 320–767px.
-- Tablet: approximately 768–1023px.
-- Desktop: 1024px and above.
-
-Exact framework breakpoint values are implementation decisions that must preserve these UX bands.
-
-## 9. Focus and accessibility tokens
+### Borders
 
 ```text
-focus.ring.color
-focus.ring.width
-focus.ring.offset
-focus.ring.inset
-state.disabled.opacity
-state.loading.opacity
-state.selected.background
-state.hover.background
-state.pressed.background
-state.error.border
-state.success.background
+--border-width-hairline = 1px
+--border-width-default  = 1px
+--border-width-strong   = 2px
+--color-border          = semantic default border
+--color-border-subtle   = semantic low-contrast border
+--color-border-strong   = semantic stronger boundary
 ```
 
-Focus tokens must remain visible in both themes and not depend on hover. Disabled tokens reduce interaction affordance without making required explanatory text unreadable.
+Borders identify inputs, selected boundaries, focus-adjacent context, and meaningful separation. They do not outline every page region.
 
-## 10. Token governance
+### Elevation
 
-- Primitive tokens may be changed during visual validation, but semantic meaning must remain stable.
-- Semantic tokens are the contract between themes and components.
-- Component tokens require a demonstrated local relationship; do not add a token for one-off styling.
-- Product state meaning must not be encoded only in a color token.
-- Final values require contrast, responsive, accessibility, and visual regression review.
-- Tokens are documented before CSS implementation.
-- Deprecated tokens need a migration note; do not silently repurpose a semantic token.
-- Theme customizations, if later supported, must map through semantic tokens and preserve contrast/source distinctions.
+```text
+--shadow-none
+--shadow-sm
+--shadow-md
+--shadow-lg
+--shadow-overlay
+```
 
-## 11. Open token decisions
+Surface color, contrast, spacing, and typography establish hierarchy first. Shadows are restrained and are reserved for raised panels, popovers, dialogs, and overlays. Dark theme shadows are independently reduced and use black alpha rather than a light-theme inversion.
 
-- Exact brand hue and brand scale.
-- Exact light/dark neutral values.
-- Final interface font and fallback stack.
-- Exact type scale and weight availability.
-- Exact spacing/radius/shadow values.
-- Exact focus-ring width/color behavior.
-- Chart-specific palette, chart language, and data visualization patterns.
-- Final density presets and whether users can select Compact, Focused default, or Comfortable explicitly.
-- Whether users can choose custom themes while preserving semantic meaning and contrast.
-- Whether users can choose future custom accent colors within semantic constraints.
-- Whether calendar colors are user-customizable within semantic constraints.
-- Final token file/configuration format for Tailwind CSS v4.
+## 7. Motion
 
-## 12. Phase boundary
+Motion values implement the PHASE 1A categories:
 
-No CSS variables, Tailwind configuration, token files, component styles, or application code were created.
+| Token | Value | Use |
+|---|---:|---|
+| `instant` | 80ms | Immediate pressed/focus affordance |
+| `fast` | 160ms | Hover, selection, small disclosure |
+| `normal` | 240ms | Local content and ordinary layer transitions |
+| `slow` | 360ms | Emphasis transitions only; not routine actions |
+
+Easing tokens are:
+
+```text
+--ease-standard  = cubic-bezier(0.2, 0, 0, 1)
+--ease-emphasized = cubic-bezier(0.2, 0.8, 0.2, 1)
+--ease-entrance  = cubic-bezier(0, 0, 0.2, 1)
+--ease-exit      = cubic-bezier(0.4, 0, 1, 1)
+```
+
+When `prefers-reduced-motion: reduce` is active, duration tokens become 1ms, easing becomes linear, and motion distances become zero. This preserves state transitions without decorative movement. Timer meaning remains textual and numeric.
+
+## 8. Responsive and layer tokens
+
+Responsive bands are intentionally few:
+
+```text
+--breakpoint-mobile  = 20rem (320px)
+--breakpoint-tablet  = 48rem (768px)
+--breakpoint-desktop = 64rem (1024px)
+--breakpoint-wide    = 90rem (1440px)
+```
+
+They correspond to the approved mobile, tablet, desktop, and wide-desktop composition bands. They do not authorize a scaled-down desktop layout on mobile.
+
+Layer values are:
+
+```text
+--z-base       = 0
+--z-sticky     = 10
+--z-navigation = 20
+--z-dropdown   = 30
+--z-popover    = 40
+--z-modal      = 50
+--z-toast      = 60
+```
+
+Future components consume these names rather than introducing arbitrary z-index values.
+
+## 9. Focus, controls, and density
+
+### Focus
+
+The global foundation provides:
+
+```text
+--focus-ring-color
+--focus-ring-width  = 3px
+--focus-ring-offset = 2px
+--focus-ring-inset  = 0px
+```
+
+The `:focus-visible` rule uses a visible outline in both themes. Focus is not dependent on hover or color alone and is available to future buttons, inputs, and custom controls.
+
+### Control dimensions
+
+These are semantic dimensions, not controls:
+
+```text
+--control-height-button       = 40px
+--control-height-input        = 40px
+--control-size-icon-button    = 40px
+--control-size-touch-target   = 44px
+--control-size-checkbox       = 20px
+--control-width-switch        = 40px
+--control-height-switch       = 24px
+--control-height-select       = 40px
+```
+
+They provide desktop precision while preserving a 44px touch target for mobile interaction. Future controls must still provide labels, states, and keyboard behavior.
+
+### Density foundation
+
+The default is **focused**. The stylesheet defines foundation values for all three PHASE 1A concepts without exposing a user-selectable density preference:
+
+```text
+--density-compact-row-min-height      = 40px
+--density-focused-row-min-height      = 44px
+--density-comfortable-row-min-height  = 48px
+--density-compact-control-height      = 36px
+--density-focused-control-height      = 40px
+--density-comfortable-control-height  = 44px
+```
+
+The default control aliases resolve to focused density. A future density setting requires a product decision and must preserve touch, focus, and large-text requirements.
+
+## 10. Tailwind CSS v4 integration
+
+`src/styles/tokens.css` uses the Tailwind v4 CSS-first model:
+
+```css
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--dayly-color-background);
+  --font-sans: var(--font-family-interface);
+  --spacing-4: var(--space-4);
+  --transition-duration-fast: var(--dayly-duration-fast);
+}
+```
+
+This makes future semantic utilities available without a JavaScript Tailwind config or raw literals:
+
+```text
+bg-background
+bg-surface
+bg-surface-selected
+text-text-primary
+text-text-secondary
+text-success
+bg-task
+border-border
+rounded-md
+shadow-overlay
+duration-fast
+mobile:...
+dark:...
+```
+
+The public token names remain usable directly in CSS as well. The `dark:` variant is scoped to `[data-theme="dark"]`; system preference still controls the default CSS values when no explicit theme is set.
+
+## 11. Governance
+
+1. Feature components consume semantic tokens or semantic Tailwind utilities.
+2. Raw color values are allowed only in the primitive palette and primitive shadow definitions.
+3. Primitive tokens are not normally consumed directly by feature components.
+4. New semantic tokens require a new product meaning and a validation/test update.
+5. Component tokens require a demonstrated reusable local relationship.
+6. Themes may override semantic backing values without changing component code.
+7. Color, icon, pattern, label, or structure must be combined for state meaning; color is never sufficient by itself.
+8. A token is not created merely to preserve an arbitrary one-off measurement.
+9. Deprecated tokens need a migration note and are not silently repurposed.
+10. Accessibility, contrast, reduced motion, localization, and responsive behavior are part of token review.
+
+## 12. Validation
+
+Run the dependency-free validator from the repository root:
+
+```bash
+node src/lib/design-system/validate-tokens.mjs
+```
+
+It verifies:
+
+- required primitive and semantic tokens exist;
+- explicit light and dark semantic backing values exist;
+- the Tailwind v4 CSS-first bridge exists;
+- system-theme and reduced-motion hooks exist;
+- focus tokens exist;
+- semantic names are not duplicated within the light token block;
+- key text/foreground pairings meet a 4.5:1 WCAG AA contrast assumption and chart series meet a 3:1 graphical contrast assumption.
+
+The validator is intentionally small and does not replace browser-level accessibility testing or a real Tailwind build once the application scaffold exists.
+
+## 13. Phase boundary
+
+PHASE 1B creates the shared visual foundation only. It does not create:
+
+- buttons, inputs, switches, selects, dialogs, cards, rows, navigation, pages, charts, or other feature components;
+- application screens or routes;
+- task, Calendar, Habit, Focus, Dashboard, Analytics, authentication, persistence, API, integration, or business logic;
+- a full user-selectable theme or density preference system;
+- a charting library, icon library, font dependency, or other unnecessary dependency.
+
+Future open decisions include whether a branded font, custom user themes, custom accent colors, user-customizable calendar colors, selectable density presets, or a final chart language should be added. None is required for this foundation.
