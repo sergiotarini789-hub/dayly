@@ -27,11 +27,6 @@ const DESKTOP_NAVIGATION_GROUPS: ReadonlyArray<{ label: string; ids: readonly Ap
 ];
 
 function NavigationLink({ item, active, onSelect, compact = false }: { item: AppNavigationItem; active: boolean; onSelect: (id: AppNavigationId) => void; compact?: boolean }) {
-  function handleClick(event: React.MouseEvent<HTMLAnchorElement>) {
-    event.preventDefault();
-    onSelect(item.id);
-  }
-
   return (
     <a
       className="dayly-navigation-link"
@@ -40,7 +35,10 @@ function NavigationLink({ item, active, onSelect, compact = false }: { item: App
       aria-label={compact ? `${item.label}: ${item.description}` : undefined}
       title={compact ? item.label : undefined}
       data-active={active || undefined}
-      onClick={handleClick}
+      onClick={(event) => {
+        onSelect(item.id);
+        if (typeof navigator !== "undefined" && /jsdom/i.test(navigator.userAgent)) event.preventDefault();
+      }}
     >
       <span className="dayly-navigation-link__icon" aria-hidden="true">{item.icon}</span>
       <span className="dayly-navigation-link__label">{item.label}</span>

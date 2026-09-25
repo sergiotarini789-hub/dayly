@@ -48,9 +48,12 @@ function formatGreeting(date: Date, displayName: string) {
   return displayName ? `${salutation}, ${displayName}.` : `${salutation}.`;
 }
 
-function formatDaySummary(taskCount: number, openTaskCount: number) {
-  if (taskCount === 0) return "A small start is enough today.";
-  if (openTaskCount === 0) return "You have moved everything planned today.";
+function formatDaySummary(taskCount: number, openTaskCount: number, planningStyle: string, availability: string) {
+  if (taskCount === 0) return planningStyle === "gentle" ? "A lighter day. One useful step is enough." : "A small start is enough today.";
+  if (openTaskCount === 0) return "Everything planned. Keep the pace comfortable.";
+  if (openTaskCount === 1) return "One last thing worth finishing.";
+  if (planningStyle === "deep") return `${openTaskCount} things worth moving forward. Protect a clear stretch for focus.`;
+  if (availability === "flexible") return `${openTaskCount} things worth moving forward, with room to choose the pace.`;
   return `${openTaskCount} ${openTaskCount === 1 ? "thing" : "things"} worth moving forward today.`;
 }
 
@@ -127,8 +130,8 @@ export function TodayExperience() {
   const hasPlanningContext = Boolean(session.availability || session.planningStyle);
   const sessionContext = session.availability ? AVAILABILITY_LABELS[session.availability] ?? "Planning context set" : "Planning context not set";
   const planningStyle = session.planningStyle ? PLANNING_STYLE_LABELS[session.planningStyle] ?? "Choose a pace that fits" : "Choose a pace that fits";
-  const progressLabel = tasks.length === 0 ? "0 of 0 complete" : `${completedTasks.length} of ${tasks.length} complete`;
-  const daySummary = formatDaySummary(tasks.length, openTasks.length);
+  const progressLabel = tasks.length === 0 ? "No tasks yet" : `${completedTasks.length} of ${tasks.length} complete`;
+  const daySummary = formatDaySummary(tasks.length, openTasks.length, session.planningStyle, session.availability);
 
   return (
     <ApplicationShell
@@ -143,7 +146,7 @@ export function TodayExperience() {
             <TodayLoadingCue isPreparing={isPreparing} />
             <NextUsefulAction nextTask={nextTask} onComplete={(id) => toggleTask(id, true)} />
             <TodayPlan tasks={tasks} openTasks={openTasks} completedTasks={completedTasks} newTaskId={newTaskId} taskTitle={taskTitle} notice={notice} onTaskTitleChange={setTaskTitle} onAddTask={addTask} onToggleTask={toggleTask} />
-            <SupportingContext sessionContext={sessionContext} planningStyle={planningStyle} hasPlanningContext={hasPlanningContext} />
+            <SupportingContext sessionContext={sessionContext} planningStyle={planningStyle} availability={session.availability ? AVAILABILITY_LABELS[session.availability] ?? "Availability set" : "Availability not set"} hasPlanningContext={hasPlanningContext} />
           </div>
           <p className="dayly-product-disclosure">Preview session only · tasks and setup changes stay in memory and are not saved.</p>
         </PageContainer>

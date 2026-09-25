@@ -109,6 +109,7 @@
 
   /* Primitive typography */
   --primitive-font-family-interface: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --primitive-font-family-display: ui-serif, Georgia, Cambria, "Times New Roman", serif;
   --primitive-font-family-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   --primitive-font-size-display: 2rem;
   --primitive-font-size-h1: 1.75rem;
@@ -353,6 +354,7 @@
 
   /* Semantic typography aliases */
   --font-family-interface: var(--primitive-font-family-interface);
+  --font-family-display: var(--primitive-font-family-display);
   --font-family-mono: var(--primitive-font-family-mono);
   --font-size-display: var(--primitive-font-size-display);
   --font-size-h1: var(--primitive-font-size-h1);

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { OnboardingExperience, TodayExperience } from "@/components/product";
+import { FocusExperience, OnboardingExperience, SearchExperience, TasksExperience, TodayExperience } from "@/components/product";
 
 afterEach(() => window.history.replaceState(null, "", "/"));
 
@@ -10,7 +10,7 @@ describe("product-facing foundations", () => {
     render(<TodayExperience />);
     expect(screen.getByRole("heading", { name: /Good (morning|afternoon|evening|night)/ })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Give the day a beginning." })).toBeInTheDocument();
-    expect(screen.getByText("0 of 0 complete")).toBeInTheDocument();
+    expect(screen.getByText("No tasks yet")).toBeInTheDocument();
 
     fireEvent.change(screen.getByRole("textbox", { name: "Add a task" }), { target: { value: "Review the day" } });
     fireEvent.click(screen.getByRole("button", { name: "Add to Today" }));
@@ -41,6 +41,26 @@ describe("product-facing foundations", () => {
     expect(screen.getByRole("heading", { name: /Good (morning|afternoon|evening), Sam/ })).toBeInTheDocument();
     expect(screen.getByText("Flexible time")).toBeInTheDocument();
     expect(screen.getByText("Deep work first")).toBeInTheDocument();
+  });
+
+  it("keeps the product surfaces useful without inventing persisted data", () => {
+    render(<TasksExperience />);
+    expect(screen.getByRole("heading", { name: "Tasks" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Your task list is clear." })).toBeInTheDocument();
+    fireEvent.change(screen.getByRole("textbox", { name: "Add something to today" }), { target: { value: "Make room for the important thing" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add" }));
+    const task = screen.getByRole("checkbox", { name: /Make room for the important thing/ });
+    fireEvent.click(task);
+    expect(task).toBeChecked();
+
+    render(<FocusExperience />);
+    expect(screen.getByRole("heading", { name: "Choose one thing to stay with." })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Start focus" }));
+    expect(screen.getByRole("button", { name: "Pause" })).toBeInTheDocument();
+
+    render(<SearchExperience />);
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search Dayly" }), { target: { value: "unknown" } });
+    expect(screen.getByRole("heading", { name: "Nothing matches “unknown”." })).toBeInTheDocument();
   });
 
   it("keeps onboarding lightweight and keyboard-operable across steps", () => {

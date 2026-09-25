@@ -28,13 +28,15 @@ interface CurrentMomentProps {
 }
 
 function DayPulse({ completedCount, taskCount, progressLabel }: { completedCount: number; taskCount: number; progressLabel: string }) {
-  const percentage = taskCount === 0 ? 0 : Math.round((completedCount / taskCount) * 100);
+  const isEmpty = taskCount === 0;
+  const isComplete = taskCount > 0 && completedCount === taskCount;
+  const percentage = isEmpty ? 0 : Math.round((completedCount / taskCount) * 100);
   const style = { "--day-pulse-progress": `${percentage}%` } as React.CSSProperties;
 
   return (
-    <div className="dayly-day-pulse" style={style} role="progressbar" aria-valuemin={0} aria-valuemax={taskCount || 1} aria-valuenow={completedCount} aria-valuetext={progressLabel}>
-      <span className="dayly-day-pulse__ring" aria-hidden="true"><span /></span>
-      <span className="dayly-day-pulse__copy"><strong>{progressLabel}</strong><span>{taskCount === 0 ? "A day in motion" : "The day in motion"}</span></span>
+    <div className="dayly-day-pulse" data-empty={isEmpty || undefined} data-complete={isComplete || undefined} style={style} role={isEmpty ? "img" : "progressbar"} aria-label={isEmpty ? "No tasks yet" : "Day progress"} aria-valuemin={isEmpty ? undefined : 0} aria-valuemax={isEmpty ? undefined : taskCount} aria-valuenow={isEmpty ? undefined : completedCount} aria-valuetext={isEmpty ? "No tasks yet" : progressLabel}>
+      <span className="dayly-day-pulse__ring" aria-hidden="true"><span>{isComplete ? "✓" : null}</span></span>
+      <span className="dayly-day-pulse__copy"><strong>{isEmpty ? "No tasks yet" : progressLabel}</strong><span>{isComplete ? "Day complete" : isEmpty ? "A day in motion" : "The day in motion"}</span></span>
     </div>
   );
 }
@@ -146,7 +148,7 @@ export function TodayPlan({ tasks, openTasks, completedTasks, newTaskId, taskTit
   );
 }
 
-export function SupportingContext({ sessionContext, planningStyle, hasPlanningContext }: { sessionContext: string; planningStyle: string; hasPlanningContext: boolean }) {
+export function SupportingContext({ sessionContext, planningStyle, availability, hasPlanningContext }: { sessionContext: string; planningStyle: string; availability: string; hasPlanningContext: boolean }) {
   return (
     <div className="dayly-product-afterglow" aria-label="Supporting context">
       <section className="dayly-product-support-section" aria-labelledby="upcoming-heading">
@@ -159,6 +161,11 @@ export function SupportingContext({ sessionContext, planningStyle, hasPlanningCo
         <h2 id="context-heading">Keep the next step realistic.</h2>
         <p>{hasPlanningContext ? `${sessionContext} · ${planningStyle}.` : "Set a little context when you are ready; Dayly will not assume you have unlimited time."}</p>
         <Link className="dayly-product-text-link" href="/onboarding">{hasPlanningContext ? "Adjust planning context" : "Set planning context"}</Link>
+      </section>
+      <section className="dayly-product-support-section" aria-labelledby="planning-heading">
+        <p className="dayly-product-eyebrow">Planning</p>
+        <h2 id="planning-heading">{hasPlanningContext ? "Room to choose" : "Room to decide"}</h2>
+        <p>{hasPlanningContext ? "Your available time shapes the pace, not the worth of the work." : "Choose an availability rhythm when it becomes useful."}</p>
       </section>
     </div>
   );
