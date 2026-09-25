@@ -1,9 +1,9 @@
 # Dayly UX Documentation
 
-**Current phase:** PHASE 1D — Layout System & Application Shell
+**Current phase:** PHASE 1E — Interaction & Motion System
 **Status:** In progress
 
-The UX documentation contains the approved PHASE 0B architecture, the reviewed PHASE 1A visual language, the PHASE 1B token foundation, the PHASE 1C domain-agnostic component system, and the PHASE 1D application shell/layout system. PHASE 1E has not started.
+The UX documentation contains the approved PHASE 0B architecture, the reviewed PHASE 1A visual language, the PHASE 1B token foundation, the PHASE 1C domain-agnostic component system, the PHASE 1D application shell/layout system, and the PHASE 1E interaction/motion system. PHASE 1F has not started.
 
 ## Approved PHASE 0B UX architecture
 
@@ -43,4 +43,12 @@ The UX documentation contains the approved PHASE 0B architecture, the reviewed P
 - [`../../src/styles/layout.css`](../../src/styles/layout.css) — responsive shell and layout behavior using approved tokens and safe-area values.
 - [`../../src/showcase/LayoutShowcase.tsx`](../../src/showcase/LayoutShowcase.tsx) — development-only layout showcase content inside `/showcase`.
 
-The shell and layout system remain structural and domain-agnostic. There are no product screens, records, feature logic, data access, integrations, or PHASE 1E interaction/motion work.
+## PHASE 1E interaction and motion implementation
+
+- [`INTERACTION_SYSTEM.md`](INTERACTION_SYSTEM.md) — implementation contract for motion categories, approved timing/easing, control states, overlays, loading/feedback, navigation, list/detail continuity, and reduced motion.
+- [`../../src/components/ui/utils.ts`](../../src/components/ui/utils.ts) — generic presence and focus/Escape utilities.
+- [`../../src/components/ui/overlays.tsx`](../../src/components/ui/overlays.tsx) — token-based dialog, drawer, popover, menu, and toast behavior.
+- [`../../src/components/layout/primitives.tsx`](../../src/components/layout/primitives.tsx) — generic `MotionList`, `MotionListItem`, and master/detail continuity.
+- [`../../src/showcase/ComponentShowcase.tsx`](../../src/showcase/ComponentShowcase.tsx) — interaction/motion states, controls, menus, overlays, loading, feedback, navigation, and reduced-motion preview.
+
+The shell, layout, and interaction/motion systems remain structural and domain-agnostic. There are no product screens, records, feature logic, data access, integrations, or PHASE 1F accessibility/UX hardening work.

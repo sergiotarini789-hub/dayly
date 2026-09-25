@@ -1,6 +1,6 @@
 import * as React from "react";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Button, Dialog, DialogClose, DialogContent, DialogTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Drawer, DrawerContent, DrawerTrigger, Popover, PopoverContent, PopoverTrigger, ToastProvider, ToastViewport, Tooltip, useToast } from "@/components/ui";
 
 function ToastDemo() {
@@ -27,6 +27,21 @@ describe("core overlay primitives", () => {
     expect(screen.getByRole("dialog", { name: "Sheet title" })).toBeInTheDocument();
   });
 
+  it("removes an overlay immediately when reduced motion is preferred", async () => {
+    const originalMatchMedia = window.matchMedia;
+    Object.defineProperty(window, "matchMedia", { configurable: true, value: vi.fn().mockReturnValue({ matches: true, media: "(prefers-reduced-motion: reduce)" }) });
+    try {
+      render(<Dialog><DialogTrigger>Open reduced dialog</DialogTrigger><DialogContent title="Reduced dialog"><p>Content</p></DialogContent></Dialog>);
+      const trigger = screen.getByRole("button", { name: "Open reduced dialog" });
+      fireEvent.click(trigger);
+      fireEvent.keyDown(document, { key: "Escape" });
+      await waitFor(() => expect(document.querySelector(".dayly-dialog")).not.toBeInTheDocument());
+      expect(trigger).toHaveFocus();
+    } finally {
+      Object.defineProperty(window, "matchMedia", { configurable: true, value: originalMatchMedia });
+    }
+  });
+
   it("dismisses popovers with Escape", async () => {
     render(<Popover><PopoverTrigger>Open popover</PopoverTrigger><PopoverContent><p>Popover body</p></PopoverContent></Popover>);
     fireEvent.click(screen.getByRole("button", { name: "Open popover" }));
@@ -44,6 +59,9 @@ describe("core overlay primitives", () => {
     fireEvent.keyDown(menu, { key: "ArrowDown" });
     expect(screen.getByRole("menuitem", { name: "Last" })).toHaveFocus();
     expect(screen.getByRole("menuitem", { name: "Unavailable" })).toHaveAttribute("aria-disabled", "true");
+    fireEvent.keyDown(document, { key: "Escape" });
+    await waitFor(() => expect(screen.queryByRole("menu")).not.toBeInTheDocument());
+    expect(screen.getByRole("button", { name: "Open menu" })).toHaveFocus();
   });
 
   it("shows a tooltip on focus without making it the only label", async () => {

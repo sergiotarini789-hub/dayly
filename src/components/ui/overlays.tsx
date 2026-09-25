@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { cn, getFocusableElements, useControllableState, useEscapeKey, useFocusRestore } from "./utils";
+import { cn, getFocusableElements, useControllableState, useEscapeKey, useFocusRestore, usePresence } from "./utils";
 import { IconButton, Spinner } from "./primitives";
 
 function Portal({ children }: { children: React.ReactNode }) {
@@ -68,11 +68,12 @@ export function DialogContent({ title, description, closeLabel = "Close dialog",
   const contentRef = React.useRef<HTMLDivElement>(null);
   const titleId = React.useId();
   const descriptionId = React.useId();
+  const presence = usePresence(context?.open ?? false, "--duration-normal");
   if (!context) throw new Error("DialogContent must be used inside Dialog");
   const close = React.useCallback(() => context.setOpen(false), [context]);
   useOverlayFocus(context.open, contentRef, close);
-  if (!context.open) return null;
-  return <Portal><div className="dayly-overlay" data-state="open"><button className="dayly-overlay__scrim" aria-label={closeLabel} tabIndex={-1} onClick={close} /><div {...props} ref={contentRef} className={cn("dayly-dialog", className)} role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={description ? descriptionId : undefined} tabIndex={-1}><div className="dayly-dialog__header"><h2 id={titleId} className="dayly-dialog__title">{title}</h2><button type="button" className="dayly-dialog__close" aria-label={closeLabel} onClick={close}>×</button></div>{description ? <p id={descriptionId} className="dayly-dialog__description">{description}</p> : null}<div className="dayly-dialog__body">{children}</div></div></div></Portal>;
+  if (!presence.present) return null;
+  return <Portal><div className="dayly-overlay" data-state={presence.state}><button className="dayly-overlay__scrim" aria-label={closeLabel} aria-hidden={!context.open} tabIndex={-1} onClick={close} /><div {...props} ref={contentRef} className={cn("dayly-dialog", className)} data-state={presence.state} role="dialog" aria-hidden={!context.open} aria-modal="true" aria-labelledby={titleId} aria-describedby={description ? descriptionId : undefined} tabIndex={-1} onAnimationEnd={presence.onAnimationEnd}><div className="dayly-dialog__header"><h2 id={titleId} className="dayly-dialog__title">{title}</h2><button type="button" className="dayly-dialog__close" aria-label={closeLabel} tabIndex={context.open ? 0 : -1} onClick={close}>×</button></div>{description ? <p id={descriptionId} className="dayly-dialog__description">{description}</p> : null}<div className="dayly-dialog__body">{children}</div></div></div></Portal>;
 }
 
 export function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) { return <h2 {...props} className={cn("dayly-dialog__title", className)} />; }
@@ -101,6 +102,7 @@ export function PopoverContent({ side = "bottom", align = "center", className, c
   const context = React.useContext(PopoverContext);
   const contentRef = React.useRef<HTMLDivElement>(null);
   const trigger = React.useRef<HTMLElement | null>(null);
+  const presence = usePresence(context?.open ?? false, "--duration-fast");
   if (!context) throw new Error("PopoverContent must be used inside Popover");
   const close = React.useCallback(() => context.setOpen(false), [context]);
   useEscapeKey(context.open, close);
@@ -111,8 +113,8 @@ export function PopoverContent({ side = "bottom", align = "center", className, c
     contentRef.current?.focus();
     return () => trigger.current?.focus();
   }, [context.open]);
-  if (!context.open) return null;
-  return <Portal><div {...props} ref={contentRef} className={cn("dayly-popover", className)} data-side={side} data-align={align} role="dialog" tabIndex={-1}>{children}</div></Portal>;
+  if (!presence.present) return null;
+  return <Portal><div {...props} ref={contentRef} className={cn("dayly-popover", className)} data-side={side} data-align={align} data-state={presence.state} aria-hidden={!context.open} role="dialog" tabIndex={-1} onAnimationEnd={presence.onAnimationEnd}>{children}</div></Portal>;
 }
 
 interface MenuContextValue { open: boolean; setOpen: (open: boolean) => void; contentId: string; }
@@ -125,11 +127,22 @@ export interface DropdownMenuContentProps extends React.HTMLAttributes<HTMLDivEl
 export function DropdownMenuContent({ label = "Menu", className, children, ...props }: DropdownMenuContentProps) {
   const context = React.useContext(MenuContext);
   const ref = React.useRef<HTMLDivElement>(null);
+  const trigger = React.useRef<HTMLElement | null>(null);
+  const presence = usePresence(context?.open ?? false, "--duration-fast");
   if (!context) throw new Error("DropdownMenuContent must be used inside DropdownMenu");
   const close = React.useCallback(() => context.setOpen(false), [context]);
   useEscapeKey(context.open, close);
-  React.useEffect(() => { if (context.open) ref.current?.querySelector<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])')?.focus(); }, [context.open]);
-  if (!context.open) return null;
+  React.useEffect(() => {
+    if (!context.open) return;
+    trigger.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    ref.current?.querySelector<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])')?.focus();
+  }, [context.open]);
+  React.useEffect(() => {
+    if (context.open || !trigger.current) return;
+    trigger.current.focus();
+    trigger.current = null;
+  }, [context.open]);
+  if (!presence.present) return null;
   function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     const items = Array.from(event.currentTarget.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])'));
     const currentIndex = items.indexOf(document.activeElement as HTMLElement);
@@ -137,7 +150,7 @@ export function DropdownMenuContent({ label = "Menu", className, children, ...pr
     if (event.key === "Home") { event.preventDefault(); items[0]?.focus(); }
     if (event.key === "End") { event.preventDefault(); items[items.length - 1]?.focus(); }
   }
-  return <Portal><div {...props} ref={ref} id={context.contentId} className={cn("dayly-menu", className)} role="menu" aria-label={label} tabIndex={-1} onKeyDown={onKeyDown}>{children}</div></Portal>;
+  return <Portal><div {...props} ref={ref} id={context.contentId} className={cn("dayly-menu", className)} data-state={presence.state} aria-hidden={!context.open} role="menu" aria-label={label} tabIndex={-1} onKeyDown={onKeyDown} onAnimationEnd={presence.onAnimationEnd}>{children}</div></Portal>;
 }
 export interface DropdownMenuItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> { destructive?: boolean; }
 export function DropdownMenuItem({ destructive, disabled, className, onClick, ...props }: DropdownMenuItemProps) { const context = React.useContext(MenuContext); if (!context) throw new Error("DropdownMenuItem must be used inside DropdownMenu"); return <button {...props} type="button" className={cn("dayly-menu-item", className)} role="menuitem" aria-disabled={disabled || undefined} data-destructive={destructive || undefined} disabled={disabled} onClick={(event) => { onClick?.(event); if (!event.defaultPrevented && !disabled) context.setOpen(false); }} />; }

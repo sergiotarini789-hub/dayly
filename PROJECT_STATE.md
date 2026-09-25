@@ -3,7 +3,7 @@
 ```text
 PROJECT: Dayly
 
-CURRENT_PHASE: 1D
+CURRENT_PHASE: 1E
 
 STATUS: IN PROGRESS
 
@@ -18,11 +18,12 @@ COMPLETED:
 - PHASE 1B design-token foundation implemented
 - PHASE 1C core UI component system implemented with tests and development showcase
 - PHASE 1D application shell and layout system implemented with tests and development showcase
+- PHASE 1E interaction and motion system in progress with token-based states, overlays, loading/feedback, reduced-motion behavior, tests, and showcase coverage
 
 CURRENT_OBJECTIVE:
-Complete final review of the PHASE 1D application shell, responsive navigation, layout primitives, accessibility, themes, safe areas, overflow behavior, and reduced-motion behavior.
+Implement and validate the domain-agnostic PHASE 1E interaction and motion system, including control states, token-based overlay presence, feedback/loading patterns, navigation continuity, generic list/detail motion, reduced motion, tests, and showcase coverage.
 
-NEXT_PHASE: PHASE 1E — Interaction & Motion
+NEXT_PHASE: PHASE 1F — Accessibility & UX Hardening
 
 RULE:
 Do not move to the next phase until the current phase has been reviewed and explicitly approved.

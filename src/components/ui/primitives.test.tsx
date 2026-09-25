@@ -13,6 +13,13 @@ describe("core form primitives", () => {
     expect(button).toHaveAttribute("data-loading", "true");
   });
 
+  it("keeps disabled controls distinct from loading", () => {
+    render(<><Button disabled>Unavailable</Button><Input label="Disabled field" disabled value="Preserved value" readOnly /></>);
+    expect(screen.getByRole("button", { name: "Unavailable" })).toBeDisabled();
+    expect(screen.getByRole("textbox", { name: "Disabled field" })).toBeDisabled();
+    expect(screen.getByRole("textbox", { name: "Disabled field" })).toHaveValue("Preserved value");
+  });
+
   it("associates input labels, descriptions, and errors", () => {
     render(<Input label="Display name" description="Shown to other people" error="Use at least two characters." />);
     const input = screen.getByRole("textbox", { name: "Display name" });

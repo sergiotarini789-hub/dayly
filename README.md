@@ -4,11 +4,11 @@ Dayly is a personal productivity platform designed to help a user understand the
 
 ## Current phase
 
-**PHASE 1D — Layout System & Application Shell**
+**PHASE 1E — Interaction & Motion System**
 
 **Status: IN PROGRESS**
 
-PHASE 1A visual direction, PHASE 1B design tokens, and PHASE 1C core components are complete. The repository now contains the token-driven core UI system plus a structural application shell, responsive navigation model, page containers, generic layout primitives, panels, master/detail and calendar foundations, and a development-only showcase. No product functionality, feature data, business logic, database, API routes, authentication, or integrations have been implemented.
+PHASE 1A visual direction, PHASE 1B design tokens, PHASE 1C core components, and PHASE 1D layout foundations are complete. PHASE 1E now establishes the domain-agnostic interaction and motion system: approved token-based control feedback, loading/feedback states, overlay presence and focus restoration, navigation continuity, generic list/detail motion, mandatory reduced-motion behavior, tests, and development-only showcase coverage. No product functionality, feature data, business logic, database, API routes, authentication, or integrations have been implemented.
 
 ## Source of truth
 
@@ -36,9 +36,10 @@ Future implementation is contractually based on Next.js 15 App Router, TypeScrip
 6. **PHASE 1A — Visual Direction & Design Language** — completed and reviewed.
 7. **PHASE 1B — Design Tokens & Theme Foundation** — completed.
 8. **PHASE 1C — Core Components** — completed.
-9. **PHASE 1D — Layout System & Application Shell** — in progress.
-10. **PHASE 1E — Interaction & Motion** — not started.
+9. **PHASE 1D — Layout System & Application Shell** — completed.
+10. **PHASE 1E — Interaction & Motion** — in progress.
+11. **PHASE 1F — Accessibility & UX Hardening** — not started.
 
 ## Project status
 
-Dayly is in structural application implementation. PHASE 1D establishes the shell and layout system only. The development-only `/showcase` route demonstrates representative placeholder layouts and core components; it is not a production dashboard. See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the current phase and approval rule.
+Dayly is in structural application implementation. PHASE 1E establishes interaction and motion behavior only; it does not introduce product workflows. The development-only `/showcase` route demonstrates representative placeholder layouts, controls, overlays, loading/feedback states, navigation, master/detail continuity, and reduced-motion preview; it is not a production dashboard. See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the current phase and approval rule.

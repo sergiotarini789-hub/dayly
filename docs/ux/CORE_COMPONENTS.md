@@ -113,7 +113,7 @@ The showcase imports the same barrel API as a product consumer, making accidenta
 
 ## Validation
 
-The final PHASE 1C validation set is:
+The PHASE 1C component validation set remains part of the PHASE 1E interaction-system validation:
 
 ```text
 npm test

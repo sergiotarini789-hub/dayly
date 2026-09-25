@@ -133,6 +133,23 @@ export function MasterDetail({ list, detail, listLabel = "List", detailLabel = "
   );
 }
 
+export interface MotionListProps extends React.HTMLAttributes<HTMLUListElement> {
+  label?: string;
+}
+
+export function MotionList({ label, className, ...props }: MotionListProps) {
+  return <ul {...props} className={cn("dayly-motion-list", className)} aria-label={label} />;
+}
+
+export interface MotionListItemProps extends React.LiHTMLAttributes<HTMLLIElement> {
+  motionState?: "enter" | "exit" | "move";
+  selected?: boolean;
+}
+
+export function MotionListItem({ motionState, selected = false, className, ...props }: MotionListItemProps) {
+  return <li {...props} className={cn("dayly-motion-list__item", className)} data-motion-state={motionState} data-selected={selected || undefined} aria-current={selected ? "true" : undefined} />;
+}
+
 export interface CalendarShellProps extends React.HTMLAttributes<HTMLDivElement> {
   header?: React.ReactNode;
   body: React.ReactNode;

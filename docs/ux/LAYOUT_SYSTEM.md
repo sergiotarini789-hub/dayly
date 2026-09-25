@@ -9,7 +9,7 @@
 
 PHASE 1D establishes the application-level composition layer for Dayly. It provides the responsive shell, navigation frame, page containers, generic layout primitives, panel behavior, and structural foundations for future routes.
 
-It deliberately does **not** implement Today, Tasks, Projects, Calendar functionality, Habits, Focus, Analytics, Search, Settings, authentication, database access, API routes, integrations, domain records, or business logic. The calendar foundation contains slots only; it does not render events, tasks, recurrence, drag/drop, or scheduling rules. PHASE 1E has not started.
+It deliberately does **not** implement Today, Tasks, Projects, Calendar functionality, Habits, Focus, Analytics, Search, Settings, authentication, database access, API routes, integrations, domain records, or business logic. The calendar foundation contains slots only; it does not render events, tasks, recurrence, drag/drop, or scheduling rules. PHASE 1E interaction and motion behavior is implemented in the shared UI/layout system and documented separately in [`INTERACTION_SYSTEM.md`](INTERACTION_SYSTEM.md).
 
 ## Application shell
 
@@ -180,4 +180,4 @@ All labels and content are placeholders. The showcase does not create product ro
 - Do not use absolute positioning for primary page structure when grid/flex can solve it.
 - Do not add layout framework dependencies for these primitives.
 - Do not treat the layout showcase as a production dashboard.
-- Do not start product functionality or PHASE 1E from this layer.
+- Do not start product functionality or PHASE 1F accessibility/UX hardening from this layer.

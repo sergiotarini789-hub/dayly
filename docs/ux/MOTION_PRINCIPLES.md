@@ -1,160 +1,104 @@
 # Dayly Motion Principles
 
-**Phase:** 1A — Visual Direction & Design Language
-**Status:** Completed and reviewed
-**Related documents:** [`VISUAL_DIRECTION.md`](VISUAL_DIRECTION.md), [`DESIGN_TOKENS.md`](DESIGN_TOKENS.md), [`VISUAL_STATES.md`](VISUAL_STATES.md), [`ACCESSIBILITY.md`](../architecture/ACCESSIBILITY.md)
+**Phase:** 1E — Interaction & Motion System
+**Status:** In progress
+**Related documents:** [`VISUAL_DIRECTION.md`](VISUAL_DIRECTION.md), [`DESIGN_TOKENS.md`](DESIGN_TOKENS.md), [`VISUAL_STATES.md`](VISUAL_STATES.md), [`INTERACTION_SYSTEM.md`](INTERACTION_SYSTEM.md), [`ACCESSIBILITY.md`](../architecture/ACCESSIBILITY.md)
 
-> This document defines motion intent and timing categories. It does not implement animations, transitions, CSS, or components.
+> This document defines the approved motion language. The implementation contract and reusable patterns are in [`INTERACTION_SYSTEM.md`](INTERACTION_SYSTEM.md).
 
-## 1. Motion purpose
+## 1. Purpose and boundaries
 
-Motion in Dayly communicates:
+Motion communicates hierarchy, continuity, spatial relationships, state change, feedback, and system status. It must not make a routine productivity action wait, hide an error, imply persistence before confirmation, or make information dependent on movement.
 
-- where the user's context moved;
-- whether an action was accepted, pending, completed, or interrupted;
-- how a layer entered or left;
-- how a time-based state changed;
-- which content is related.
+Dayly motion is quiet, direct, reversible where possible, and stable across light/dark themes, responsive layouts, touch, keyboard, and assistive technology. Prefer CSS transitions and keyframes using `transform` and `opacity`. Do not add an animation framework, JavaScript animation loop, parallax, routine bounce, hover-only action, or complex gesture system.
 
-Motion does not exist to make a productivity workflow feel busy. It must never delay a common action, hide an error, imply saved state prematurely, or reward every completion with a spectacle.
+## 2. Motion categories
 
-## 2. Motion personality
+Every motion treatment should have one primary category and a plain-state equivalent:
 
-Dayly motion should be:
+| Category | Purpose | Examples | Default treatment |
+|---|---|---|---|
+| **Micro** | Confirm a direct pointer or keyboard interaction. | Hover, press, focus-adjacent surface, checkbox mark. | Immediate color/border/opacity or very small transform. |
+| **State** | Make a control's persistent state change legible. | Selected tab, checked switch, input error/success, disabled control. | Fast token transition; never relies on movement alone. |
+| **Structural** | Preserve continuity when a region appears, disappears, or changes arrangement. | Disclosure, list insertion/removal, master/detail region. | Small opacity/translation, bounded to the affected region. |
+| **Feedback** | Communicate system status or a completed/failed action. | Spinner, skeleton, toast, inline success/error, retry state. | Static text/semantics always remain; continuous motion is optional. |
+| **Spatial** | Explain where a layer or context came from or is going. | Dialog, popover, drawer, sheet, overlay. | Short enter/exit with a small token distance and a related origin. |
 
-- quiet and confident;
-- short for frequent actions;
-- direct rather than bouncy by default;
-- spatially coherent;
-- reversible where the action is reversible;
-- restrained during Focus;
-- optional for users who prefer reduced motion.
+Do not combine categories to make a routine action theatrical. Structural and spatial motion must never block Escape, focus restoration, keyboard navigation, touch dismissal, or the next valid action.
 
-Use opacity, small translation, surface emphasis, and height changes before large scale, rotation, blur, or parallax effects.
+## 3. Approved timing categories
 
-## 3. Duration categories
+Only the existing duration tokens in [`src/styles/tokens.css`](../../src/styles/tokens.css) may be used:
 
-These categories are implemented as CSS custom-property tokens in [`DESIGN_TOKENS.md`](DESIGN_TOKENS.md) and [`src/styles/tokens.css`](../../src/styles/tokens.css). They remain subject to usability validation before any future component motion is added:
-
-| Category | Approximate range | Use |
+| Token | Current value | Approved use |
 |---|---:|---|
-| **Instant** | 0–100ms | Pressed feedback, focus/state color, immediate affordance. |
-| **Fast** | 100–180ms | Hover/selected surface, checkbox/completion acknowledgment, small disclosure. |
-| **Standard** | 180–280ms | Popovers, row expansion, local content changes, ordinary enter/exit. |
-| **Emphasis** | 280–450ms | Modal/sheet entrance, meaningful Today reordering, first-use guidance. |
-| **Long** | Over 450ms | Avoid for routine work; only for a bounded, user-controlled onboarding or progress context. |
+| `--duration-instant` | `80ms` | Immediate pressed/focus-adjacent feedback and state acknowledgment. |
+| `--duration-fast` | `160ms` | Hover, selected/checked state, small disclosure, menu/popover. |
+| `--duration-normal` | `240ms` | Dialog/drawer, toast, ordinary local enter/exit, detail continuity. |
+| `--duration-slow` | `360ms` | Deliberate spatial emphasis only when it improves orientation; not routine controls. |
 
-Duration should account for distance, content importance, device capability, and reduced-motion preference. A faster action is usually better than a more expressive one.
+These are categories, not permission to invent a fifth duration. Do not add arbitrary values, long routine transitions, or per-component timing overrides. Reduced-motion tokens collapse timing to an immediate result and the CSS reduced-motion rules remove decorative movement.
 
-## 4. Easing direction
+## 4. Existing easing tokens
 
-Conceptual easing tokens:
+Use only the approved easing tokens:
 
-- **Standard:** balanced acceleration/deceleration for ordinary state changes.
-- **Enter:** gentle acceleration into a new surface.
-- **Exit:** quick departure so the next action is available promptly.
-- **Emphasis:** restrained spring only for a meaningful spatial relationship, never for a routine checkbox.
+- `--ease-standard` for ordinary state and micro feedback;
+- `--ease-emphasized` only for a meaningful spatial relationship;
+- `--ease-entrance` for entering content;
+- `--ease-exit` for leaving content.
 
-Avoid elastic overshoot, bouncing badges, and easing that makes content feel detached from the user's action.
+Routine controls should not bounce, overshoot, spring, rotate, or use a custom cubic-bezier. Existing motion distances are `--motion-distance-small` and `--motion-distance-panel`; use them rather than inventing distances.
 
-## 5. Interaction motion
+## 5. Interaction rules
 
-### Hover and focus
+### Controls
 
-Use a fast surface/border transition. Focus ring appearance must be immediate and visible; never animate it in a way that hides keyboard position.
+- Hover supplements, but never replaces, focus, labels, or an action.
+- Pressed feedback is immediate and confirms input, not persistence.
+- `:focus-visible` is high-contrast and immediate; it is never faded out or hidden during a transition.
+- Disabled controls remain readable, are not focus targets, and are distinct from loading.
+- Loading controls preserve their measured layout and accessible name; the spinner is supplemental.
+- Inputs keep readable values and messages while focus, error, success, or disabled feedback changes.
 
-### Pressed
+### Layers
 
-Use a subtle immediate scale/surface/opacity response. It confirms input, not persistence.
+Dialogs, drawers, sheets, popovers, menus, and scrims use token-based entrance and exit behavior. Escape is handled immediately at the document/container level. Focus moves into a modal scope and returns to the opening trigger when it closes, without waiting for an animation to complete.
 
-### Completion
+### Lists and detail
 
-Task completion may use a brief check/settled-text transition and optional row movement. It must:
+Use list motion only for the affected item or bounded region. Insertion and removal may use a small opacity/translation treatment; reorder should preserve orientation and not animate a long list. Selection remains visible without motion. Generic master/detail transitions use a short detail entrance on desktop and a stacked region on narrow screens.
 
-- remain understandable without animation;
-- preserve an undo path;
-- not move a long list unexpectedly before the result is confirmed;
-- avoid celebratory confetti, sound, or oversized reward treatment by default.
+## 6. Responsive structural changes
 
-Habit completion uses an equally restrained occurrence update. Streaks should not animate as a game reward.
+Responsive breakpoints can change navigation, columns, stacking, safe-area padding, and scroll ownership. Those structural changes should remain **instant**: they are an environmental layout response, not a user action that benefits from a delayed transition. Do not animate grid-template changes, viewport-wide reflow, breakpoint navigation replacement, or shell geometry. A bounded content region that is explicitly opened by the user may use structural motion after it is mounted.
 
-### List changes
+## 7. Loading and feedback
 
-When an item is created, completed, archived, or filtered:
+- Spinners indicate short indeterminate work and have an accessible label/status.
+- Skeletons preserve the expected layout and remain static under reduced motion.
+- Progress communicates bounded work; it is not a substitute for error or empty state.
+- Inline success/error states stay near the source action and include text.
+- Toasts are non-blocking confirmations with an accessible live region and a visible dismissal/action path.
+- Retry is explicit and adjacent to the affected scope.
+- No success, error, or selection meaning depends on an animation completing.
 
-- use a small, predictable transition or immediate state update;
-- preserve keyboard/screen-reader context;
-- avoid large layout shifts;
-- do not animate every row in a long list.
+## 8. Reduced motion is mandatory
 
-### Focus transitions
+With `prefers-reduced-motion: reduce`:
 
-Entering Focus reduces unrelated motion. The timer changes state immediately on start/pause/resume. Elapsed time remains readable as a value, not dependent on a rotating animation.
+- remove decorative translation, scaling, continuous spinner/progress/skeleton movement, shimmer, parallax, and spatial animation;
+- replace entrance/exit with immediate presence and semantic state updates;
+- keep useful opacity, border, and text changes when they improve clarity;
+- do not auto-scroll, reorder, or move focus through animation;
+- preserve Escape, keyboard navigation, touch interaction, focus restoration, live announcements, and loading/error/success meaning.
 
-## 6. Page and navigation transitions
+The token layer provides reduced-motion values and component/layout styles explicitly disable continuous and decorative animation. JavaScript presence handling also completes exit immediately when the preference is active.
 
-- Route changes should preserve a stable shell and current destination.
-- Use a short crossfade or spatially related transition only where it aids orientation.
-- Do not animate every page as a theatrical scene.
-- Back navigation should feel like returning to the prior context, not replaying an onboarding sequence.
-- Preserve Today/calendar date context through transitions.
+## 9. Performance and validation
 
-## 7. Modal, drawer, and bottom-sheet motion
+Prefer compositor-friendly `transform` and `opacity`. Avoid JavaScript animation loops, layout-thrashing measurements, large-list animation, full-page background motion, and high-frequency timer animation. Validate with mouse, keyboard-only, touch-sized controls, light theme, dark theme, narrow/desktop layouts, and reduced motion. Test focus restoration and immediate Escape independently of visual timing.
 
-- Modals/sheets enter from the interaction context with a clear scrim/surface separation.
-- Enter and exit timing is short enough to keep forms responsive.
-- Focus moves into a modal and returns to the trigger when it closes.
-- Dismissal is available by visible control and keyboard/touch equivalent.
-- On mobile, a bottom sheet may slide from the bottom; a complex form may use a full-screen transition.
-- Destructive confirmation does not use alarming motion as a substitute for clear copy.
+## 10. Phase boundary
 
-## 8. Loading and progress motion
-
-- Skeleton shimmer is optional and must respect reduced motion; static placeholders are valid.
-- Spinners are reserved for short indeterminate operations and include accessible status.
-- Progress indicators communicate bounded work only when progress is meaningful.
-- A syncing indicator does not imply successful synchronization.
-- Never use infinite animation to cover an unknown/error state indefinitely.
-
-## 9. Calendar and data visualization motion
-
-- Calendar navigation may animate a small date-range shift when it improves orientation, but instant keyboard navigation remains supported.
-- Drag/move previews are optional and must have a non-drag alternative.
-- Chart reveal animation is not required to understand a metric.
-- Data changes should not animate from false zero values; use a state transition that preserves the source/period.
-- Current-time indicators may update without distracting movement.
-
-## 10. Reduced motion
-
-When `prefers-reduced-motion: reduce` is active:
-
-- remove non-essential page/element translation, scaling, parallax, and spring effects;
-- replace with immediate state changes or a short opacity/border change;
-- keep Focus timer readable without visual animation;
-- disable skeleton shimmer in favor of static placeholders;
-- do not auto-scroll or reorder content through animated movement;
-- preserve all state feedback through text, structure, and focus.
-
-Users should not lose meaning or access to actions when motion is reduced.
-
-## 11. Motion accessibility and performance
-
-- Motion must not cause flashing or seizure risk.
-- Keep animation work composited and bounded when implemented.
-- Avoid animating large lists, full-page backgrounds, or high-frequency timer elements.
-- Do not move focus with animation.
-- Test at reduced motion, low-power mode, large text, keyboard-only, and screen-reader use.
-
-## 12. Open motion decisions
-
-- Whether the implemented duration/easing values need adjustment after usability testing.
-- Whether route transitions are needed after usability testing.
-- Whether a small completion motion is helpful or distracting.
-- Calendar navigation/drag preview behavior.
-- Chart animation policy and library constraints.
-- Focus timer visual update strategy.
-- Component-level motion patterns and their future Tailwind usage.
-
-## 13. Phase boundary
-
-No animation library, CSS transition, motion component, or application code was created.
+PHASE 1E establishes the domain-agnostic interaction/motion primitives, token-based CSS behavior, reduced-motion contract, showcase coverage, and tests. It does not implement product features, domain state, persistence, APIs, integrations, or PHASE 1F accessibility/UX hardening.

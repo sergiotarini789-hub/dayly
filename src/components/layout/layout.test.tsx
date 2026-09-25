@@ -1,7 +1,7 @@
 import * as React from "react";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { ApplicationShell, PageContainer, PageHeader, Panel } from "@/components/layout";
+import { ApplicationShell, MotionList, MotionListItem, PageContainer, PageHeader, Panel } from "@/components/layout";
 
 function ShellFixture() {
   return <ApplicationShell topBar={<header>Fixture top bar</header>}><PageContainer width="narrow"><PageHeader title="Fixture page" description="A layout composition test." /><Panel>Content region</Panel></PageContainer></ApplicationShell>;
@@ -44,5 +44,12 @@ describe("Dayly layout system", () => {
     render(<ShellFixture />);
     expect(document.querySelector(".dayly-page-container[data-width='narrow']")).toBeInTheDocument();
     expect(document.querySelector(".dayly-panel[data-variant='standard']")).toHaveTextContent("Content region");
+  });
+
+  it("exposes generic list motion states without coupling to a domain", () => {
+    render(<MotionList label="Placeholder list"><MotionListItem motionState="enter" selected>Selected placeholder</MotionListItem><MotionListItem motionState="move">Available placeholder</MotionListItem></MotionList>);
+    expect(screen.getByRole("list", { name: "Placeholder list" })).toBeInTheDocument();
+    expect(screen.getByText("Selected placeholder")).toHaveAttribute("data-motion-state", "enter");
+    expect(screen.getByText("Selected placeholder")).toHaveAttribute("aria-current", "true");
   });
 });

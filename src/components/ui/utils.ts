@@ -73,3 +73,49 @@ export function getFocusableElements(container: HTMLElement | null) {
     ),
   );
 }
+
+function readMotionDuration(tokenName: string): number {
+  if (typeof document === "undefined") return 0;
+  const value = window.getComputedStyle(document.documentElement).getPropertyValue(tokenName).trim();
+  const numericValue = Number.parseFloat(value);
+  if (!Number.isFinite(numericValue)) return 0;
+  return value.endsWith("s") && !value.endsWith("ms") ? numericValue * 1000 : numericValue;
+}
+
+export type MotionDurationToken = "--duration-instant" | "--duration-fast" | "--duration-normal" | "--duration-slow";
+
+export interface PresenceState {
+  present: boolean;
+  state: "open" | "closed";
+  onAnimationEnd: (event: React.AnimationEvent<HTMLElement>) => void;
+}
+
+export function usePresence(open: boolean, durationToken: MotionDurationToken = "--duration-fast"): PresenceState {
+  const [present, setPresent] = React.useState(open);
+  const [exiting, setExiting] = React.useState(false);
+
+  React.useEffect(() => {
+    if (open) {
+      setPresent(true);
+      setExiting(false);
+      return;
+    }
+    if (!present) return;
+
+    setExiting(true);
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+    const duration = reducedMotion ? 0 : readMotionDuration(durationToken);
+    if (duration === 0) {
+      setPresent(false);
+      return;
+    }
+    const timeout = window.setTimeout(() => setPresent(false), duration);
+    return () => window.clearTimeout(timeout);
+  }, [durationToken, open, present]);
+
+  const onAnimationEnd = React.useCallback((event: React.AnimationEvent<HTMLElement>) => {
+    if (!open && exiting && event.target === event.currentTarget) setPresent(false);
+  }, [exiting, open]);
+
+  return { present: open || present, state: open || !exiting ? "open" : "closed", onAnimationEnd };
+}
