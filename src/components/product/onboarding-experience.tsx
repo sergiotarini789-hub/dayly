@@ -16,8 +16,15 @@ export function OnboardingExperience() {
   const [message, setMessage] = React.useState("Choose what feels useful; optional setup can wait.");
 
   function goToToday() {
+    const params = new URLSearchParams();
     const task = firstTask.trim();
-    window.location.href = task ? `/today?firstTask=${encodeURIComponent(task)}` : "/today";
+    if (task) params.set("firstTask", task);
+    if (displayName.trim()) params.set("name", displayName.trim());
+    if (timeZone) params.set("timeZone", timeZone);
+    if (availability) params.set("availability", availability);
+    if (planningStyle) params.set("planningStyle", planningStyle);
+    const query = params.toString();
+    window.location.href = query ? `/today?${query}` : "/today";
   }
 
   function continueStep(event: React.FormEvent<HTMLFormElement>) {

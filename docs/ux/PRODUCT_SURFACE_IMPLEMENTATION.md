@@ -65,6 +65,10 @@ The implementation preserves:
 
 Validation is covered by [`src/components/product/product.test.tsx`](../../src/components/product/product.test.tsx), the existing component/layout tests, typecheck, production build, and `git diff --check`.
 
+## Product visual redesign
+
+The initial PHASE 1F dashboard-like composition was refined into the mobile-first editorial system documented in [`PRODUCT_VISUAL_SYSTEM.md`](PRODUCT_VISUAL_SYSTEM.md). Today now leads with greeting/context, one next useful action, progress, a low-chrome task plan, upcoming items, and supporting planning context. The redesign removes repeated elevated cards and heavy hero treatment, adds personalized session context from onboarding, refines the shared product shell and compact bottom navigation, and adds restrained entrance, completion, progress, and skeleton transitions while preserving reduced-motion behavior.
+
 ## Deliberate non-goals
 
 PHASE 1F does not implement task records, scheduling, calendar data, habits, focus timers, analytics, settings persistence, authentication, database access, API routes, provider integrations, fake server behavior, or PHASE 1G work. Those boundaries remain governed by the product and architecture specifications.

@@ -20,6 +20,7 @@ COMPLETED:
 - PHASE 1D application shell and layout system implemented with tests and development showcase
 - PHASE 1E interaction and motion system completed with token-based states, overlays, loading/feedback, reduced-motion behavior, tests, and showcase coverage
 - PHASE 1F product-facing onboarding and Today preview completed with frontend-only in-memory state, responsive/theme/accessibility coverage, tests, and implementation documentation
+- PHASE 1F product visual redesign completed with a mobile-first editorial system, refined shell/navigation, restrained surfaces, personalized Today hierarchy, skeleton/motion states, and visual-system documentation
 
 CURRENT_OBJECTIVE:
 PHASE 1F delivers a cohesive product-facing Today experience at `/` and `/today`, plus a focused first-use onboarding flow at `/onboarding`. The implementation is intentionally frontend-only: onboarding and Today interactions are local React state, placeholder values are disclosed as temporary, and no backend, database, authentication, integrations, persistence, or fake server behavior is included.

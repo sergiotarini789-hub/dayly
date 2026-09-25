@@ -8,7 +8,7 @@ Dayly is a personal productivity platform designed to help a user understand the
 
 **Status: COMPLETE**
 
-PHASE 1A visual direction, PHASE 1B design tokens, PHASE 1C core components, PHASE 1D layout foundations, and PHASE 1E interaction/motion foundations are complete. PHASE 1F composes those foundations into a cohesive frontend-only product surface: `/` and `/today` provide Today, while `/onboarding` provides a short welcome, planning context, optional profile, and optional first-task flow. Onboarding and Today interactions use local React state only and explicitly disclose that preview values are temporary. No backend, database, authentication, integrations, persistence, or fake server functionality is included.
+PHASE 1A visual direction, PHASE 1B design tokens, PHASE 1C core components, PHASE 1D layout foundations, and PHASE 1E interaction/motion foundations are complete. PHASE 1F composes those foundations into a cohesive frontend-only product surface: `/` and `/today` provide Today, while `/onboarding` provides a short welcome, planning context, optional profile, and optional first-task flow. The product surface now uses a mobile-first editorial visual system with restrained surfaces, personalized session context, polished state transitions, skeleton cues, and a compact bottom navigation treatment. Onboarding and Today interactions use local React state only and explicitly disclose that preview values are temporary. No backend, database, authentication, integrations, persistence, or fake server functionality is included.
 
 ## Source of truth
 

@@ -1,23 +1,34 @@
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { OnboardingExperience, TodayExperience } from "@/components/product";
+
+afterEach(() => window.history.replaceState(null, "", "/"));
 
 describe("product-facing foundations", () => {
   it("guides a first Today action and keeps an in-memory task usable", () => {
     render(<TodayExperience />);
-    expect(screen.getByRole("heading", { name: "Make room for what matters." })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "No tasks on Today yet" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Good (morning|afternoon|evening)/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Give the day a beginning." })).toBeInTheDocument();
 
-    fireEvent.change(screen.getByRole("textbox", { name: "Task title" }), { target: { value: "Review the day" } });
+    fireEvent.change(screen.getByRole("textbox", { name: "Add a task" }), { target: { value: "Review the day" } });
     fireEvent.click(screen.getByRole("button", { name: "Add to Today" }));
 
     const task = screen.getByRole("checkbox", { name: /Review the day/ });
     expect(task).not.toBeChecked();
-    expect(screen.queryByRole("heading", { name: "No tasks on Today yet" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Give the day a beginning." })).not.toBeInTheDocument();
     fireEvent.click(task);
     expect(task).toBeChecked();
     expect(screen.getByRole("status")).toHaveTextContent("Task marked complete");
+  });
+
+  it("uses onboarding session context to personalize Today without persistence", () => {
+    window.history.replaceState(null, "", "/today?name=Sam&availability=flexible&planningStyle=deep");
+    render(<TodayExperience />);
+
+    expect(screen.getByRole("heading", { name: /Good (morning|afternoon|evening), Sam/ })).toBeInTheDocument();
+    expect(screen.getByText("Flexible time")).toBeInTheDocument();
+    expect(screen.getByText("Deep work first")).toBeInTheDocument();
   });
 
   it("keeps onboarding lightweight and keyboard-operable across steps", () => {

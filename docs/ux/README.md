@@ -54,6 +54,7 @@ The UX documentation contains the approved PHASE 0B architecture, the reviewed P
 ## PHASE 1F product-facing implementation
 
 - [`PRODUCT_SURFACE_IMPLEMENTATION.md`](PRODUCT_SURFACE_IMPLEMENTATION.md) — route map, onboarding/Today behavior, local-only state boundary, applicable UX states, accessibility contract, validation, and non-goals.
+- [`PRODUCT_VISUAL_SYSTEM.md`](PRODUCT_VISUAL_SYSTEM.md) — mobile-first visual principles, typography, spacing, color strategy, surfaces, motion, navigation, and Today hierarchy.
 - [`../../src/components/product/`](../../src/components/product/) — product-facing onboarding and Today experiences.
 - [`../../src/styles/product.css`](../../src/styles/product.css) — product composition and responsive styling using existing tokens.
 - [`../../src/components/product/product.test.tsx`](../../src/components/product/product.test.tsx) — onboarding progression and in-memory Today task behavior coverage.
