@@ -130,7 +130,7 @@ export function TodayExperience() {
   const hasPlanningContext = Boolean(session.availability || session.planningStyle);
   const sessionContext = session.availability ? AVAILABILITY_LABELS[session.availability] ?? "Planning context set" : "Planning context not set";
   const planningStyle = session.planningStyle ? PLANNING_STYLE_LABELS[session.planningStyle] ?? "Choose a pace that fits" : "Choose a pace that fits";
-  const progressLabel = tasks.length === 0 ? "No tasks yet" : `${completedTasks.length} of ${tasks.length} complete`;
+  const progressLabel = tasks.length === 0 ? "No tasks yet" : `${completedTasks.length} / ${tasks.length} complete`;
   const daySummary = formatDaySummary(tasks.length, openTasks.length, session.planningStyle, session.availability);
 
   return (

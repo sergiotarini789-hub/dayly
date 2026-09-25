@@ -36,7 +36,7 @@ function DayPulse({ completedCount, taskCount, progressLabel }: { completedCount
   return (
     <div className="dayly-day-pulse" data-empty={isEmpty || undefined} data-complete={isComplete || undefined} style={style} role={isEmpty ? "img" : "progressbar"} aria-label={isEmpty ? "No tasks yet" : "Day progress"} aria-valuemin={isEmpty ? undefined : 0} aria-valuemax={isEmpty ? undefined : taskCount} aria-valuenow={isEmpty ? undefined : completedCount} aria-valuetext={isEmpty ? "No tasks yet" : progressLabel}>
       <span className="dayly-day-pulse__ring" aria-hidden="true"><span>{isComplete ? "✓" : null}</span></span>
-      <span className="dayly-day-pulse__copy"><strong>{isEmpty ? "No tasks yet" : progressLabel}</strong><span>{isComplete ? "Day complete" : isEmpty ? "A day in motion" : "The day in motion"}</span></span>
+      <span className="dayly-day-pulse__copy"><strong>{isEmpty ? "No tasks yet" : progressLabel}</strong><span>{isComplete ? "Day complete" : isEmpty ? "Ready to move" : "Moved today"}</span></span>
     </div>
   );
 }
@@ -77,7 +77,7 @@ export function NextUsefulAction({ nextTask, onComplete }: { nextTask?: TodayTas
       <div className="dayly-product-focus-plane__body">
         <div className="dayly-product-focus-plane__copy">
           <h2 id="next-action-heading">{nextTask?.title ?? "Choose one thing to move forward."}</h2>
-          <p>{nextTask ? "Open · preview session" : "You can organize it later."}</p>
+          <p>{nextTask ? "Open · next useful step" : "You can organize it later."}</p>
         </div>
         {nextTask ? (
           <Cluster className="dayly-product-focus-plane__actions">
@@ -108,7 +108,7 @@ function TaskRow({ task, index, isNew, onToggle }: { task: TodayTask; index: num
   return (
     <div className="dayly-product-task-row" data-completed={task.completed || undefined} data-new={isNew || undefined}>
       <span className="dayly-product-task-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-      <Checkbox label={task.title} checked={task.completed} onChange={(event) => onToggle(task.id, event.target.checked)} description={task.completed ? "Completed" : "Open"} />
+      <Checkbox label={task.title} checked={task.completed} onChange={(event) => onToggle(task.id, event.target.checked)} description={task.completed ? "Moved today" : "Open · today"} />
       <span className="dayly-product-task-arrow" aria-hidden="true">→</span>
     </div>
   );
@@ -122,7 +122,7 @@ export function TodayPlan({ tasks, openTasks, completedTasks, newTaskId, taskTit
           <p className="dayly-product-eyebrow">Today's movement</p>
           <h2 id="plan-heading">What is in motion</h2>
         </div>
-        <span>{openTasks.length === 0 ? "All clear" : `${openTasks.length} to move`}</span>
+        <span>{tasks.length === 0 ? "Ready when you are" : `${completedTasks.length} / ${tasks.length} moved`}</span>
       </header>
       {tasks.length === 0 ? (
         <div className="dayly-product-empty" role="status">

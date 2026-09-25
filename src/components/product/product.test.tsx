@@ -25,7 +25,7 @@ describe("product-facing foundations", () => {
     fireEvent.click(screen.getByRole("button", { name: "Complete task" }));
     const completedTask = screen.getByRole("checkbox", { name: /Review the day/ });
     expect(completedTask).toBeChecked();
-    expect(screen.getByText("1 of 1 complete")).toBeInTheDocument();
+    expect(screen.getByText("1 / 1 complete")).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent("Task marked complete");
 
     fireEvent.click(completedTask);

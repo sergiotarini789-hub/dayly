@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { Button, Input, SearchInput, Select, Switch } from "@/components/ui";
-import { AddTaskForm, ActionLink, ProductSurface, SurfaceBadge, SurfaceContextBlock, SurfaceEmptyState, SurfaceSection, SurfaceSectionHeader, TaskTrail, useProductTasks, type ProductTask } from "./product-primitives";
+import { AddTaskForm, ActionLink, ProductSurface, SurfaceBadge, SurfaceContextBlock, SurfaceEmptyState, SurfaceSection, SurfaceSectionHeader, TaskTrail, useProductTasks } from "./product-primitives";
 
 const todayLabel = new Intl.DateTimeFormat("en", { weekday: "long", month: "long", day: "numeric" }).format(new Date());
 
