@@ -147,13 +147,13 @@ Users should not lose meaning or access to actions when motion is reduced.
 
 ## 12. Open motion decisions
 
-- Exact duration/easing values.
+- Whether the implemented duration/easing values need adjustment after usability testing.
 - Whether route transitions are needed after usability testing.
 - Whether a small completion motion is helpful or distracting.
 - Calendar navigation/drag preview behavior.
 - Chart animation policy and library constraints.
 - Focus timer visual update strategy.
-- Motion token format for Tailwind CSS v4.
+- Component-level motion patterns and their future Tailwind usage.
 
 ## 13. Phase boundary
 

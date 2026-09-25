@@ -693,10 +693,10 @@
   --transition-duration-fast: var(--dayly-duration-fast);
   --transition-duration-normal: var(--dayly-duration-normal);
   --transition-duration-slow: var(--dayly-duration-slow);
-  --breakpoint-mobile: var(--primitive-breakpoint-mobile);
-  --breakpoint-tablet: var(--primitive-breakpoint-tablet);
-  --breakpoint-desktop: var(--primitive-breakpoint-desktop);
-  --breakpoint-wide: var(--primitive-breakpoint-wide);
+  --breakpoint-mobile: 20rem;
+  --breakpoint-tablet: 48rem;
+  --breakpoint-desktop: 64rem;
+  --breakpoint-wide: 90rem;
   --z-base: var(--primitive-z-base);
   --z-sticky: var(--primitive-z-sticky);
   --z-navigation: var(--primitive-z-navigation);
