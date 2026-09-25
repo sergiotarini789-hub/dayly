@@ -205,4 +205,4 @@ No results should help the user change the query or scope:
 
 ## 16. Phase boundary
 
-The state vocabulary remains domain-agnostic. PHASE 1E implements reusable control, loading, feedback, overlay, navigation, list/detail, and reduced-motion behavior without introducing product records or workflows. New accessibility/UX hardening beyond the interaction contract belongs to PHASE 1F.
+The state vocabulary remains reusable across product surfaces. PHASE 1E implements reusable control, loading, feedback, overlay, navigation, list/detail, and reduced-motion behavior. PHASE 1F applies that vocabulary to the frontend-only onboarding and Today preview; it implements first-use/empty, populated, local success, and input-feedback states without introducing persistence or remote state.

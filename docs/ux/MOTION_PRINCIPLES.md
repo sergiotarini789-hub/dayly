@@ -101,4 +101,4 @@ Prefer compositor-friendly `transform` and `opacity`. Avoid JavaScript animation
 
 ## 10. Phase boundary
 
-PHASE 1E establishes the domain-agnostic interaction/motion primitives, token-based CSS behavior, reduced-motion contract, showcase coverage, and tests. It does not implement product features, domain state, persistence, APIs, integrations, or PHASE 1F accessibility/UX hardening.
+PHASE 1E establishes the domain-agnostic interaction/motion primitives, token-based CSS behavior, reduced-motion contract, showcase coverage, and tests. PHASE 1F composes those foundations into product-facing onboarding and Today surfaces without adding domain persistence, APIs, integrations, or fake server behavior.

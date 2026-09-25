@@ -130,4 +130,4 @@ For a new generic interaction pattern, verify:
 - reduced-motion removes decorative/continuous movement;
 - tests assert state and semantics rather than animation timing or pixel coordinates.
 
-PHASE 1E stops at generic interaction/motion foundations. Product workflows and PHASE 1F hardening are out of scope.
+PHASE 1E stops at generic interaction/motion foundations. PHASE 1F composes them into a bounded frontend-only onboarding and Today preview; persistence, remote product workflows, and PHASE 1G remain out of scope.

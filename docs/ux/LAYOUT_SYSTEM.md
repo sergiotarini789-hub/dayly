@@ -180,4 +180,4 @@ All labels and content are placeholders. The showcase does not create product ro
 - Do not use absolute positioning for primary page structure when grid/flex can solve it.
 - Do not add layout framework dependencies for these primitives.
 - Do not treat the layout showcase as a production dashboard.
-- Do not start product functionality or PHASE 1F accessibility/UX hardening from this layer.
+- Do not put product functionality in this layer; PHASE 1F product routes should compose these primitives rather than modify their structural contract.

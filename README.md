@@ -4,19 +4,20 @@ Dayly is a personal productivity platform designed to help a user understand the
 
 ## Current phase
 
-**PHASE 1E — Interaction & Motion System**
+**PHASE 1F — Product-facing onboarding & Today preview**
 
-**Status: IN PROGRESS**
+**Status: COMPLETE**
 
-PHASE 1A visual direction, PHASE 1B design tokens, PHASE 1C core components, and PHASE 1D layout foundations are complete. PHASE 1E now establishes the domain-agnostic interaction and motion system: approved token-based control feedback, loading/feedback states, overlay presence and focus restoration, navigation continuity, generic list/detail motion, mandatory reduced-motion behavior, tests, and development-only showcase coverage. No product functionality, feature data, business logic, database, API routes, authentication, or integrations have been implemented.
+PHASE 1A visual direction, PHASE 1B design tokens, PHASE 1C core components, PHASE 1D layout foundations, and PHASE 1E interaction/motion foundations are complete. PHASE 1F composes those foundations into a cohesive frontend-only product surface: `/` and `/today` provide Today, while `/onboarding` provides a short welcome, planning context, optional profile, and optional first-task flow. Onboarding and Today interactions use local React state only and explicitly disclose that preview values are temporary. No backend, database, authentication, integrations, persistence, or fake server functionality is included.
 
 ## Source of truth
 
 - [Product specification](PRODUCT_SPEC.md)
 - [Project state](PROJECT_STATE.md)
-- [UX architecture, visual direction, token, component, and layout documentation](docs/ux/)
+- [UX architecture, visual direction, token, component, layout, and product surface documentation](docs/ux/)
 - [Design-token CSS foundation](src/styles/tokens.css)
 - [Application shell and layout implementation](src/components/layout/)
+- [Product surface implementation](src/components/product/)
 - [Domain, integration, and technical architecture](docs/architecture/)
 - [Architecture decision index](docs/decisions/ADR_INDEX.md)
 
@@ -37,9 +38,10 @@ Future implementation is contractually based on Next.js 15 App Router, TypeScrip
 7. **PHASE 1B — Design Tokens & Theme Foundation** — completed.
 8. **PHASE 1C — Core Components** — completed.
 9. **PHASE 1D — Layout System & Application Shell** — completed.
-10. **PHASE 1E — Interaction & Motion** — in progress.
-11. **PHASE 1F — Accessibility & UX Hardening** — not started.
+10. **PHASE 1E — Interaction & Motion** — completed.
+11. **PHASE 1F — Product-facing onboarding & Today preview** — completed.
+12. **PHASE 1G** — not started; scope requires explicit approval.
 
 ## Project status
 
-Dayly is in structural application implementation. PHASE 1E establishes interaction and motion behavior only; it does not introduce product workflows. The development-only `/showcase` route demonstrates representative placeholder layouts, controls, overlays, loading/feedback states, navigation, master/detail continuity, and reduced-motion preview; it is not a production dashboard. See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the current phase and approval rule.
+Dayly now has a bounded product-facing preview while the development-only `/showcase` route remains a separate design-system reference and is not the product. The Today surface supports first-use guidance, title-only in-memory task capture, explicit completion/reopen behavior, planning-context entry points, and clear local-state disclosure. Onboarding supports welcome, planning preferences, optional display name, and first-task-or-do-later flow. See [`PROJECT_STATE.md`](PROJECT_STATE.md) for the phase and approval rule.

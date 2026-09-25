@@ -1,9 +1,9 @@
 # Dayly UX Documentation
 
-**Current phase:** PHASE 1E — Interaction & Motion System
-**Status:** In progress
+**Current phase:** PHASE 1F — Product-facing onboarding & Today preview
+**Status:** Complete
 
-The UX documentation contains the approved PHASE 0B architecture, the reviewed PHASE 1A visual language, the PHASE 1B token foundation, the PHASE 1C domain-agnostic component system, the PHASE 1D application shell/layout system, and the PHASE 1E interaction/motion system. PHASE 1F has not started.
+The UX documentation contains the approved PHASE 0B architecture, the reviewed PHASE 1A visual language, the PHASE 1B token foundation, the PHASE 1C domain-agnostic component system, the PHASE 1D application shell/layout system, the PHASE 1E interaction/motion system, and the bounded PHASE 1F product-facing preview. PHASE 1G has not started.
 
 ## Approved PHASE 0B UX architecture
 
@@ -45,10 +45,19 @@ The UX documentation contains the approved PHASE 0B architecture, the reviewed P
 
 ## PHASE 1E interaction and motion implementation
 
-- [`INTERACTION_SYSTEM.md`](INTERACTION_SYSTEM.md) — implementation contract for motion categories, approved timing/easing, control states, overlays, loading/feedback, navigation, list/detail continuity, and reduced motion.
+- [`INTERACTION_SYSTEM.md`](INTERACTION_SYSTEM.md) — implementation contract for motion categories, approved timing/easing, control states, overlays, loading/feedback, navigation, list/detail continuity, and reduced-motion behavior.
 - [`../../src/components/ui/utils.ts`](../../src/components/ui/utils.ts) — generic presence and focus/Escape utilities.
 - [`../../src/components/ui/overlays.tsx`](../../src/components/ui/overlays.tsx) — token-based dialog, drawer, popover, menu, and toast behavior.
 - [`../../src/components/layout/primitives.tsx`](../../src/components/layout/primitives.tsx) — generic `MotionList`, `MotionListItem`, and master/detail continuity.
 - [`../../src/showcase/ComponentShowcase.tsx`](../../src/showcase/ComponentShowcase.tsx) — interaction/motion states, controls, menus, overlays, loading, feedback, navigation, and reduced-motion preview.
 
-The shell, layout, and interaction/motion systems remain structural and domain-agnostic. There are no product screens, records, feature logic, data access, integrations, or PHASE 1F accessibility/UX hardening work.
+## PHASE 1F product-facing implementation
+
+- [`PRODUCT_SURFACE_IMPLEMENTATION.md`](PRODUCT_SURFACE_IMPLEMENTATION.md) — route map, onboarding/Today behavior, local-only state boundary, applicable UX states, accessibility contract, validation, and non-goals.
+- [`../../src/components/product/`](../../src/components/product/) — product-facing onboarding and Today experiences.
+- [`../../src/styles/product.css`](../../src/styles/product.css) — product composition and responsive styling using existing tokens.
+- [`../../src/components/product/product.test.tsx`](../../src/components/product/product.test.tsx) — onboarding progression and in-memory Today task behavior coverage.
+- [`../../src/app/page.tsx`](../../src/app/page.tsx) and [`../../src/app/today/page.tsx`](../../src/app/today/page.tsx) — Today launch and explicit routes.
+- [`../../src/app/onboarding/page.tsx`](../../src/app/onboarding/page.tsx) — focused onboarding route.
+
+The shell, layout, and interaction/motion systems remain reusable and domain-agnostic. PHASE 1F composes them into bounded product workflows without adding product persistence, data access, backend services, authentication, integrations, fake server behavior, or PHASE 1G work. `/showcase` remains a development-only design-system reference and is not the product surface.

@@ -52,13 +52,14 @@ export interface SectionHeaderProps extends Omit<React.HTMLAttributes<HTMLElemen
   title: React.ReactNode;
   description?: React.ReactNode;
   actions?: React.ReactNode;
+  headingId?: string;
 }
 
-export function SectionHeader({ title, description, actions, className, ...props }: SectionHeaderProps) {
+export function SectionHeader({ title, description, actions, headingId, className, ...props }: SectionHeaderProps) {
   return (
     <header {...props} className={cn("dayly-section-header", className)}>
       <div className="dayly-section-header__copy">
-        <h2>{title}</h2>
+        <h2 id={headingId}>{title}</h2>
         {description ? <p>{description}</p> : null}
       </div>
       {actions ? <div className="dayly-section-header__actions">{actions}</div> : null}

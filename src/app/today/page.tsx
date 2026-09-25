@@ -1,5 +1,5 @@
 import { TodayExperience } from "@/components/product";
 
-export default function HomePage() {
+export default function TodayPage() {
   return <TodayExperience />;
 }

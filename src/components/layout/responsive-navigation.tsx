@@ -57,7 +57,7 @@ export function ResponsiveNavigation({ initialActiveId = "today", onNavigate }: 
     <>
       <aside className="dayly-sidebar" data-collapsed={sidebarCollapsed || undefined} aria-label="Dayly application navigation">
         <div className="dayly-sidebar__brand">
-          <a href="#layout-showcase" aria-label="Dayly home" onClick={(event) => event.preventDefault()}>
+          <a href="/" aria-label="Dayly home">
             <span className="dayly-sidebar__mark" aria-hidden="true">D</span>
             <span className="dayly-sidebar__brand-label">Dayly</span>
           </a>
