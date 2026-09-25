@@ -38,7 +38,7 @@ describe("product-facing foundations", () => {
     window.history.replaceState(null, "", "/today?name=Sam&availability=flexible&planningStyle=deep");
     render(<TodayExperience />);
 
-    expect(screen.getByRole("heading", { name: /Good (morning|afternoon|evening), Sam/ })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Good (morning|afternoon|evening|night), Sam/ })).toBeInTheDocument();
     expect(screen.getByText("Flexible time")).toBeInTheDocument();
     expect(screen.getByText("Deep work first")).toBeInTheDocument();
   });

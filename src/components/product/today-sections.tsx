@@ -170,3 +170,29 @@ export function SupportingContext({ sessionContext, planningStyle, availability,
     </div>
   );
 }
+
+export function TodayWorkspaceRail({ completedCount, taskCount, nextTask, hasPlanningContext, sessionContext, planningStyle }: { completedCount: number; taskCount: number; nextTask?: TodayTask; hasPlanningContext: boolean; sessionContext: string; planningStyle: string }) {
+  const percentage = taskCount === 0 ? 0 : Math.round((completedCount / taskCount) * 100);
+  return (
+    <aside className="dayly-today-rail" aria-label="Today context">
+      <section className="dayly-today-rail__section" aria-labelledby="today-rail-progress">
+        <p className="dayly-product-eyebrow">Day pulse</p>
+        <div className="dayly-today-rail__metric"><strong id="today-rail-progress">{taskCount === 0 ? "Ready to begin" : `${completedCount} / ${taskCount}`}</strong><span>{taskCount === 0 ? "No open tasks" : "complete"}</span></div>
+        <div className="dayly-today-rail__track" role="progressbar" aria-label="Today progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percentage}><span style={{ inlineSize: `${percentage}%` }} /></div>
+        <p>{taskCount === 0 ? "A useful first step is enough." : `${percentage}% of today's tasks moved.`}</p>
+      </section>
+      <section className="dayly-today-rail__section" aria-labelledby="today-rail-upcoming">
+        <p className="dayly-product-eyebrow">Upcoming</p>
+        <h2 id="today-rail-upcoming">{nextTask ? "Next useful step" : "Nothing queued"}</h2>
+        <p>{nextTask ? nextTask.title : "Add a task when something real arrives."}</p>
+        <Link className="dayly-product-text-link" href="#today-plan">Open the trail →</Link>
+      </section>
+      <section className="dayly-today-rail__section" aria-labelledby="today-rail-planning">
+        <p className="dayly-product-eyebrow">Planning context</p>
+        <h2 id="today-rail-planning">{hasPlanningContext ? "A pace that fits" : "Not set yet"}</h2>
+        <p>{hasPlanningContext ? `${sessionContext} is shaping ${planningStyle.toLowerCase()}.` : "Dayly will not assume unlimited time."}</p>
+        <Link className="dayly-product-text-link" href="/onboarding">{hasPlanningContext ? "Adjust context →" : "Set context →"}</Link>
+      </section>
+    </aside>
+  );
+}

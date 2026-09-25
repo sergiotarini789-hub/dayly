@@ -19,7 +19,7 @@ export function ApplicationShell({ children, initialActiveNavigationId = "today"
         <ResponsiveNavigation initialActiveId={initialActiveNavigationId} />
         <div className="dayly-shell-content">
           {topBar ?? <AppTopBar title="Dayly" aria-label="Application top bar" />}
-          <main className="dayly-shell-main" id="dayly-main-content" tabIndex={-1}>{children}</main>
+          <main className="dayly-shell-main" id="dayly-main-content" tabIndex={-1}><div className="dayly-route-content">{children}</div></main>
         </div>
       </div>
     </div>

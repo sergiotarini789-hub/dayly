@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import {
   Dialog,
   DialogContent,
@@ -28,9 +29,10 @@ const DESKTOP_NAVIGATION_GROUPS: ReadonlyArray<{ label: string; ids: readonly Ap
 
 function NavigationLink({ item, active, onSelect, compact = false }: { item: AppNavigationItem; active: boolean; onSelect: (id: AppNavigationId) => void; compact?: boolean }) {
   return (
-    <a
+    <Link
       className="dayly-navigation-link"
       href={item.href}
+      prefetch
       aria-current={active ? "page" : undefined}
       aria-label={compact ? `${item.label}: ${item.description}` : undefined}
       title={compact ? item.label : undefined}
@@ -42,7 +44,7 @@ function NavigationLink({ item, active, onSelect, compact = false }: { item: App
     >
       <span className="dayly-navigation-link__icon" aria-hidden="true">{item.icon}</span>
       <span className="dayly-navigation-link__label">{item.label}</span>
-    </a>
+    </Link>
   );
 }
 
@@ -63,10 +65,10 @@ export function ResponsiveNavigation({ initialActiveId = "today", onNavigate }: 
     <>
       <aside className="dayly-sidebar" data-collapsed={sidebarCollapsed || undefined} aria-label="Dayly application navigation">
         <div className="dayly-sidebar__brand">
-          <a href="/" aria-label="Dayly home">
+          <Link href="/" prefetch aria-label="Dayly home">
             <span className="dayly-sidebar__mark" aria-hidden="true">D</span>
             <span className="dayly-sidebar__brand-label">Dayly</span>
-          </a>
+          </Link>
         </div>
         <nav className="dayly-sidebar__nav" aria-label="Primary navigation">
           <div className="dayly-sidebar__nav-groups">

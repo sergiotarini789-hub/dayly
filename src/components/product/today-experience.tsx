@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { AppTopBar, ApplicationShell, PageContainer } from "@/components/layout";
-import { CurrentMoment, NextUsefulAction, SupportingContext, TodayLoadingCue, TodayPlan, type TimeOfDay, type TodayTask } from "./today-sections";
+import { CurrentMoment, NextUsefulAction, SupportingContext, TodayLoadingCue, TodayPlan, TodayWorkspaceRail, type TimeOfDay, type TodayTask } from "./today-sections";
 
 interface PreviewSession {
   displayName: string;
@@ -140,13 +140,18 @@ export function TodayExperience() {
       topBar={<AppTopBar title="Today" aria-label="Today application bar" right={<Link className="dayly-product-top-link" href="/onboarding">Personalize</Link>} />}
     >
       <div className="dayly-product-page" data-ready={!isPreparing || undefined} data-time-of-day={timeOfDay}>
-        <PageContainer width="default">
-          <CurrentMoment greeting={greeting} todayLabel={todayLabel} timeLabel={timeLabel} timeOfDay={timeOfDay} isPreparing={isPreparing} sessionContext={sessionContext} planningStyle={planningStyle} daySummary={daySummary} completedCount={completedTasks.length} taskCount={tasks.length} progressLabel={progressLabel} />
-          <div className="dayly-product-canvas">
-            <TodayLoadingCue isPreparing={isPreparing} />
-            <NextUsefulAction nextTask={nextTask} onComplete={(id) => toggleTask(id, true)} />
-            <TodayPlan tasks={tasks} openTasks={openTasks} completedTasks={completedTasks} newTaskId={newTaskId} taskTitle={taskTitle} notice={notice} onTaskTitleChange={setTaskTitle} onAddTask={addTask} onToggleTask={toggleTask} />
-            <SupportingContext sessionContext={sessionContext} planningStyle={planningStyle} availability={session.availability ? AVAILABILITY_LABELS[session.availability] ?? "Availability set" : "Availability not set"} hasPlanningContext={hasPlanningContext} />
+        <PageContainer width="wide">
+          <div className="dayly-product-workspace">
+            <div className="dayly-product-primary">
+              <CurrentMoment greeting={greeting} todayLabel={todayLabel} timeLabel={timeLabel} timeOfDay={timeOfDay} isPreparing={isPreparing} sessionContext={sessionContext} planningStyle={planningStyle} daySummary={daySummary} completedCount={completedTasks.length} taskCount={tasks.length} progressLabel={progressLabel} />
+              <div className="dayly-product-canvas">
+                <TodayLoadingCue isPreparing={isPreparing} />
+                <NextUsefulAction nextTask={nextTask} onComplete={(id) => toggleTask(id, true)} />
+                <TodayPlan tasks={tasks} openTasks={openTasks} completedTasks={completedTasks} newTaskId={newTaskId} taskTitle={taskTitle} notice={notice} onTaskTitleChange={setTaskTitle} onAddTask={addTask} onToggleTask={toggleTask} />
+                <SupportingContext sessionContext={sessionContext} planningStyle={planningStyle} availability={session.availability ? AVAILABILITY_LABELS[session.availability] ?? "Availability set" : "Availability not set"} hasPlanningContext={hasPlanningContext} />
+              </div>
+            </div>
+            <TodayWorkspaceRail completedCount={completedTasks.length} taskCount={tasks.length} nextTask={nextTask} hasPlanningContext={hasPlanningContext} sessionContext={sessionContext} planningStyle={planningStyle} />
           </div>
           <p className="dayly-product-disclosure">Preview session only · tasks and setup changes stay in memory and are not saved.</p>
         </PageContainer>
