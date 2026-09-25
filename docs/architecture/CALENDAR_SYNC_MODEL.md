@@ -1,7 +1,7 @@
 # Dayly Calendar Synchronization Model
 
 **Phase:** 0D — Integration Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Related documents:** [`INTEGRATION_ARCHITECTURE.md`](INTEGRATION_ARCHITECTURE.md), [`DOMAIN_MODEL.md`](DOMAIN_MODEL.md), [`DATA_OWNERSHIP.md`](DATA_OWNERSHIP.md), [`SYNC_ERROR_MODEL.md`](SYNC_ERROR_MODEL.md)
 
 > This is a provider-neutral synchronization design. It does not implement calendar APIs, OAuth, webhooks, queues, database migrations, or UI.

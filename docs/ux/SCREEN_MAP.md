@@ -1,7 +1,7 @@
 # Dayly Screen Map
 
 **Phase:** 0B — UX Architecture & Information Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Source:** [`INFORMATION_ARCHITECTURE.md`](INFORMATION_ARCHITECTURE.md) and [`PRODUCT_SPEC.md`](../../PRODUCT_SPEC.md)
 
 > This is a conceptual screen inventory. It describes responsibilities, entry/exit paths, and states without creating visual mockups or production UI.

@@ -1,7 +1,7 @@
 # Dayly Data Constraints, Indexing, RLS, and Migration Strategy
 
 **Phase:** 0C — Domain Model & Database Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Related documents:** [`DOMAIN_MODEL.md`](DOMAIN_MODEL.md), [`DATABASE_SCHEMA.md`](DATABASE_SCHEMA.md), [`DATA_OWNERSHIP.md`](DATA_OWNERSHIP.md), [`DATA_LIFECYCLE.md`](DATA_LIFECYCLE.md)
 
 > This document describes constraints and architecture the future database should enforce. It contains no SQL, DDL, migrations, executable Row-Level Security policies, or application code.

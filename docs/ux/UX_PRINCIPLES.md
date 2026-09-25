@@ -1,7 +1,7 @@
 # Dayly UX Principles and Decision Log
 
 **Phase:** 0B — UX Architecture & Information Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Source:** [`PRODUCT_SPEC.md`](../../PRODUCT_SPEC.md), [`INFORMATION_ARCHITECTURE.md`](INFORMATION_ARCHITECTURE.md), and [`SCREEN_MAP.md`](SCREEN_MAP.md)
 
 > These principles guide future UX design and validation. They do not lock final colors, typography, component APIs, or production implementation.

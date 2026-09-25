@@ -1,7 +1,7 @@
 # Dayly Information Architecture
 
 **Phase:** 0B — UX Architecture & Information Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Source of truth:** [`PRODUCT_SPEC.md`](../../PRODUCT_SPEC.md)
 
 > This document defines the conceptual information architecture and navigation model. It does not define routes, implementation details, database structures, or production UI code.

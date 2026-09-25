@@ -1,7 +1,7 @@
 # Dayly Integration Architecture
 
 **Phase:** 0D — Integration Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Source of truth:** Approved product, UX, and data architecture documents in this repository
 
 > This document defines provider-neutral integration boundaries and operational principles. It does not implement OAuth, provider SDKs, API routes, synchronization, UI, credentials, database migrations, or application code.

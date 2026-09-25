@@ -1,7 +1,7 @@
 # Dayly Synchronization Error Model
 
 **Phase:** 0D — Integration Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Related documents:** [`INTEGRATION_ARCHITECTURE.md`](INTEGRATION_ARCHITECTURE.md), [`CALENDAR_SYNC_MODEL.md`](CALENDAR_SYNC_MODEL.md), [`NUTRITRACK_INTEGRATION.md`](NUTRITRACK_INTEGRATION.md)
 
 > This document defines conceptual sync states, error classes, retry behavior, user-facing degradation, and observability. It does not implement a queue, worker, provider adapter, logger, API, database migration, or UI.

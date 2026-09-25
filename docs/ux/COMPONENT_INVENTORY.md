@@ -1,7 +1,7 @@
 # Dayly Conceptual Component Inventory
 
 **Phase:** 0B — UX Architecture & Information Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Source:** [`INFORMATION_ARCHITECTURE.md`](INFORMATION_ARCHITECTURE.md), [`SCREEN_MAP.md`](SCREEN_MAP.md), and [`PRODUCT_SPEC.md`](../../PRODUCT_SPEC.md)
 
 > This inventory describes reusable UX concepts and their responsibilities. It is not a component API, design-system specification, implementation plan, or production UI code.

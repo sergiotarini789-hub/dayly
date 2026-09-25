@@ -1,7 +1,7 @@
 # Dayly Data Lifecycle and Retention
 
 **Phase:** 0C — Domain Model & Database Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Related documents:** [`DOMAIN_MODEL.md`](DOMAIN_MODEL.md), [`DATABASE_SCHEMA.md`](DATABASE_SCHEMA.md), [`DATA_CONSTRAINTS.md`](DATA_CONSTRAINTS.md)
 
 > This document defines conceptual lifecycle behavior and retention expectations. It does not implement deletion jobs, database triggers, migrations, or account controls.

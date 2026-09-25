@@ -1,7 +1,7 @@
 # Dayly Logical Database Architecture
 
 **Phase:** 0C — Domain Model & Database Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Related documents:** [`DOMAIN_MODEL.md`](DOMAIN_MODEL.md), [`DATA_OWNERSHIP.md`](DATA_OWNERSHIP.md), [`DATA_LIFECYCLE.md`](DATA_LIFECYCLE.md), [`DATA_CONSTRAINTS.md`](DATA_CONSTRAINTS.md)
 
 > This is a logical persistence blueprint. It intentionally does not contain SQL, DDL, migrations, executable policies, table creation, or application code. The word “record” means a conceptual persistence unit, not an instruction to create a physical table now.

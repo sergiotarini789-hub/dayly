@@ -1,7 +1,7 @@
 # Dayly Data Ownership and Integration Boundaries
 
 **Phase:** 0C — Domain Model & Database Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Related documents:** [`DOMAIN_MODEL.md`](DOMAIN_MODEL.md), [`DATABASE_SCHEMA.md`](DATABASE_SCHEMA.md), [`DATA_LIFECYCLE.md`](DATA_LIFECYCLE.md)
 
 > This document defines who owns a fact, who may consume it, and how provenance must remain visible. It does not define provider APIs, synchronization code, authentication, or physical storage.

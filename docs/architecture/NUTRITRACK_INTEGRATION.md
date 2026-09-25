@@ -1,7 +1,7 @@
 # Dayly NutriTrack Integration Architecture
 
 **Phase:** 0D — Integration Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Related documents:** [`INTEGRATION_ARCHITECTURE.md`](INTEGRATION_ARCHITECTURE.md), [`DATA_OWNERSHIP.md`](DATA_OWNERSHIP.md), [`DOMAIN_MODEL.md`](DOMAIN_MODEL.md), [`SYNC_ERROR_MODEL.md`](SYNC_ERROR_MODEL.md)
 
 > This document defines a future read-oriented boundary between Dayly and NutriTrack. It does not implement an API, OAuth, data synchronization, nutrition calculations, database changes, UI, or application code.

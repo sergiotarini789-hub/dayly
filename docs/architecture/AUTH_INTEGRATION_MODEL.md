@@ -1,7 +1,7 @@
 # Dayly Authentication and Identity Integration Model
 
 **Phase:** 0D — Integration Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Related documents:** [`INTEGRATION_ARCHITECTURE.md`](INTEGRATION_ARCHITECTURE.md), [`DATA_OWNERSHIP.md`](DATA_OWNERSHIP.md), [`DATABASE_SCHEMA.md`](DATABASE_SCHEMA.md)
 
 > Authentication implementation is out of scope. This document defines the conceptual identity boundary needed for future account and integration work. It does not choose an auth provider, implement sessions, create routes, store credentials, or create policies.

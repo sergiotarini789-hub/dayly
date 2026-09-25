@@ -1,7 +1,7 @@
 # Dayly Domain Model
 
 **Phase:** 0C — Domain Model & Database Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Source of truth:** [`PRODUCT_SPEC.md`](../../PRODUCT_SPEC.md), the approved UX documents in [`../ux/`](../ux/), and [`PROJECT_STATE.md`](../../PROJECT_STATE.md)
 
 > This document defines the conceptual domain model and logical ownership boundaries. It is not a physical database schema, SQL migration, API contract, authentication implementation, integration implementation, or application code.

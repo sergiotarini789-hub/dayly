@@ -2,7 +2,7 @@
 
 **Phase:** 0A — Product Foundation & Specification
 
-**Status:** In progress
+**Status:** Approved (historical source of truth)
 
 **Document role:** Product source of truth for future design and implementation
 

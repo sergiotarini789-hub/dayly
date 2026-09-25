@@ -1,7 +1,7 @@
 # Dayly User Flows
 
 **Phase:** 0B — UX Architecture & Information Architecture
-**Status:** In progress
+**Status:** Approved (historical)
 **Source:** [`PRODUCT_SPEC.md`](../../PRODUCT_SPEC.md) and [`INFORMATION_ARCHITECTURE.md`](INFORMATION_ARCHITECTURE.md)
 
 > Flows describe intended user intent, navigation, and state transitions. They are not implementation specifications or visual mockups.
