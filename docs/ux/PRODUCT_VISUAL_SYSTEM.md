@@ -4,7 +4,7 @@
 **Status:** Implemented
 **Scope:** Frontend-only product surface; no new product domains or persistence
 
-This visual system supersedes the initial PHASE 1F dashboard-like composition and records the incremental PHASE 1G experience pass. It keeps the existing tokens, shell, controls, motion foundations, and information architecture, while making `/` and `/today` one personal, mobile-first daily companion experience. `/showcase` remains the development reference for the underlying system and is not the product visual target.
+This visual system supersedes the initial PHASE 1F/1G dashboard-like composition and records the complete product presentation redesign. It keeps the existing tokens, shell contracts, controls, motion foundations, and navigation registry, while recomposing `/`, `/today`, and `/onboarding` as one calm, mobile-first personal daily companion. `/showcase` remains the development reference for the underlying system and is not the product visual target.
 
 ## 1. Visual principles
 
@@ -60,27 +60,27 @@ Avoid repeated bordered panels, badge clusters, shadowed cards, gradients, and l
 
 ## 6. Motion principles
 
-- Page and section entrances use a short rise/fade with existing `--duration-fast` and `--ease-entrance`.
-- Task completion uses a restrained row fade/strike transition and updates progress smoothly.
-- Progress bars interpolate their width rather than using a spinner.
-- Existing dialogs/drawers keep the shared overlay transitions.
-- Buttons and navigation retain short press/hover feedback.
-- `prefers-reduced-motion: reduce` disables product keyframes and leaves state changes immediate.
+- The current moment and primary Today composition enter as two meaningful groups rather than animating every element independently.
+- Task entry uses a short horizontal arrival; completion uses success feedback, a transformed/muted row, and a smoothly updated progress line.
+- Progress interpolates through the existing primitive rather than introducing a loading widget.
+- Onboarding step content changes use the same short entrance family; dialogs/drawers keep shared overlay transitions.
+- Buttons, rows, and navigation retain short press, hover, and focus feedback.
+- `prefers-reduced-motion: reduce` removes product keyframes and leaves state changes immediate.
 
 Motion communicates hierarchy or state change; it never delays a local action.
 
 ### PHASE 1G motion and experience additions
 
 - Boot readiness uses a small, non-blocking preparation cue; content remains usable without waiting on a fake remote state.
-- Greeting, focus, progress, plan, and supporting sections use a restrained stagger from reusable product timing aliases.
-- Task addition uses a short entry cue, completion uses a success wash, and progress updates through the existing semantic progress primitive.
-- The next-action lane exposes a direct completion action and an in-page plan link without introducing another dashboard module.
-- Time-of-day context uses the existing semantic warning, focus, and info tokens for a small marker and tonal focus-lane variation; it does not introduce gradients or a large hero.
-- New controls remain shared `Button`, `Link`, `Input`, `Checkbox`, `Progress`, and shell/navigation primitives, so focus, keyboard, touch-target, and reduced-motion behavior stays centralized.
+- Current moment and the primary Today flow use a restrained two-stage reveal from reusable product timing aliases.
+- Task addition uses a short row arrival; completion uses a success transition, transformed/muted copy, and progress update through the existing semantic primitive.
+- The next-action surface exposes a direct completion action and an in-page plan link through typography and one accent rule, not a widget shell.
+- Time-of-day context uses existing semantic warning, focus, and info tokens for a small marker and accent treatment; it does not introduce gradients or a large hero.
+- Onboarding, task rows, controls, and navigation continue using shared primitives, so focus, keyboard, touch-target, and reduced-motion behavior stays centralized.
 
 ## 7. Mobile navigation strategy
 
-At widths below the tablet breakpoint, Today uses the existing five-destination bottom navigation with a compact floating treatment: Today, Tasks, Calendar, Focus, and More. The bar is safe-area aware, keeps touch targets at the existing contract, and uses a quiet selected state. The desktop sidebar remains the same registry and information model, but the product shell removes unnecessary chrome and uses the same selected-state language.
+At widths below the tablet breakpoint, product routes use the existing five-destination bottom navigation as a flat, safe-area-aware bar: Today, Tasks, Focus, Calendar, and More. It keeps the existing touch-target contract, uses a quiet selected state, and never becomes a floating card. The desktop sidebar uses the same registry with small groups for Start, Plan, Focus, Review, and Tools; group labels disappear when the rail collapses.
 
 ## 8. Today information hierarchy
 
@@ -89,9 +89,9 @@ Current context and greeting
   ↓
 Next useful action
   ↓
-Progress toward today
+Today's task rows and quick capture
   ↓
-Today's tasks and quick capture
+Quiet daily progress
   ↓
 Upcoming commitments
   ↓

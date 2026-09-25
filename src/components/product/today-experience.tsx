@@ -2,14 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { AppTopBar, ApplicationShell, Cluster, PageContainer } from "@/components/layout";
-import { Button, Checkbox, Input, Progress } from "@/components/ui";
-
-interface PreviewTask {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+import { AppTopBar, ApplicationShell, PageContainer } from "@/components/layout";
+import { CurrentMoment, NextUsefulAction, SupportingContext, TodayLoadingCue, TodayPlan, type TimeOfDay, type TodayTask } from "./today-sections";
 
 interface PreviewSession {
   displayName: string;
@@ -17,8 +11,6 @@ interface PreviewSession {
   availability: string;
   planningStyle: string;
 }
-
-type TimeOfDay = "morning" | "afternoon" | "evening" | "night";
 
 const EMPTY_SESSION: PreviewSession = { displayName: "", timeZone: "", availability: "", planningStyle: "" };
 
@@ -72,7 +64,7 @@ function readPreviewSession(params: URLSearchParams): PreviewSession {
 }
 
 export function TodayExperience() {
-  const [tasks, setTasks] = React.useState<PreviewTask[]>([]);
+  const [tasks, setTasks] = React.useState<TodayTask[]>([]);
   const [taskTitle, setTaskTitle] = React.useState("");
   const [notice, setNotice] = React.useState("Today is ready for your first useful step.");
   const [todayLabel, setTodayLabel] = React.useState("Today");
@@ -132,6 +124,7 @@ export function TodayExperience() {
   const openTasks = tasks.filter((task) => !task.completed);
   const completedTasks = tasks.filter((task) => task.completed);
   const nextTask = openTasks[0];
+  const hasPlanningContext = Boolean(session.availability || session.planningStyle);
   const sessionContext = session.availability ? AVAILABILITY_LABELS[session.availability] ?? "Planning context set" : "Planning context not set";
   const planningStyle = session.planningStyle ? PLANNING_STYLE_LABELS[session.planningStyle] ?? "Choose a pace that fits" : "Choose a pace that fits";
   const progressLabel = tasks.length === 0 ? "0 of 0 complete" : `${completedTasks.length} of ${tasks.length} complete`;
@@ -145,100 +138,15 @@ export function TodayExperience() {
     >
       <div className="dayly-product-page" data-ready={!isPreparing || undefined} data-time-of-day={timeOfDay}>
         <PageContainer width="default">
-          <header className="dayly-product-greeting">
-            <div className="dayly-product-greeting__date">
-              <p className="dayly-product-eyebrow"><span className="dayly-product-time-mark" data-time-of-day={timeOfDay} aria-hidden="true" />{todayLabel}</p>
-              {timeLabel ? <span className="dayly-product-time">{timeLabel}</span> : null}
-            </div>
-            <div className="dayly-product-greeting__copy">
-              <h1>{greeting}</h1>
-              <p>{daySummary}</p>
-            </div>
-            <div className="dayly-product-context-line" aria-label="Planning context">
-              {isPreparing ? <span className="dayly-product-skeleton dayly-product-skeleton--context" aria-hidden="true" /> : <><span>{sessionContext}</span><strong>{planningStyle}</strong></>}
-            </div>
-          </header>
-
-          <div className="dayly-product-loading-cue" data-visible={isPreparing || undefined} role={isPreparing ? "status" : undefined} aria-live="polite">
-            {isPreparing ? <><span className="dayly-product-skeleton dayly-product-skeleton--short" aria-hidden="true" /> <span>Preparing your day</span></> : null}
-          </div>
-
+          <CurrentMoment greeting={greeting} todayLabel={todayLabel} timeLabel={timeLabel} timeOfDay={timeOfDay} isPreparing={isPreparing} sessionContext={sessionContext} planningStyle={planningStyle} daySummary={daySummary} />
+          <TodayLoadingCue isPreparing={isPreparing} />
           <div className="dayly-product-layout">
             <div className="dayly-product-primary">
-              <section className="dayly-product-focus-lane" aria-labelledby="next-action-heading">
-                <div className="dayly-product-focus-lane__label">
-                  <p className="dayly-product-eyebrow">Next</p>
-                  <span>{nextTask ? "A clear place to begin" : "Start with one useful step"}</span>
-                </div>
-                <div className="dayly-product-focus-lane__row">
-                  <div className="dayly-product-focus-lane__copy">
-                    <h2 id="next-action-heading">{nextTask?.title ?? "Choose one thing to move forward."}</h2>
-                    <p>{nextTask ? "Open · preview session" : "You can organize it later."}</p>
-                  </div>
-                  {nextTask ? (
-                    <Cluster className="dayly-product-focus-lane__actions">
-                      <Button aria-label="Complete task" className="dayly-product-focus-lane__action" size="sm" variant="ghost" onClick={() => toggleTask(nextTask.id, true)}>
-                        <span className="dayly-product-action-label">Complete task</span><span aria-hidden="true">→</span>
-                      </Button>
-                      <Link className="dayly-product-text-link" href="#today-plan">Open in plan →</Link>
-                    </Cluster>
-                  ) : <Link className="dayly-product-text-link dayly-product-focus-lane__action" href="#today-plan">Add first task →</Link>}
-                </div>
-              </section>
-
-              <section className="dayly-product-plan" id="today-plan" aria-labelledby="plan-heading">
-                <header className="dayly-product-section-heading">
-                  <div>
-                    <h2 id="plan-heading">Today</h2>
-                  </div>
-                  <span className="dayly-product-plan__count">{openTasks.length} {openTasks.length === 1 ? "open task" : "open tasks"}</span>
-                </header>
-                {tasks.length === 0 ? (
-                  <div className="dayly-product-empty" role="status">
-                    <span className="dayly-product-empty__marker" aria-hidden="true">01</span>
-                    <div>
-                      <h3>Give the day a beginning.</h3>
-                      <p>Your first task will become the next useful step, not another empty list to manage.</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="dayly-product-task-list" aria-label="Today tasks">
-                    {openTasks.map((task, index) => <div className="dayly-product-task-row" data-completed={task.completed || undefined} data-new={newTaskId === task.id || undefined} key={task.id}><span className="dayly-product-task-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><Checkbox label={task.title} checked={task.completed} onChange={(event) => toggleTask(task.id, event.target.checked)} description="Open" /><span className="dayly-product-task-arrow" aria-hidden="true">→</span></div>)}
-                    {completedTasks.length > 0 ? <><p className="dayly-product-list-label">Completed</p>{completedTasks.map((task, index) => <div className="dayly-product-task-row" data-completed="true" data-new={newTaskId === task.id || undefined} key={task.id}><span className="dayly-product-task-index" aria-hidden="true">{String(openTasks.length + index + 1).padStart(2, "0")}</span><Checkbox label={task.title} checked={task.completed} onChange={(event) => toggleTask(task.id, event.target.checked)} description="Completed" /><span className="dayly-product-task-arrow" aria-hidden="true">→</span></div>)}</> : null}
-                  </div>
-                )}
-
-                <div className="dayly-product-progress" aria-labelledby="progress-heading">
-                  <div className="dayly-product-progress__summary">
-                    <strong id="progress-heading">{progressLabel}</strong>
-                    <span>{tasks.length === 0 ? "Ready when you are" : "A quiet measure of what has moved."}</span>
-                  </div>
-                  <Progress value={completedTasks.length} max={Math.max(tasks.length, 1)} label={`Today progress: ${progressLabel}`} />
-                </div>
-
-                <form className="dayly-product-capture" onSubmit={addTask}>
-                  <Input id="today-task-title" label="Add a task" value={taskTitle} onChange={(event) => setTaskTitle(event.target.value)} placeholder="Something useful, in a few words" />
-                  <Button aria-label="Add to Today" type="submit" size="sm" variant="ghost">Add</Button>
-                </form>
-                <p className="dayly-product-live-note" role="status" aria-live="polite">{notice}</p>
-              </section>
+              <NextUsefulAction nextTask={nextTask} onComplete={(id) => toggleTask(id, true)} />
+              <TodayPlan tasks={tasks} openTasks={openTasks} completedTasks={completedTasks} newTaskId={newTaskId} progressLabel={progressLabel} taskTitle={taskTitle} notice={notice} onTaskTitleChange={setTaskTitle} onAddTask={addTask} onToggleTask={toggleTask} />
             </div>
-
-            <aside className="dayly-product-aside" aria-label="Supporting context">
-              <section className="dayly-product-support-section" aria-labelledby="upcoming-heading">
-                <p className="dayly-product-eyebrow">Coming up</p>
-                <h2 id="upcoming-heading">Nothing scheduled yet.</h2>
-                <p>Commitments will appear here when you add them.</p>
-              </section>
-              <section className="dayly-product-support-section" aria-labelledby="context-heading">
-                <p className="dayly-product-eyebrow">A day with room</p>
-                <h2 id="context-heading">Keep the next step realistic.</h2>
-                <p>{session.availability ? `${sessionContext} · ${planningStyle}.` : "Set a little context when you are ready; Dayly will not assume you have unlimited time."}</p>
-                <Link className="dayly-product-text-link" href="/onboarding">{session.availability ? "Adjust planning context" : "Set planning context"}</Link>
-              </section>
-            </aside>
+            <SupportingContext sessionContext={sessionContext} planningStyle={planningStyle} hasPlanningContext={hasPlanningContext} />
           </div>
-
           <p className="dayly-product-disclosure">Preview session only · tasks and setup changes stay in memory and are not saved.</p>
         </PageContainer>
       </div>

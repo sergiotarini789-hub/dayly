@@ -21,10 +21,10 @@ COMPLETED:
 - PHASE 1E interaction and motion system completed with token-based states, overlays, loading/feedback, reduced-motion behavior, tests, and showcase coverage
 - PHASE 1F product-facing onboarding and Today preview completed with frontend-only in-memory state, responsive/theme/accessibility coverage, tests, and implementation documentation
 - PHASE 1F product visual redesign completed with a mobile-first editorial system, refined shell/navigation, restrained surfaces, personalized Today hierarchy, skeleton/motion states, and visual-system documentation
-- PHASE 1G product experience and motion pass completed with time-aware context, direct Next actions, task-entry/completion feedback, responsive refinements, safe-area-aware navigation preservation, reduced-motion coverage, and updated product documentation
+- PHASE 1G complete product presentation redesign completed with a mobile-first daily companion composition, composable Today sections, redesigned onboarding, grouped shell navigation, time-aware context, task-entry/completion feedback, responsive behavior, safe-area support, reduced-motion coverage, and updated product documentation
 
 CURRENT_OBJECTIVE:
-PHASE 1G is complete. `/` and `/today` are one personal daily companion experience with the hierarchy greeting/time context → next useful action → progress → Today tasks → upcoming → supporting context. The implementation remains frontend-only: onboarding and Today interactions are local React state, placeholder values are disclosed as temporary, and no backend, database, authentication, integrations, persistence, or fake server behavior is included.
+PHASE 1G is complete. `/`, `/today`, and `/onboarding` now share a coherent personal daily companion language: greeting/time context → next useful action → Today task rows → quiet progress → upcoming → supporting context. The implementation remains frontend-only: onboarding and Today interactions are local React state, placeholder values are disclosed as temporary, and no backend, database, authentication, integrations, persistence, or fake server behavior is included.
 
 NEXT_PHASE: PHASE 1H — NOT STARTED; do not begin without explicit approval
 

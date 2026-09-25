@@ -5,7 +5,7 @@
 **Scope:** Frontend-only, in-memory preview
 **Source of truth:** [`PRODUCT_SPEC.md`](../../PRODUCT_SPEC.md), [`SCREEN_MAP.md`](SCREEN_MAP.md), [`USER_FLOWS.md`](USER_FLOWS.md), and [`UX_PRINCIPLES.md`](UX_PRINCIPLES.md)
 
-> This document records the bounded PHASE 1F product surface and its incremental PHASE 1G experience pass. It does not authorize persistence, backend services, authentication, integrations, or PHASE 1H work.
+> This document records the bounded PHASE 1F product surface and the complete PHASE 1G product presentation redesign. It does not authorize persistence, backend services, authentication, integrations, or PHASE 1H work.
 
 ## Routes and responsibilities
 
@@ -70,11 +70,11 @@ Validation is covered by [`src/components/product/product.test.tsx`](../../src/c
 
 ## Product visual redesign
 
-The initial PHASE 1F dashboard-like composition was corrected into the mobile-first editorial system documented in [`PRODUCT_VISUAL_SYSTEM.md`](PRODUCT_VISUAL_SYSTEM.md). Today now leads with greeting/context, one next useful action, a task-led Today list, quiet integrated progress, and only then supporting context. The redesign removes repeated cards, dashboard-like progress treatment, heavy hero treatment, and floating mobile navigation; it uses typography, rhythm, hairlines, one accent rule, and a narrow desktop context column instead. Personalized session context, task completion, and restrained entrance/entry/success transitions remain in place with reduced-motion behavior preserved.
+The initial PHASE 1F/1G dashboard-like composition was replaced by the mobile-first editorial system documented in [`PRODUCT_VISUAL_SYSTEM.md`](PRODUCT_VISUAL_SYSTEM.md). Today now leads with greeting/context, one next useful action, a task-led Today list, quiet integrated progress, and only then supporting context. The redesign removes repeated cards, dashboard-like progress treatment, heavy hero treatment, and floating mobile navigation; it uses typography, rhythm, hairlines, one accent rule, and a narrow desktop context column instead. Onboarding now shares the same spacious editorial language through a two-part setup composition rather than a centered form card. Personalized session context, task completion, and restrained entrance/entry/success transitions remain in place with reduced-motion behavior preserved.
 
 ## PHASE 1G experience contract
 
-PHASE 1G treats `/` and `/today` as the same personal daily companion surface and preserves the hierarchy: greeting/time context, next useful action, Today task rows, integrated progress, upcoming, then supporting context. The corrective presentation pass makes the phone composition primary: a text-led greeting, an accent-ruled Next row, compact task rows, and a quiet progress line. Desktop adds measure and a narrow contextual column without recreating a dashboard grid. The existing motion supports page reveal, task entry/reflow, completion, controls, navigation, focus, and success without animating every element independently.
+PHASE 1G treats `/` and `/today` as the same personal daily companion surface and preserves the hierarchy: greeting/time context, next useful action, Today task rows, integrated progress, upcoming, then supporting context. The complete redesign makes the phone composition primary: a text-led greeting, an accent-ruled Next row, compact task rows, and a quiet progress line. Desktop adds measure and a narrow contextual column without recreating a dashboard grid. The shell now groups the existing navigation registry on desktop and presents a flat safe-area bottom bar on mobile. Today presentation is split into current-moment, next-action, plan, and supporting-context components rather than a monolithic screen. The existing motion supports page reveal, task entry/reflow, completion, controls, navigation, focus, and success without animating every element independently.
 
 All state remains frontend-only and session/in-memory. The onboarding query handoff is still cleaned from the URL, task changes remain disclosed as temporary, the navigation registry and interaction primitives are unchanged, and `/showcase` remains untouched.
 

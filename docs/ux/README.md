@@ -56,7 +56,9 @@ The UX documentation contains the approved PHASE 0B architecture, the reviewed P
 - [`PRODUCT_SURFACE_IMPLEMENTATION.md`](PRODUCT_SURFACE_IMPLEMENTATION.md) — route map, onboarding/Today behavior, local-only state boundary, applicable UX states, accessibility contract, validation, and non-goals.
 - [`PRODUCT_VISUAL_SYSTEM.md`](PRODUCT_VISUAL_SYSTEM.md) — mobile-first visual principles, typography, spacing, color strategy, surfaces, motion, navigation, and Today hierarchy.
 - [`../../src/components/product/`](../../src/components/product/) — product-facing onboarding and Today experiences.
-- [`../../src/styles/product.css`](../../src/styles/product.css) — product composition and responsive styling using existing tokens.
+- [`../../src/components/product/today-sections.tsx`](../../src/components/product/today-sections.tsx) — composable current-moment, Next action, Today plan, and supporting-context sections.
+- [`../../src/components/layout/responsive-navigation.tsx`](../../src/components/layout/responsive-navigation.tsx) — grouped desktop navigation and the shared mobile bottom navigation composition.
+- [`../../src/styles/product.css`](../../src/styles/product.css) — product composition, onboarding, shell treatment, and responsive styling using existing tokens.
 - [`../../src/components/product/product.test.tsx`](../../src/components/product/product.test.tsx) — onboarding progression and in-memory Today task behavior coverage.
 - [`../../src/app/page.tsx`](../../src/app/page.tsx) and [`../../src/app/today/page.tsx`](../../src/app/today/page.tsx) — Today launch and explicit routes.
 - [`../../src/app/onboarding/page.tsx`](../../src/app/onboarding/page.tsx) — focused onboarding route.

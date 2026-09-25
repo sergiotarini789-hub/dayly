@@ -29,7 +29,7 @@ export const APP_NAVIGATION_ITEMS = [
   { id: "settings", label: "Settings", href: "#settings", icon: "⚙", description: "Preferences and account" },
 ] as const satisfies readonly AppNavigationItem[];
 
-export const MOBILE_PRIMARY_NAVIGATION_IDS = ["today", "tasks", "calendar", "focus"] as const satisfies readonly AppNavigationId[];
+export const MOBILE_PRIMARY_NAVIGATION_IDS = ["today", "tasks", "focus", "calendar"] as const satisfies readonly AppNavigationId[];
 
 export function isMobilePrimaryNavigationItem(item: AppNavigationItem): boolean {
   return MOBILE_PRIMARY_NAVIGATION_IDS.includes(item.id as (typeof MOBILE_PRIMARY_NAVIGATION_IDS)[number]);

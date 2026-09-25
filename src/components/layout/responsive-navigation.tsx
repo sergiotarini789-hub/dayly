@@ -18,6 +18,14 @@ export interface ResponsiveNavigationProps {
   onNavigate?: (id: AppNavigationId) => void;
 }
 
+const DESKTOP_NAVIGATION_GROUPS: ReadonlyArray<{ label: string; ids: readonly AppNavigationId[] }> = [
+  { label: "Start", ids: ["today"] },
+  { label: "Plan", ids: ["tasks", "projects", "calendar", "habits"] },
+  { label: "Focus", ids: ["focus"] },
+  { label: "Review", ids: ["analytics"] },
+  { label: "Tools", ids: ["search", "settings"] },
+];
+
 function NavigationLink({ item, active, onSelect, compact = false }: { item: AppNavigationItem; active: boolean; onSelect: (id: AppNavigationId) => void; compact?: boolean }) {
   function handleClick(event: React.MouseEvent<HTMLAnchorElement>) {
     event.preventDefault();
@@ -63,13 +71,19 @@ export function ResponsiveNavigation({ initialActiveId = "today", onNavigate }: 
           </a>
         </div>
         <nav className="dayly-sidebar__nav" aria-label="Primary navigation">
-          <ul>
-            {APP_NAVIGATION_ITEMS.map((item) => (
-              <li key={item.id}>
-                <NavigationLink item={item} active={activeId === item.id} onSelect={selectNavigationItem} compact={sidebarCollapsed} />
-              </li>
-            ))}
-          </ul>
+          <div className="dayly-sidebar__nav-groups">
+            {DESKTOP_NAVIGATION_GROUPS.map((group) => {
+              const items = APP_NAVIGATION_ITEMS.filter((item) => group.ids.includes(item.id));
+              return (
+                <section className="dayly-sidebar__nav-group" key={group.label} aria-labelledby={`navigation-group-${group.label.toLowerCase()}`}>
+                  <p className="dayly-sidebar__group-label" id={`navigation-group-${group.label.toLowerCase()}`}>{group.label}</p>
+                  <ul>
+                    {items.map((item) => <li key={item.id}><NavigationLink item={item} active={activeId === item.id} onSelect={selectNavigationItem} compact={sidebarCollapsed} /></li>)}
+                  </ul>
+                </section>
+              );
+            })}
+          </div>
         </nav>
         <button
           className="dayly-sidebar__collapse"
