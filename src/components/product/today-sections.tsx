@@ -70,7 +70,7 @@ export function TodayLoadingCue({ isPreparing }: { isPreparing: boolean }) {
   );
 }
 
-export function NextUsefulAction({ nextTask, onComplete }: { nextTask?: TodayTask; onComplete: (id: number) => void }) {
+export function NextUsefulAction({ nextTask, onComplete, onStartTask }: { nextTask?: TodayTask; onComplete: (id: number) => void; onStartTask: () => void }) {
   return (
     <section className={`dayly-product-focus-plane${nextTask ? "" : " dayly-product-focus-plane--empty"}`} aria-labelledby="next-action-heading">
       <div className="dayly-product-focus-plane__topline"><span className="dayly-product-focus-plane__beacon" aria-hidden="true" /><p className="dayly-product-eyebrow">Right now</p><span>{nextTask ? "One useful move" : "A quiet beginning"}</span></div>
@@ -86,7 +86,7 @@ export function NextUsefulAction({ nextTask, onComplete }: { nextTask?: TodayTas
             </Button>
             <Link className="dayly-product-text-link" href="#today-plan">Open in plan →</Link>
           </Cluster>
-        ) : <Link className="dayly-product-text-link dayly-product-focus-plane__action" href="#today-plan">Add your first task →</Link>}
+        ) : <button className="dayly-product-text-link dayly-product-focus-plane__action dayly-product-link-button" type="button" onClick={onStartTask}>Add your first task →</button>}
       </div>
     </section>
   );
@@ -99,6 +99,8 @@ interface TodayPlanProps {
   newTaskId: number | null;
   taskTitle: string;
   notice: string;
+  composerOpen: boolean;
+  onComposerOpenChange: (open: boolean) => void;
   onTaskTitleChange: (value: string) => void;
   onAddTask: (event: React.FormEvent<HTMLFormElement>) => void;
   onToggleTask: (id: number, completed: boolean) => void;
@@ -114,7 +116,29 @@ function TaskRow({ task, index, isNew, onToggle }: { task: TodayTask; index: num
   );
 }
 
-export function TodayPlan({ tasks, openTasks, completedTasks, newTaskId, taskTitle, notice, onTaskTitleChange, onAddTask, onToggleTask }: TodayPlanProps) {
+export function TodayPlan({ tasks, openTasks, completedTasks, newTaskId, taskTitle, notice, composerOpen, onComposerOpenChange, onTaskTitleChange, onAddTask, onToggleTask }: TodayPlanProps) {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const composerRef = React.useRef<HTMLFormElement>(null);
+
+  const revealComposer = React.useCallback(() => {
+    window.requestAnimationFrame(() => composerRef.current?.scrollIntoView({ block: "center", behavior: "auto" }));
+  }, []);
+
+  React.useEffect(() => {
+    if (!composerOpen) return;
+    inputRef.current?.focus({ preventScroll: true });
+    revealComposer();
+    const viewport = window.visualViewport;
+    viewport?.addEventListener("resize", revealComposer);
+    return () => viewport?.removeEventListener("resize", revealComposer);
+  }, [composerOpen, revealComposer]);
+
+  function handleComposerKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== "Escape") return;
+    if (!taskTitle.trim()) onComposerOpenChange(false);
+    inputRef.current?.blur();
+  }
+
   return (
     <section className="dayly-product-movement" id="today-plan" aria-labelledby="plan-heading">
       <header className="dayly-product-movement__heading">
@@ -139,10 +163,15 @@ export function TodayPlan({ tasks, openTasks, completedTasks, newTaskId, taskTit
         </div>
       )}
       <div className="dayly-product-movement__summary"><span>{tasks.length === 0 ? "Ready when you are" : "Keep the useful things visible."}</span></div>
-      <form className="dayly-product-capture" onSubmit={onAddTask}>
-        <Input id="today-task-title" label="Add a task" value={taskTitle} onChange={(event) => onTaskTitleChange(event.target.value)} placeholder="Something useful, in a few words" />
-        <Button aria-label="Add to Today" type="submit" size="sm" variant="ghost">Add</Button>
-      </form>
+      <div className="dayly-product-composer" id="today-task-composer" data-open={composerOpen || undefined}>
+        <button className="dayly-product-composer__trigger" type="button" onClick={() => onComposerOpenChange(true)} aria-expanded={composerOpen} aria-controls="today-task-form">
+          <span aria-hidden="true">+</span><span>Add a task</span><span aria-hidden="true">→</span>
+        </button>
+        <form ref={composerRef} className="dayly-product-capture" id="today-task-form" onSubmit={onAddTask}>
+          <Input ref={inputRef} id="today-task-title" label="Add a task" value={taskTitle} onChange={(event) => onTaskTitleChange(event.target.value)} onFocus={revealComposer} onKeyDown={handleComposerKeyDown} autoComplete="off" enterKeyHint="done" placeholder="What needs to move forward?" />
+          <Button aria-label="Add to Today" type="submit" size="sm" variant="ghost" disabled={!taskTitle.trim()}><span aria-hidden="true">→</span><span className="dayly-visually-hidden">Add task</span></Button>
+        </form>
+      </div>
       <p className="dayly-product-live-note" role="status" aria-live="polite">{notice}</p>
     </section>
   );

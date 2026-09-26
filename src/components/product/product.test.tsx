@@ -12,7 +12,10 @@ describe("product-facing foundations", () => {
     expect(screen.getByRole("heading", { name: "Give the day a beginning." })).toBeInTheDocument();
     expect(screen.getByText("No tasks yet")).toBeInTheDocument();
 
-    fireEvent.change(screen.getByRole("textbox", { name: "Add a task" }), { target: { value: "Review the day" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add your first task →" }));
+    const composer = screen.getByRole("textbox", { name: "Add a task" });
+    expect(composer).toHaveFocus();
+    fireEvent.change(composer, { target: { value: "Review the day" } });
     fireEvent.click(screen.getByRole("button", { name: "Add to Today" }));
 
     const task = screen.getByRole("checkbox", { name: /Review the day/ });
@@ -32,6 +35,14 @@ describe("product-facing foundations", () => {
     const reopenedTask = screen.getByRole("checkbox", { name: /Review the day/ });
     expect(reopenedTask).not.toBeChecked();
     expect(screen.getByRole("status")).toHaveTextContent("Task reopened");
+
+    fireEvent.change(composer, { target: { value: "Call brother" } });
+    fireEvent.submit(composer.closest("form")!);
+    expect(screen.getByRole("checkbox", { name: /Call brother/ })).toBeInTheDocument();
+    expect(composer).toHaveFocus();
+    fireEvent.keyDown(composer, { key: "Escape" });
+    expect(composer).not.toHaveFocus();
+    expect(screen.getByRole("button", { name: "Add a task" })).toHaveAttribute("aria-expanded", "false");
   });
 
   it("uses onboarding session context to personalize Today without persistence", () => {

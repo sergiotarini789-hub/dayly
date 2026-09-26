@@ -116,6 +116,18 @@ export function TaskTrail({ tasks, onToggle, newTaskId }: { tasks: ProductTask[]
 
 export function AddTaskForm({ onAdd, label = "Add a task", buttonLabel = "Add" }: { onAdd: (title: string) => void; label?: string; buttonLabel?: string }) {
   const [value, setValue] = React.useState("");
+  const formRef = React.useRef<HTMLFormElement>(null);
+  function revealForm() {
+    window.requestAnimationFrame(() => formRef.current?.scrollIntoView({ block: "center", behavior: "auto" }));
+  }
+  React.useEffect(() => {
+    const viewport = window.visualViewport;
+    const keepVisible = () => {
+      if (formRef.current?.contains(document.activeElement)) revealForm();
+    };
+    viewport?.addEventListener("resize", keepVisible);
+    return () => viewport?.removeEventListener("resize", keepVisible);
+  }, []);
   function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const title = value.trim();
@@ -124,9 +136,9 @@ export function AddTaskForm({ onAdd, label = "Add a task", buttonLabel = "Add" }
     setValue("");
   }
   return (
-    <form className="dayly-surface-capture" onSubmit={submit}>
-      <Input label={label} value={value} onChange={(event) => setValue(event.target.value)} placeholder="Something useful, in a few words" />
-      <Button type="submit" size="sm" variant="ghost">{buttonLabel}</Button>
+    <form ref={formRef} className="dayly-surface-capture" onSubmit={submit}>
+      <Input label={label} value={value} onChange={(event) => setValue(event.target.value)} onFocus={revealForm} autoComplete="off" enterKeyHint="done" placeholder="What needs to move forward?" />
+      <Button type="submit" size="sm" variant="ghost" disabled={!value.trim()} aria-label={buttonLabel}>{buttonLabel}</Button>
     </form>
   );
 }

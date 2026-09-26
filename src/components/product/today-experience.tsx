@@ -76,6 +76,7 @@ export function TodayExperience() {
   const [timeOfDay, setTimeOfDay] = React.useState<TimeOfDay>("morning");
   const [session, setSession] = React.useState<PreviewSession>(EMPTY_SESSION);
   const [newTaskId, setNewTaskId] = React.useState<number | null>(null);
+  const [composerOpen, setComposerOpen] = React.useState(false);
   const [isPreparing, setIsPreparing] = React.useState(true);
 
   React.useEffect(() => {
@@ -115,6 +116,7 @@ export function TodayExperience() {
     const id = Date.now();
     setTasks((current) => [...current, { id, title, completed: false }]);
     setNewTaskId(id);
+    setComposerOpen(true);
     setTaskTitle("");
     setNotice(`“${title}” is part of today. This preview keeps changes in memory only.`);
   }
@@ -146,8 +148,8 @@ export function TodayExperience() {
               <CurrentMoment greeting={greeting} todayLabel={todayLabel} timeLabel={timeLabel} timeOfDay={timeOfDay} isPreparing={isPreparing} sessionContext={sessionContext} planningStyle={planningStyle} daySummary={daySummary} completedCount={completedTasks.length} taskCount={tasks.length} progressLabel={progressLabel} />
               <div className="dayly-product-canvas">
                 <TodayLoadingCue isPreparing={isPreparing} />
-                <NextUsefulAction nextTask={nextTask} onComplete={(id) => toggleTask(id, true)} />
-                <TodayPlan tasks={tasks} openTasks={openTasks} completedTasks={completedTasks} newTaskId={newTaskId} taskTitle={taskTitle} notice={notice} onTaskTitleChange={setTaskTitle} onAddTask={addTask} onToggleTask={toggleTask} />
+                <NextUsefulAction nextTask={nextTask} onComplete={(id) => toggleTask(id, true)} onStartTask={() => setComposerOpen(true)} />
+                <TodayPlan tasks={tasks} openTasks={openTasks} completedTasks={completedTasks} newTaskId={newTaskId} taskTitle={taskTitle} notice={notice} composerOpen={composerOpen} onComposerOpenChange={setComposerOpen} onTaskTitleChange={setTaskTitle} onAddTask={addTask} onToggleTask={toggleTask} />
                 <SupportingContext sessionContext={sessionContext} planningStyle={planningStyle} availability={session.availability ? AVAILABILITY_LABELS[session.availability] ?? "Availability set" : "Availability not set"} hasPlanningContext={hasPlanningContext} />
               </div>
             </div>
