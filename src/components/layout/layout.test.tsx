@@ -23,6 +23,9 @@ describe("Dayly layout system", () => {
     expect(within(sidebar).getByRole("link", { name: "Today" })).toHaveAttribute("aria-current", "page");
     fireEvent.click(tasksLink);
     expect(tasksLink).toHaveAttribute("aria-current", "page");
+    expect(tasksLink).toHaveAttribute("aria-busy", "true");
+    expect(screen.getByRole("status")).toHaveTextContent("Opening Tasks");
+    expect(document.querySelector(".dayly-navigation-progress")).toHaveAttribute("data-visible", "true");
     const collapse = within(sidebar).getByRole("button", { name: "Collapse navigation" });
     fireEvent.click(collapse);
     expect(collapse).toHaveAttribute("aria-expanded", "false");

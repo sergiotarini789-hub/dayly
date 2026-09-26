@@ -59,8 +59,13 @@ describe("product-facing foundations", () => {
     expect(screen.getByRole("button", { name: "Pause" })).toBeInTheDocument();
 
     render(<SearchExperience />);
-    fireEvent.change(screen.getByRole("searchbox", { name: "Search Dayly" }), { target: { value: "unknown" } });
+    const search = screen.getByRole("searchbox", { name: "Search Dayly" });
+    expect(search).toHaveFocus();
+    fireEvent.change(search, { target: { value: "unknown" } });
     expect(screen.getByRole("heading", { name: "Nothing matches “unknown”." })).toBeInTheDocument();
+    search.blur();
+    fireEvent.keyDown(window, { key: "k", ctrlKey: true });
+    expect(search).toHaveFocus();
   });
 
   it("keeps onboarding lightweight and keyboard-operable across steps", () => {

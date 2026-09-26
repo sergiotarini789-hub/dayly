@@ -27,7 +27,7 @@ const DESKTOP_NAVIGATION_GROUPS: ReadonlyArray<{ label: string; ids: readonly Ap
   { label: "Tools", ids: ["search", "settings"] },
 ];
 
-function NavigationLink({ item, active, onSelect, compact = false }: { item: AppNavigationItem; active: boolean; onSelect: (id: AppNavigationId) => void; compact?: boolean }) {
+function NavigationLink({ item, active, pending, onSelect, compact = false }: { item: AppNavigationItem; active: boolean; pending: boolean; onSelect: (id: AppNavigationId) => void; compact?: boolean }) {
   return (
     <Link
       className="dayly-navigation-link"
@@ -35,26 +35,31 @@ function NavigationLink({ item, active, onSelect, compact = false }: { item: App
       prefetch
       aria-current={active ? "page" : undefined}
       aria-label={compact ? `${item.label}: ${item.description}` : undefined}
+      aria-busy={pending || undefined}
       title={compact ? item.label : undefined}
       data-active={active || undefined}
+      data-pending={pending || undefined}
       onClick={(event) => {
-        onSelect(item.id);
+        if (!active) onSelect(item.id);
         if (typeof navigator !== "undefined" && /jsdom/i.test(navigator.userAgent)) event.preventDefault();
       }}
     >
       <span className="dayly-navigation-link__icon" aria-hidden="true">{item.icon}</span>
       <span className="dayly-navigation-link__label">{item.label}</span>
+      {pending ? <span className="dayly-navigation-link__pending" aria-hidden="true" /> : null}
     </Link>
   );
 }
 
 export function ResponsiveNavigation({ initialActiveId = "today", onNavigate }: ResponsiveNavigationProps) {
   const [activeId, setActiveId] = React.useState<AppNavigationId>(initialActiveId);
+  const [pendingId, setPendingId] = React.useState<AppNavigationId | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
   const [moreOpen, setMoreOpen] = React.useState(false);
 
   function selectNavigationItem(id: AppNavigationId) {
     setActiveId(id);
+    setPendingId(id);
     onNavigate?.(id);
   }
 
@@ -63,6 +68,8 @@ export function ResponsiveNavigation({ initialActiveId = "today", onNavigate }: 
 
   return (
     <>
+      <div className="dayly-navigation-progress" data-visible={pendingId !== null || undefined} aria-hidden="true"><span /></div>
+      {pendingId ? <p className="dayly-visually-hidden" role="status" aria-live="polite">Opening {APP_NAVIGATION_ITEMS.find((item) => item.id === pendingId)?.label}</p> : null}
       <aside className="dayly-sidebar" data-collapsed={sidebarCollapsed || undefined} aria-label="Dayly application navigation">
         <div className="dayly-sidebar__brand">
           <Link href="/" prefetch aria-label="Dayly home">
@@ -78,7 +85,7 @@ export function ResponsiveNavigation({ initialActiveId = "today", onNavigate }: 
                 <section className="dayly-sidebar__nav-group" key={group.label} aria-labelledby={`navigation-group-${group.label.toLowerCase()}`}>
                   <p className="dayly-sidebar__group-label" id={`navigation-group-${group.label.toLowerCase()}`}>{group.label}</p>
                   <ul>
-                    {items.map((item) => <li key={item.id}><NavigationLink item={item} active={activeId === item.id} onSelect={selectNavigationItem} compact={sidebarCollapsed} /></li>)}
+                    {items.map((item) => <li key={item.id}><NavigationLink item={item} active={activeId === item.id} pending={pendingId === item.id} onSelect={selectNavigationItem} compact={sidebarCollapsed} /></li>)}
                   </ul>
                 </section>
               );
@@ -101,7 +108,7 @@ export function ResponsiveNavigation({ initialActiveId = "today", onNavigate }: 
         <ul>
           {mobilePrimaryItems.map((item) => (
             <li key={item.id}>
-              <NavigationLink item={item} active={activeId === item.id} onSelect={selectNavigationItem} />
+              <NavigationLink item={item} active={activeId === item.id} pending={pendingId === item.id} onSelect={selectNavigationItem} />
             </li>
           ))}
           <li>
@@ -118,6 +125,7 @@ export function ResponsiveNavigation({ initialActiveId = "today", onNavigate }: 
                         <NavigationLink
                           item={item}
                           active={activeId === item.id}
+                          pending={pendingId === item.id}
                           onSelect={(id) => {
                             selectNavigationItem(id);
                             setMoreOpen(false);

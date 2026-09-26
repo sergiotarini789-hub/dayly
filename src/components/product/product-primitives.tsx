@@ -100,11 +100,11 @@ export interface ProductTask {
   context?: string;
 }
 
-export function TaskTrail({ tasks, onToggle }: { tasks: ProductTask[]; onToggle: (id: number, completed: boolean) => void }) {
+export function TaskTrail({ tasks, onToggle, newTaskId }: { tasks: ProductTask[]; onToggle: (id: number, completed: boolean) => void; newTaskId?: number | null }) {
   return (
     <ol className="dayly-surface-task-trail" aria-label="Tasks">
       {tasks.map((task, index) => (
-        <li className="dayly-surface-task-row" data-completed={task.completed || undefined} key={task.id}>
+        <li className="dayly-surface-task-row" data-completed={task.completed || undefined} data-new={newTaskId === task.id || undefined} key={task.id}>
           <span className="dayly-surface-task-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
           <Checkbox label={task.title} description={task.completed ? "Moved today" : task.context ?? "Open · today"} checked={task.completed} onChange={(event) => onToggle(task.id, event.target.checked)} />
           <span className="dayly-surface-task-arrow" aria-hidden="true">→</span>
@@ -142,9 +142,18 @@ export function SurfaceBadge({ children, variant = "neutral" }: { children: Reac
 export function useProductTasks(initial: ProductTask[] = []) {
   const [tasks, setTasks] = React.useState<ProductTask[]>(initial);
   const [notice, setNotice] = React.useState("");
+  const [newTaskId, setNewTaskId] = React.useState<number | null>(null);
+
+  React.useEffect(() => {
+    if (newTaskId === null) return;
+    const timeoutId = window.setTimeout(() => setNewTaskId(null), 520);
+    return () => window.clearTimeout(timeoutId);
+  }, [newTaskId]);
 
   function addTask(title: string) {
-    setTasks((current) => [...current, { id: Date.now(), title, completed: false }]);
+    const id = Date.now();
+    setTasks((current) => [...current, { id, title, completed: false }]);
+    setNewTaskId(id);
     setNotice(`“${title}” added for this preview session.`);
   }
 
@@ -153,5 +162,5 @@ export function useProductTasks(initial: ProductTask[] = []) {
     setNotice(completed ? "Task marked complete." : "Task reopened.");
   }
 
-  return { tasks, notice, addTask, toggleTask };
+  return { tasks, notice, newTaskId, addTask, toggleTask };
 }
