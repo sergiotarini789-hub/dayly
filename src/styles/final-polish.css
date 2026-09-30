@@ -1,0 +1,121 @@
+@layer components {
+  /* Final interaction pass: quiet feedback without changing Dayly's visual language. */
+  .dayly-product-link-button { transition: color 140ms var(--ease-standard), opacity 140ms var(--ease-standard), transform 120ms var(--ease-standard); }
+  .dayly-product-link-button:hover { color: var(--color-primary-hover); }
+  .dayly-product-link-button:active { transform: translateY(1px); }
+  .dayly-product-link-button:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); border-radius: var(--radius-sm); }
+
+  .dayly-product-task-row,
+  .dayly-surface-task-row,
+  .dayly-habit-row,
+  .dayly-project-row,
+  .dayly-calendar-commitments li { transition: color 160ms var(--ease-standard), background-color 160ms var(--ease-standard), opacity 180ms var(--ease-standard), transform 160ms var(--ease-standard); }
+
+  .dayly-product-task-row:active,
+  .dayly-surface-task-row:active { transform: translateY(1px); }
+
+  .dayly-habit-row:hover,
+  .dayly-habit-row:focus-within,
+  .dayly-project-row:hover,
+  .dayly-project-row:focus-within,
+  .dayly-calendar-commitments li:hover { background: color-mix(in srgb, var(--color-surface-hover) 48%, transparent); }
+
+  .dayly-habit-marker:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); }
+  .dayly-habit-row[data-completed="true"] { opacity: 0.72; }
+  .dayly-habit-row[data-completed="true"] .dayly-habit-marker { background: color-mix(in srgb, var(--color-success-subtle) 64%, transparent); }
+
+  .dayly-project-capture {
+    padding-block: var(--space-4);
+    border-block: var(--border-width-hairline) solid var(--product-line);
+    animation: dayly-compact-editor-in 180ms var(--ease-entrance) both;
+  }
+  .dayly-project-capture__actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); }
+
+  .dayly-calendar-commitments li { animation: dayly-row-settle 180ms var(--ease-entrance) both; }
+
+  .dayly-search-results { gap: var(--space-6); }
+  .dayly-search-result-group { display: grid; gap: var(--space-1); }
+  .dayly-search-result-group > .dayly-product-eyebrow { margin-block-end: var(--space-1); }
+
+  .dayly-focus-mode[data-state="active"] + .dayly-surface-context-grid,
+  .dayly-focus-mode[data-state="paused"] + .dayly-surface-context-grid { opacity: 0.35; transition: opacity 180ms var(--ease-standard); }
+  .dayly-focus-mode[data-state="active"] .dayly-focus-mode__actions .dayly-button:first-child { color: var(--color-primary-foreground); background: var(--color-primary); }
+  .dayly-focus-mode[data-state="finished"] { border-color: color-mix(in srgb, var(--color-success) 42%, var(--product-line)); }
+
+  .dayly-route-skeleton__block { animation-duration: 980ms; }
+
+  @keyframes dayly-compact-editor-in {
+    from { opacity: 0; transform: translateY(0.25rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes dayly-row-settle {
+    from { opacity: 0; transform: translateY(0.2rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (min-width: 64rem) {
+    .dayly-product-primary { max-inline-size: 62rem; }
+    .dayly-surface-primary { max-inline-size: 68rem; }
+    .dayly-product-greeting h1 { max-inline-size: 38rem; }
+    .dayly-product-focus-plane__body { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+  }
+
+  @media (max-width: 47.999rem) {
+    .dayly-product-greeting__date { align-items: baseline; }
+    .dayly-product-greeting__copy > p { max-inline-size: 20rem; }
+    .dayly-product-context-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .dayly-product-focus-plane__topline > span:last-child { display: none; }
+    .dayly-product-focus-plane__copy > p { max-inline-size: 18rem; }
+
+    .dayly-product-composer__trigger { padding-inline: var(--space-2); }
+    .dayly-product-composer__trigger > span:last-child { display: none; }
+    .dayly-product-composer[data-open="true"] .dayly-product-capture {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2);
+      padding-block: var(--space-2) var(--space-1);
+    }
+    .dayly-product-composer .dayly-product-capture .dayly-button {
+      inline-size: auto;
+      min-inline-size: 4.5rem;
+      justify-self: end;
+      padding-inline: var(--space-4);
+      color: var(--color-primary-foreground);
+      background: var(--product-accent);
+      border-color: transparent;
+    }
+    .dayly-product-composer .dayly-product-capture .dayly-button:disabled { background: var(--color-surface-hover); }
+
+    .dayly-product-task-row,
+    .dayly-surface-task-row { border-radius: var(--radius-sm); }
+    .dayly-product-task-row:hover,
+    .dayly-product-task-row:focus-within,
+    .dayly-surface-task-row:hover,
+    .dayly-surface-task-row:focus-within { box-shadow: none; }
+
+    .dayly-project-capture { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); padding-block: var(--space-3); }
+    .dayly-project-capture__actions { justify-content: space-between; }
+    .dayly-project-capture__actions .dayly-button { min-block-size: var(--control-size-touch-target); }
+
+    .dayly-search-results { gap: var(--space-5); margin-block-start: var(--space-5); }
+    .dayly-search-result-group { gap: 0; }
+
+    .dayly-focus-mode[data-state="active"] + .dayly-surface-context-grid,
+    .dayly-focus-mode[data-state="paused"] + .dayly-surface-context-grid { display: none; }
+    .dayly-focus-mode[data-state="active"] { padding-block: var(--space-8); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dayly-project-capture,
+    .dayly-calendar-commitments li { animation: none; }
+    .dayly-product-link-button,
+    .dayly-product-task-row,
+    .dayly-surface-task-row,
+    .dayly-habit-row,
+    .dayly-project-row,
+    .dayly-focus-mode + .dayly-surface-context-grid { transition: none; }
+  }
+
+  :root[data-reduce-motion="true"] .dayly-project-capture,
+  :root[data-reduce-motion="true"] .dayly-calendar-commitments li { animation: none; }
+}

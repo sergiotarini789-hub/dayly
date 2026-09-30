@@ -110,7 +110,7 @@ function TaskRow({ task, index, isNew, onToggle }: { task: TodayTask; index: num
   return (
     <div className="dayly-product-task-row" data-completed={task.completed || undefined} data-new={isNew || undefined}>
       <span className="dayly-product-task-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-      <Checkbox label={task.title} checked={task.completed} onChange={(event) => onToggle(task.id, event.target.checked)} description={task.completed ? "Moved today" : "Open · today"} />
+      <Checkbox label={task.title} checked={task.completed} onChange={(event) => onToggle(task.id, event.target.checked)} description={task.completed ? "Completed" : "Open · today"} />
       <span className="dayly-product-task-arrow" aria-hidden="true">→</span>
     </div>
   );
@@ -165,11 +165,11 @@ export function TodayPlan({ tasks, openTasks, completedTasks, newTaskId, taskTit
       <div className="dayly-product-movement__summary"><span>{tasks.length === 0 ? "Ready when you are" : "Keep the useful things visible."}</span></div>
       <div className="dayly-product-composer" id="today-task-composer" data-open={composerOpen || undefined}>
         <button className="dayly-product-composer__trigger" type="button" onClick={() => onComposerOpenChange(true)} aria-expanded={composerOpen} aria-controls="today-task-form">
-          <span aria-hidden="true">+</span><span>Add a task</span><span aria-hidden="true">→</span>
+          <span aria-hidden="true">+</span><span>Add task</span><span aria-hidden="true">→</span>
         </button>
         <form ref={composerRef} className="dayly-product-capture" id="today-task-form" onSubmit={onAddTask}>
           <Input ref={inputRef} id="today-task-title" label="Add a task" value={taskTitle} onChange={(event) => onTaskTitleChange(event.target.value)} onFocus={revealComposer} onKeyDown={handleComposerKeyDown} autoComplete="off" enterKeyHint="done" placeholder="What needs to move forward?" />
-          <Button aria-label="Add to Today" type="submit" size="sm" variant="ghost" disabled={!taskTitle.trim()}><span aria-hidden="true">→</span><span className="dayly-visually-hidden">Add task</span></Button>
+          <Button aria-label="Add to Today" type="submit" size="sm" variant="ghost" disabled={!taskTitle.trim()}>Add</Button>
         </form>
       </div>
       <p className="dayly-product-live-note" role="status" aria-live="polite">{notice}</p>

@@ -55,7 +55,7 @@ describe("product-facing foundations", () => {
     expect(composer).toHaveFocus();
     fireEvent.keyDown(composer, { key: "Escape" });
     expect(composer).not.toHaveFocus();
-    expect(screen.getByRole("button", { name: "Add a task" })).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("button", { name: "Add task" })).toHaveAttribute("aria-expanded", "false");
   });
 
   it("uses onboarding session context to personalize Today without persistence", () => {
@@ -108,6 +108,7 @@ describe("product-facing foundations", () => {
 
   it("keeps project, calendar, habit, focus, search, and setting interactions coherent", () => {
     const view = renderProduct(<ProjectsExperience />);
+    fireEvent.click(screen.getByRole("button", { name: "New project +" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Project name" }), { target: { value: "Launch the calm plan" } });
     fireEvent.change(screen.getByRole("textbox", { name: "Outcome" }), { target: { value: "A clear next release" } });
     fireEvent.click(screen.getByRole("button", { name: "Add project" }));

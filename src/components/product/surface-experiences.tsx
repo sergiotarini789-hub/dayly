@@ -39,6 +39,9 @@ export function ProjectsExperience() {
   const [title, setTitle] = React.useState("");
   const [outcome, setOutcome] = React.useState("");
   const [notice, setNotice] = React.useState("");
+  const [composerOpen, setComposerOpen] = React.useState(false);
+  const titleRef = React.useRef<HTMLInputElement>(null);
+  React.useEffect(() => { if (composerOpen) titleRef.current?.focus(); }, [composerOpen]);
   function addProject(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const nextTitle = title.trim();
@@ -46,18 +49,19 @@ export function ProjectsExperience() {
     addSessionProject(nextTitle, outcome);
     setTitle("");
     setOutcome("");
+    setComposerOpen(false);
     setNotice(`“${nextTitle}” added for this preview session.`);
   }
   return (
     <ProductSurface activeId="projects" title="Projects" eyebrow="Keep outcomes in view" description="A project is a meaningful direction, not another place to collect every task.">
       <SurfaceSection className="dayly-project-surface-flow">
-        <SurfaceSectionHeader title="Your projects" description="Start with the outcome. Add tasks when the next step is clear." />
-        {projects.length > 0 ? <><div className="dayly-project-list-head" aria-hidden="true"><span>Project</span><span>Outcome</span><span>Next move</span></div><div className="dayly-project-list">{projects.map((project) => <article className="dayly-project-row" key={project.id}><div><p className="dayly-product-eyebrow">In progress</p><h2>{project.title}</h2></div><p>{project.outcome}</p><ActionLink href="/tasks">Add a task →</ActionLink></article>)}</div></> : <SurfaceEmptyState title="No projects are shaping the day yet." description="Create a project when a task belongs to a larger outcome. Keep one-off work in Tasks." action={<ActionLink href="#project-capture">Create a project →</ActionLink>} />}
-        <form className="dayly-project-capture" id="project-capture" onSubmit={addProject}>
-          <Input label="Project name" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Something you want to move forward" />
+        <SurfaceSectionHeader title="Your projects" description="Start with the outcome. Add tasks when the next step is clear." actions={!composerOpen ? <button className="dayly-product-text-link dayly-product-link-button" type="button" onClick={() => setComposerOpen(true)}>New project +</button> : undefined} />
+        {projects.length > 0 ? <><div className="dayly-project-list-head" aria-hidden="true"><span>Project</span><span>Outcome</span><span>Next move</span></div><div className="dayly-project-list">{projects.map((project) => <article className="dayly-project-row" key={project.id}><div><p className="dayly-product-eyebrow">In progress</p><h2>{project.title}</h2></div><p>{project.outcome}</p><ActionLink href="/tasks">Add a task →</ActionLink></article>)}</div></> : <SurfaceEmptyState title="No projects are shaping the day yet." description="Create one when a task belongs to a larger outcome." action={<button className="dayly-product-text-link dayly-product-link-button" type="button" onClick={() => setComposerOpen(true)}>Create a project →</button>} />}
+        {composerOpen ? <form className="dayly-project-capture" id="project-capture" onSubmit={addProject}>
+          <Input ref={titleRef} label="Project name" value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Something you want to move forward" />
           <Input label="Outcome" value={outcome} onChange={(event) => setOutcome(event.target.value)} placeholder="What will be different when it is done?" />
-          <Button type="submit" size="sm" variant="ghost">Add project</Button>
-        </form>
+          <div className="dayly-project-capture__actions"><Button type="button" size="sm" variant="ghost" onClick={() => setComposerOpen(false)}>Cancel</Button><Button type="submit" size="sm" variant="ghost" disabled={!title.trim()}>Add project</Button></div>
+        </form> : null}
         <p className="dayly-surface-live-note" role="status" aria-live="polite">{notice}</p>
       </SurfaceSection>
       <div className="dayly-surface-context-grid"><SurfaceContextBlock label="Keep it useful" title="Projects are for direction."><p>Use a project when the outcome deserves more than one next step. Dayly keeps the work connected without adding ceremony.</p></SurfaceContextBlock><SurfaceContextBlock label="Next" title="Choose one move in Today."><p>Projects become useful when they can hand you a clear next action.</p><ActionLink href="/today">Go to Today →</ActionLink></SurfaceContextBlock></div>
@@ -139,17 +143,18 @@ export function SearchExperience() {
   }, []);
   const normalizedQuery = query.trim().toLowerCase();
   const destinations = [
-    { href: "/today", label: "Today", copy: "Return to the current moment" },
-    { href: "/tasks", label: "Tasks", copy: "Capture or revisit an action" },
-    { href: "/projects", label: "Projects", copy: "Find a larger outcome" },
+    { type: "Other", href: "/today", label: "Today", copy: "Return to the current moment" },
+    { type: "Other", href: "/tasks", label: "Tasks", copy: "Capture or revisit an action" },
+    { type: "Other", href: "/projects", label: "Projects", copy: "Find a larger outcome" },
   ].filter((item) => !normalizedQuery || `${item.label} ${item.copy}`.toLowerCase().includes(normalizedQuery));
   const contentResults = normalizedQuery ? [
-    ...tasks.map((task) => ({ href: "/tasks", label: task.title, copy: task.completed ? "Completed task" : "Open task" })),
-    ...projects.map((project) => ({ href: "/projects", label: project.title, copy: project.outcome })),
-    ...habits.map((habit) => ({ href: "/habits", label: habit.title, copy: habit.completed ? "Habit complete today" : habit.rhythm })),
+    ...tasks.map((task) => ({ type: "Tasks", href: "/tasks", label: task.title, copy: task.completed ? "Completed" : "Open" })),
+    ...projects.map((project) => ({ type: "Projects", href: "/projects", label: project.title, copy: project.outcome })),
+    ...habits.map((habit) => ({ type: "Habits", href: "/habits", label: habit.title, copy: habit.completed ? "Complete today" : habit.rhythm })),
   ].filter((item) => `${item.label} ${item.copy}`.toLowerCase().includes(normalizedQuery)) : [];
   const results = [...contentResults, ...destinations];
-  return <ProductSurface activeId="search" title="Search" eyebrow="Find your way back in" description="A fast command surface for the things you have already captured in Dayly."><SurfaceSection className="dayly-search-surface-flow"><form className="dayly-search-command" role="search" onSubmit={(event) => event.preventDefault()}><SearchInput ref={inputRef} label="Search Dayly" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search tasks, projects, and habits" />{query ? <Button type="button" variant="ghost" size="sm" onClick={() => { setQuery(""); inputRef.current?.focus(); }}>Clear</Button> : null}</form><div className="dayly-search-hint"><span className="dayly-search-hint__key">⌘ K</span><p>{normalizedQuery ? `${results.length} ${results.length === 1 ? "result" : "results"}` : "Type to search this session, or move to a nearby workspace."}</p></div>{results.length > 0 ? <section className="dayly-search-results" aria-label={normalizedQuery ? "Search results" : "Suggested destinations"}><p className="dayly-product-eyebrow">{normalizedQuery ? "Results" : "Move quickly"}</p>{results.map((item, index) => <Link key={`${item.href}-${item.label}-${index}`} href={item.href} className="dayly-search-result"><span><strong>{item.label}</strong><small>{item.copy}</small></span><span aria-hidden="true">→</span></Link>)}</section> : <SurfaceEmptyState eyebrow="No matches in this preview" title={`Nothing matches “${query}”.`} description="Try a route name, task, project, or habit from this session." />}</SurfaceSection><div className="dayly-surface-context-grid"><SurfaceContextBlock label="Try a phrase" title="Search by the next step."><p>Tasks, project outcomes, habits, and destinations are available without a filter wall.</p></SurfaceContextBlock><SurfaceContextBlock label="Keyboard" title="Keep moving quickly."><p>Press Command or Control K to return focus to search without reaching for the pointer.</p></SurfaceContextBlock></div></ProductSurface>;
+  const groups = ["Tasks", "Projects", "Habits", "Other"].map((type) => ({ type, items: results.filter((item) => item.type === type) })).filter((group) => group.items.length > 0);
+  return <ProductSurface activeId="search" title="Search" eyebrow="Find your way back in" description="A fast command surface for the things you have already captured in Dayly."><SurfaceSection className="dayly-search-surface-flow"><form className="dayly-search-command" role="search" onSubmit={(event) => event.preventDefault()}><SearchInput ref={inputRef} label="Search Dayly" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search tasks, projects, and habits" />{query ? <Button type="button" variant="ghost" size="sm" onClick={() => { setQuery(""); inputRef.current?.focus(); }}>Clear</Button> : null}</form><div className="dayly-search-hint"><span className="dayly-search-hint__key">⌘ K</span><p>{normalizedQuery ? `${results.length} ${results.length === 1 ? "result" : "results"}` : "Type to search this session, or move to a nearby workspace."}</p></div>{groups.length > 0 ? <section className="dayly-search-results" aria-label={normalizedQuery ? "Search results" : "Suggested destinations"}>{groups.map((group) => <div className="dayly-search-result-group" key={group.type}><p className="dayly-product-eyebrow">{group.type}</p>{group.items.map((item, index) => <Link key={`${item.href}-${item.label}-${index}`} href={item.href} className="dayly-search-result"><span><strong>{item.label}</strong><small>{item.copy}</small></span><span aria-hidden="true">→</span></Link>)}</div>)}</section> : <SurfaceEmptyState eyebrow="No matches in this preview" title={`Nothing matches “${query}”.`} description="Try a route name, task, project, or habit from this session." />}</SurfaceSection><div className="dayly-surface-context-grid"><SurfaceContextBlock label="Try a phrase" title="Search by the next step."><p>Tasks, project outcomes, habits, and destinations are available without a filter wall.</p></SurfaceContextBlock><SurfaceContextBlock label="Keyboard" title="Keep moving quickly."><p>Press Command or Control K to return focus to search without reaching for the pointer.</p></SurfaceContextBlock></div></ProductSurface>;
 }
 
 export function SettingsExperience() {

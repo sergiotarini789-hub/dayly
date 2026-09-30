@@ -100,7 +100,7 @@ export function TaskTrail({ tasks, onToggle, newTaskId }: { tasks: ProductTask[]
       {tasks.map((task, index) => (
         <li className="dayly-surface-task-row" data-completed={task.completed || undefined} data-new={newTaskId === task.id || undefined} key={task.id}>
           <span className="dayly-surface-task-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-          <Checkbox label={task.title} description={task.completed ? "Moved today" : task.context ?? "Open · today"} checked={task.completed} onChange={(event) => onToggle(task.id, event.target.checked)} />
+          <Checkbox label={task.title} description={task.completed ? "Completed" : task.context ?? "Open · today"} checked={task.completed} onChange={(event) => onToggle(task.id, event.target.checked)} />
           <span className="dayly-surface-task-arrow" aria-hidden="true">→</span>
         </li>
       ))}
