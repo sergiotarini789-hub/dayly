@@ -1,0 +1,63 @@
+@layer components {
+  .dayly-calendar-capture {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(8rem, 0.6fr) auto;
+    gap: var(--space-3);
+    align-items: end;
+    margin-block-start: var(--space-6);
+  }
+
+  .dayly-calendar-capture .dayly-field__label { color: var(--color-text-muted); font-size: var(--font-size-caption); }
+  .dayly-calendar-capture .dayly-input { background: transparent; border-color: var(--product-line); border-radius: var(--radius-sm); }
+  .dayly-calendar-capture .dayly-input:focus { border-color: var(--product-accent); box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--product-accent) 18%, transparent); }
+
+  .dayly-calendar-commitments {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .dayly-calendar-commitments li {
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1fr);
+    gap: var(--space-4);
+    align-items: center;
+    min-block-size: 3.5rem;
+    border-block-end: var(--border-width-hairline) solid var(--product-line);
+  }
+
+  .dayly-calendar-commitments time { color: var(--product-accent); font-family: var(--font-family-mono); font-size: var(--font-size-caption); }
+  .dayly-calendar-commitments strong { overflow-wrap: anywhere; color: var(--color-text-primary); font-size: var(--font-size-body-small); font-weight: var(--font-weight-medium); }
+
+  .dayly-analytics-session {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-block-start: var(--space-5);
+    border-block: var(--border-width-hairline) solid var(--product-line);
+  }
+
+  .dayly-analytics-session > div { display: grid; gap: var(--space-2); padding: var(--space-5); border-inline-end: var(--border-width-hairline) solid var(--product-line); }
+  .dayly-analytics-session > div:last-child { border-inline-end: 0; }
+  .dayly-analytics-session strong { color: var(--color-text-primary); font-family: var(--font-family-mono); font-size: clamp(var(--font-size-h2), 4vw, 2.25rem); font-weight: var(--font-weight-regular); }
+  .dayly-analytics-session span { color: var(--color-text-muted); font-size: var(--font-size-caption); }
+
+  .dayly-search-command { position: relative; }
+  .dayly-search-command > .dayly-button { position: absolute; inset-block-end: var(--space-3); inset-inline-end: var(--space-3); }
+  .dayly-search-command:has(> .dayly-button) .dayly-input { padding-inline-end: 5rem; }
+
+  @media (max-width: 47.999rem) {
+    .dayly-calendar-capture { grid-template-columns: minmax(0, 1fr) 7rem; gap: var(--space-2); margin-block-start: var(--space-4); }
+    .dayly-calendar-capture .dayly-button { grid-column: 1 / -1; justify-self: start; min-block-size: var(--control-size-touch-target); }
+    .dayly-calendar-commitments li { grid-template-columns: 4.25rem minmax(0, 1fr); gap: var(--space-2); }
+    .dayly-analytics-session { grid-template-columns: minmax(0, 1fr); }
+    .dayly-analytics-session > div { grid-template-columns: auto minmax(0, 1fr); align-items: baseline; padding: var(--space-3) 0; border-inline-end: 0; border-block-end: var(--border-width-hairline) solid var(--product-line); }
+    .dayly-analytics-session > div:last-child { border-block-end: 0; }
+    .dayly-analytics-session strong { font-size: var(--font-size-h3); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dayly-calendar-commitments li,
+    .dayly-analytics-session { animation: none; transition: none; }
+  }
+}

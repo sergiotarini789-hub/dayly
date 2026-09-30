@@ -1,13 +1,26 @@
 import * as React from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
-import { FocusExperience, OnboardingExperience, SearchExperience, TasksExperience, TodayExperience } from "@/components/product";
+import { CalendarExperience, FocusExperience, HabitsExperience, OnboardingExperience, ProductSessionProvider, ProjectsExperience, SearchExperience, SettingsExperience, TasksExperience, TodayExperience } from "@/components/product";
 
-afterEach(() => window.history.replaceState(null, "", "/"));
+afterEach(() => {
+  window.history.replaceState(null, "", "/");
+  delete document.documentElement.dataset.theme;
+  delete document.documentElement.dataset.reduceMotion;
+});
+
+function renderProduct(node: React.ReactNode) {
+  return render(<ProductSessionProvider>{node}</ProductSessionProvider>);
+}
+
+function SessionRouteFixture() {
+  const [route, setRoute] = React.useState<"today" | "tasks">("today");
+  return <ProductSessionProvider><button onClick={() => setRoute(route === "today" ? "tasks" : "today")}>Open {route === "today" ? "Tasks" : "Today"} fixture</button>{route === "today" ? <TodayExperience /> : <TasksExperience />}</ProductSessionProvider>;
+}
 
 describe("product-facing foundations", () => {
   it("guides a first Today action and keeps an in-memory task usable", () => {
-    render(<TodayExperience />);
+    renderProduct(<TodayExperience />);
     expect(screen.getByRole("heading", { name: /Good (morning|afternoon|evening|night)/ })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Give the day a beginning." })).toBeInTheDocument();
     expect(screen.getByText("No tasks yet")).toBeInTheDocument();
@@ -47,7 +60,7 @@ describe("product-facing foundations", () => {
 
   it("uses onboarding session context to personalize Today without persistence", () => {
     window.history.replaceState(null, "", "/today?name=Sam&availability=flexible&planningStyle=deep");
-    render(<TodayExperience />);
+    renderProduct(<TodayExperience />);
 
     expect(screen.getByRole("heading", { name: /Good (morning|afternoon|evening|night), Sam/ })).toBeInTheDocument();
     expect(screen.getByText("Flexible time")).toBeInTheDocument();
@@ -55,7 +68,7 @@ describe("product-facing foundations", () => {
   });
 
   it("keeps the product surfaces useful without inventing persisted data", () => {
-    render(<TasksExperience />);
+    renderProduct(<TasksExperience />);
     expect(screen.getByRole("heading", { name: "Tasks" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Your task list is clear." })).toBeInTheDocument();
     fireEvent.change(screen.getByRole("textbox", { name: "Add something to today" }), { target: { value: "Make room for the important thing" } });
@@ -64,12 +77,12 @@ describe("product-facing foundations", () => {
     fireEvent.click(task);
     expect(task).toBeChecked();
 
-    render(<FocusExperience />);
+    renderProduct(<FocusExperience />);
     expect(screen.getByRole("heading", { name: "Choose one thing to stay with." })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Start focus" }));
     expect(screen.getByRole("button", { name: "Pause" })).toBeInTheDocument();
 
-    render(<SearchExperience />);
+    renderProduct(<SearchExperience />);
     const search = screen.getByRole("searchbox", { name: "Search Dayly" });
     expect(search).toHaveFocus();
     fireEvent.change(search, { target: { value: "unknown" } });
@@ -77,6 +90,56 @@ describe("product-facing foundations", () => {
     search.blur();
     fireEvent.keyDown(window, { key: "k", ctrlKey: true });
     expect(search).toHaveFocus();
+  });
+
+  it("keeps session work available when moving between Today and Tasks", () => {
+    render(<SessionRouteFixture />);
+    fireEvent.click(screen.getByRole("button", { name: "Add your first task →" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Add a task" }), { target: { value: "Carry context forward" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add to Today" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open Tasks fixture" }));
+    const sharedTask = screen.getByRole("checkbox", { name: /Carry context forward/ });
+    expect(sharedTask).not.toBeChecked();
+    fireEvent.click(sharedTask);
+    fireEvent.click(screen.getByRole("button", { name: "Open Today fixture" }));
+    expect(screen.getByRole("checkbox", { name: /Carry context forward/ })).toBeChecked();
+    expect(screen.getByText("1 / 1 complete")).toBeInTheDocument();
+  });
+
+  it("keeps project, calendar, habit, focus, search, and setting interactions coherent", () => {
+    const view = renderProduct(<ProjectsExperience />);
+    fireEvent.change(screen.getByRole("textbox", { name: "Project name" }), { target: { value: "Launch the calm plan" } });
+    fireEvent.change(screen.getByRole("textbox", { name: "Outcome" }), { target: { value: "A clear next release" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add project" }));
+    expect(screen.getByRole("heading", { name: "Launch the calm plan" })).toBeInTheDocument();
+
+    view.rerender(<ProductSessionProvider><CalendarExperience /></ProductSessionProvider>);
+    fireEvent.change(screen.getByRole("textbox", { name: "Commitment" }), { target: { value: "Planning call" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add time" }));
+    expect(screen.getByText("Planning call")).toBeInTheDocument();
+
+    view.rerender(<ProductSessionProvider><HabitsExperience /></ProductSessionProvider>);
+    fireEvent.change(screen.getByRole("textbox", { name: "Add a habit" }), { target: { value: "Review tomorrow" } });
+    fireEvent.click(screen.getByRole("button", { name: "Add habit" }));
+    fireEvent.click(screen.getByRole("button", { name: "Complete Review tomorrow" }));
+    expect(screen.getByText("Kept today")).toBeInTheDocument();
+
+    view.rerender(<ProductSessionProvider><FocusExperience /></ProductSessionProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Start focus" }));
+    fireEvent.click(screen.getByRole("button", { name: "Pause" }));
+    fireEvent.click(screen.getByRole("button", { name: "Resume" }));
+    fireEvent.click(screen.getByRole("button", { name: "Complete" }));
+    expect(screen.getByText("Session complete")).toBeInTheDocument();
+
+    view.rerender(<ProductSessionProvider><SearchExperience /></ProductSessionProvider>);
+    fireEvent.change(screen.getByRole("searchbox", { name: "Search Dayly" }), { target: { value: "calm plan" } });
+    expect(screen.getByText("Launch the calm plan")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Clear" }));
+    expect(screen.getByRole("searchbox", { name: "Search Dayly" })).toHaveValue("");
+
+    view.rerender(<ProductSessionProvider><SettingsExperience /></ProductSessionProvider>);
+    fireEvent.change(screen.getByRole("combobox", { name: "Theme" }), { target: { value: "dark" } });
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
   });
 
   it("keeps onboarding lightweight and keyboard-operable across steps", () => {

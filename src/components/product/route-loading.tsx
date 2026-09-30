@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { usePathname } from "next/navigation";
-import { AppTopBar, ApplicationShell, PageContainer } from "@/components/layout";
+import { PageContainer } from "@/components/layout";
 import type { AppNavigationId } from "@/components/layout/navigation";
 
 const ROUTE_META: Record<string, { id: AppNavigationId; title: string; eyebrow: string }> = {
@@ -46,17 +46,15 @@ function RouteSkeletonBody({ id }: { id: AppNavigationId }) {
 
 function ProductLoadingSkeleton({ meta }: { meta: NonNullable<ReturnType<typeof getRouteMeta>> }) {
   return (
-    <ApplicationShell className="dayly-product-shell dayly-product-shell--loading" initialActiveNavigationId={meta.id} topBar={<AppTopBar title={meta.title} aria-label={`${meta.title} loading bar`} />}>
-      <div className={`dayly-surface-page dayly-surface-page--${meta.id} dayly-route-loading`} data-loading-route={meta.id} aria-busy="true" aria-label={`Loading ${meta.title}`}>
-        <PageContainer width="wide">
-          <div className="dayly-route-loading__heading"><SkeletonBlock className="dayly-route-skeleton__eyebrow" /><SkeletonBlock className="dayly-route-skeleton__title" /><SkeletonBlock className="dayly-route-skeleton__description" /></div>
-          <div className="dayly-route-loading__workspace">
-            <div className="dayly-route-loading__primary"><RouteSkeletonBody id={meta.id} /></div>
-            <aside className="dayly-route-loading__rail" aria-hidden="true"><SkeletonBlock className="dayly-route-skeleton__rail-title" /><SkeletonBlock className="dayly-route-skeleton__rail-copy" /><SkeletonBlock className="dayly-route-skeleton__rail-copy dayly-route-skeleton__rail-copy--short" /><SkeletonBlock className="dayly-route-skeleton__rule" /><SkeletonBlock className="dayly-route-skeleton__rail-copy" /></aside>
-          </div>
-        </PageContainer>
-      </div>
-    </ApplicationShell>
+    <div className={`dayly-surface-page dayly-surface-page--${meta.id} dayly-route-loading`} data-loading-route={meta.id} aria-busy="true" aria-label={`Loading ${meta.title}`}>
+      <PageContainer width="wide">
+        <div className="dayly-route-loading__heading"><SkeletonBlock className="dayly-route-skeleton__eyebrow" /><SkeletonBlock className="dayly-route-skeleton__title" /><SkeletonBlock className="dayly-route-skeleton__description" /></div>
+        <div className="dayly-route-loading__workspace">
+          <div className="dayly-route-loading__primary"><RouteSkeletonBody id={meta.id} /></div>
+          <aside className="dayly-route-loading__rail" aria-hidden="true"><SkeletonBlock className="dayly-route-skeleton__rail-title" /><SkeletonBlock className="dayly-route-skeleton__rail-copy" /><SkeletonBlock className="dayly-route-skeleton__rail-copy dayly-route-skeleton__rail-copy--short" /><SkeletonBlock className="dayly-route-skeleton__rule" /><SkeletonBlock className="dayly-route-skeleton__rail-copy" /></aside>
+        </div>
+      </PageContainer>
+    </div>
   );
 }
 

@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { AppTopBar, ApplicationShell, PageContainer } from "@/components/layout";
+import { PageContainer } from "@/components/layout";
+import { useProductSession } from "./product-session";
 import { CurrentMoment, NextUsefulAction, SupportingContext, TodayLoadingCue, TodayPlan, TodayWorkspaceRail, type TimeOfDay, type TodayTask } from "./today-sections";
 
 interface PreviewSession {
@@ -67,15 +67,13 @@ function readPreviewSession(params: URLSearchParams): PreviewSession {
 }
 
 export function TodayExperience() {
-  const [tasks, setTasks] = React.useState<TodayTask[]>([]);
+  const { tasks, addTask: addSessionTask, toggleTask: toggleSessionTask, newTaskId, notice, displayName } = useProductSession();
   const [taskTitle, setTaskTitle] = React.useState("");
-  const [notice, setNotice] = React.useState("Today is ready for your first useful step.");
   const [todayLabel, setTodayLabel] = React.useState("Today");
   const [timeLabel, setTimeLabel] = React.useState("");
   const [greeting, setGreeting] = React.useState("Good morning.");
   const [timeOfDay, setTimeOfDay] = React.useState<TimeOfDay>("morning");
   const [session, setSession] = React.useState<PreviewSession>(EMPTY_SESSION);
-  const [newTaskId, setNewTaskId] = React.useState<number | null>(null);
   const [composerOpen, setComposerOpen] = React.useState(false);
   const [isPreparing, setIsPreparing] = React.useState(true);
 
@@ -88,42 +86,24 @@ export function TodayExperience() {
     setTodayLabel(formatToday(now));
     setTimeLabel(formatTime(now));
     setTimeOfDay(getTimeOfDay(now));
-    setGreeting(formatGreeting(now, nextSession.displayName));
+    setGreeting(formatGreeting(now, nextSession.displayName || displayName));
     setSession(nextSession);
-    if (firstTask) {
-      const id = Date.now();
-      setTasks([{ id, title: firstTask, completed: false }]);
-      setNewTaskId(id);
-      setNotice(`“${firstTask}” was added for this preview session. Changes remain in memory only.`);
-    }
+    if (firstTask) addSessionTask(firstTask);
     setIsPreparing(false);
     if (window.location.search) window.history.replaceState(null, "", "/today");
   }, []);
 
-  React.useEffect(() => {
-    if (newTaskId === null) return;
-    const timeoutId = window.setTimeout(() => setNewTaskId(null), 720);
-    return () => window.clearTimeout(timeoutId);
-  }, [newTaskId]);
-
   function addTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const title = taskTitle.trim();
-    if (!title) {
-      setNotice("Add a short task title before saving.");
-      return;
-    }
-    const id = Date.now();
-    setTasks((current) => [...current, { id, title, completed: false }]);
-    setNewTaskId(id);
+    if (!title) return;
+    addSessionTask(title);
     setComposerOpen(true);
     setTaskTitle("");
-    setNotice(`“${title}” is part of today. This preview keeps changes in memory only.`);
   }
 
   function toggleTask(id: number, completed: boolean) {
-    setTasks((current) => current.map((task) => task.id === id ? { ...task, completed } : task));
-    setNotice(completed ? "Task marked complete for this preview session." : "Task reopened.");
+    toggleSessionTask(id, completed);
   }
 
   const openTasks = tasks.filter((task) => !task.completed);
@@ -136,13 +116,8 @@ export function TodayExperience() {
   const daySummary = formatDaySummary(tasks.length, openTasks.length, session.planningStyle, session.availability);
 
   return (
-    <ApplicationShell
-      className="dayly-product-shell"
-      initialActiveNavigationId="today"
-      topBar={<AppTopBar title="Today" aria-label="Today application bar" right={<Link className="dayly-product-top-link" href="/onboarding">Personalize</Link>} />}
-    >
-      <div className="dayly-product-page" data-ready={!isPreparing || undefined} data-time-of-day={timeOfDay}>
-        <PageContainer width="wide">
+    <div className="dayly-product-page" data-ready={!isPreparing || undefined} data-time-of-day={timeOfDay}>
+      <PageContainer width="wide">
           <div className="dayly-product-workspace">
             <div className="dayly-product-primary">
               <CurrentMoment greeting={greeting} todayLabel={todayLabel} timeLabel={timeLabel} timeOfDay={timeOfDay} isPreparing={isPreparing} sessionContext={sessionContext} planningStyle={planningStyle} daySummary={daySummary} completedCount={completedTasks.length} taskCount={tasks.length} progressLabel={progressLabel} />
@@ -155,9 +130,8 @@ export function TodayExperience() {
             </div>
             <TodayWorkspaceRail completedCount={completedTasks.length} taskCount={tasks.length} nextTask={nextTask} hasPlanningContext={hasPlanningContext} sessionContext={sessionContext} planningStyle={planningStyle} />
           </div>
-          <p className="dayly-product-disclosure">Preview session only · tasks and setup changes stay in memory and are not saved.</p>
-        </PageContainer>
-      </div>
-    </ApplicationShell>
+        <p className="dayly-product-disclosure">Preview session only · tasks and setup changes stay in memory and are not saved.</p>
+      </PageContainer>
+    </div>
   );
 }

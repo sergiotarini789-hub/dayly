@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { AppTopBar, ApplicationShell, PageContainer, PageHeader, SectionHeader } from "@/components/layout";
+import { PageContainer, PageHeader, SectionHeader } from "@/components/layout";
 import type { AppNavigationId } from "@/components/layout/navigation";
 import { Badge, Button, Checkbox, Input } from "@/components/ui";
 
@@ -40,24 +40,18 @@ function SurfaceRail({ activeId }: { activeId: AppNavigationId }) {
   );
 }
 
-export function ProductSurface({ activeId, title, eyebrow, description, children, className, topBarRight }: ProductSurfaceProps) {
+export function ProductSurface({ activeId, title, eyebrow, description, children, className }: ProductSurfaceProps) {
   return (
-    <ApplicationShell
-      className="dayly-product-shell"
-      initialActiveNavigationId={activeId}
-      topBar={<AppTopBar title={title} aria-label={`${title} application bar`} right={topBarRight ?? <Link className="dayly-product-top-link" href="/onboarding">Personalize</Link>} />}
-    >
-      <div className={`dayly-surface-page dayly-surface-page--${activeId}${className ? ` ${className}` : ""}`} data-surface={activeId}>
-        <PageContainer width="wide">
-          <PageHeader eyebrow={eyebrow} title={title} description={description} />
-          <div className={`dayly-surface-workspace dayly-surface-workspace--${activeId}`}>
-            <div className="dayly-surface-primary">{children}</div>
-            <SurfaceRail activeId={activeId} />
-          </div>
-          <p className="dayly-product-disclosure">Preview session only · changes stay in memory and are not saved.</p>
-        </PageContainer>
-      </div>
-    </ApplicationShell>
+    <div className={`dayly-surface-page dayly-surface-page--${activeId}${className ? ` ${className}` : ""}`} data-surface={activeId}>
+      <PageContainer width="wide">
+        <PageHeader eyebrow={eyebrow} title={title} description={description} />
+        <div className={`dayly-surface-workspace dayly-surface-workspace--${activeId}`}>
+          <div className="dayly-surface-primary">{children}</div>
+          <SurfaceRail activeId={activeId} />
+        </div>
+        <p className="dayly-product-disclosure">Preview session only · changes stay in memory and are not saved.</p>
+      </PageContainer>
+    </div>
   );
 }
 

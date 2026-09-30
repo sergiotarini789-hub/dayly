@@ -57,6 +57,11 @@ export function ResponsiveNavigation({ initialActiveId = "today", onNavigate }: 
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
   const [moreOpen, setMoreOpen] = React.useState(false);
 
+  React.useEffect(() => {
+    setActiveId(initialActiveId);
+    setPendingId(null);
+  }, [initialActiveId]);
+
   function selectNavigationItem(id: AppNavigationId) {
     setActiveId(id);
     setPendingId(id);
