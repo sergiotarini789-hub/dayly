@@ -120,6 +120,20 @@ describe("product-facing foundations", () => {
     expect(screen.getByRole("textbox", { name: "Add a habit" })).toHaveFocus();
   });
 
+  it("supports rapid consecutive task capture and Escape dismissal", () => {
+    renderProduct(<TasksExperience />);
+    const composer = screen.getByRole("textbox", { name: "Add something to today" });
+    fireEvent.focus(composer);
+    for (const title of ["First useful move", "Second useful move", "Third useful move"]) {
+      fireEvent.change(composer, { target: { value: title } });
+      fireEvent.submit(composer.closest("form")!);
+      expect(screen.getByRole("checkbox", { name: new RegExp(title) })).toBeInTheDocument();
+      expect(composer).toHaveFocus();
+    }
+    fireEvent.keyDown(composer, { key: "Escape" });
+    expect(composer).not.toHaveFocus();
+  });
+
   it("dismisses the project editor without retaining an abandoned draft", () => {
     renderProduct(<ProjectsExperience />);
     fireEvent.click(screen.getByRole("button", { name: "New project +" }));
@@ -136,12 +150,12 @@ describe("product-facing foundations", () => {
     fireEvent.click(screen.getByRole("button", { name: "New project +" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Project name" }), { target: { value: "Launch the calm plan" } });
     fireEvent.change(screen.getByRole("textbox", { name: "Outcome" }), { target: { value: "A clear next release" } });
-    fireEvent.click(screen.getByRole("button", { name: "Add project" }));
+    fireEvent.click(screen.getByRole("button", { name: "Create project" }));
     expect(screen.getByRole("heading", { name: "Launch the calm plan" })).toBeInTheDocument();
 
     view.rerender(<ProductSessionProvider><CalendarExperience /></ProductSessionProvider>);
     fireEvent.change(screen.getByRole("textbox", { name: "Commitment" }), { target: { value: "Planning call" } });
-    fireEvent.click(screen.getByRole("button", { name: "Add time" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add commitment" }));
     expect(screen.getByText("Planning call")).toBeInTheDocument();
 
     view.rerender(<ProductSessionProvider><HabitsExperience /></ProductSessionProvider>);

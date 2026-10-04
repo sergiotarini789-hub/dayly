@@ -111,6 +111,17 @@ export function TaskTrail({ tasks, onToggle, newTaskId }: { tasks: ProductTask[]
 export function AddTaskForm({ onAdd, label = "Add a task", buttonLabel = "Add", inputRef }: { onAdd: (title: string) => void; label?: string; buttonLabel?: string; inputRef?: React.RefObject<HTMLInputElement | null> }) {
   const [value, setValue] = React.useState("");
   const formRef = React.useRef<HTMLFormElement>(null);
+  const localInputRef = React.useRef<HTMLInputElement>(null);
+  const restoreFocusRef = React.useRef(false);
+  const setInputRef = React.useCallback((node: HTMLInputElement | null) => {
+    localInputRef.current = node;
+    if (inputRef) inputRef.current = node;
+  }, [inputRef]);
+  React.useLayoutEffect(() => {
+    if (!restoreFocusRef.current) return;
+    restoreFocusRef.current = false;
+    localInputRef.current?.focus({ preventScroll: true });
+  }, [value]);
   function revealForm() {
     window.requestAnimationFrame(() => formRef.current?.scrollIntoView({ block: "center", behavior: "auto" }));
   }
@@ -126,13 +137,18 @@ export function AddTaskForm({ onAdd, label = "Add a task", buttonLabel = "Add", 
     event.preventDefault();
     const title = value.trim();
     if (!title) return;
+    restoreFocusRef.current = true;
     onAdd(title);
     setValue("");
   }
+  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== "Escape") return;
+    event.currentTarget.blur();
+  }
   return (
-    <form ref={formRef} className="dayly-surface-capture" onSubmit={submit}>
-      <Input ref={inputRef} label={label} value={value} onChange={(event) => setValue(event.target.value)} onFocus={revealForm} autoComplete="off" enterKeyHint="done" placeholder="What needs to move forward?" />
-      <Button type="submit" size="sm" variant="ghost" disabled={!value.trim()} aria-label={buttonLabel}>{buttonLabel}</Button>
+    <form ref={formRef} className="dayly-surface-capture dayly-task-composer" data-has-value={Boolean(value.trim()) || undefined} onSubmit={submit}>
+      <Input ref={setInputRef} label={label} value={value} onChange={(event) => setValue(event.target.value)} onFocus={revealForm} onKeyDown={handleKeyDown} autoComplete="off" enterKeyHint="done" placeholder="What needs to move forward?" />
+      <Button type="submit" size="sm" variant="primary" disabled={!value.trim()} aria-label={buttonLabel}>{buttonLabel}</Button>
     </form>
   );
 }

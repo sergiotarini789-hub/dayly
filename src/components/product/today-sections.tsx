@@ -86,7 +86,7 @@ export function NextUsefulAction({ nextTask, onComplete, onStartTask }: { nextTa
             </Button>
             <Link className="dayly-product-text-link" href="#today-plan">Open in plan →</Link>
           </Cluster>
-        ) : <button className="dayly-product-text-link dayly-product-focus-plane__action dayly-product-link-button" type="button" onClick={onStartTask}>Add your first task →</button>}
+        ) : <button className="dayly-product-text-link dayly-product-focus-plane__action dayly-product-link-button dayly-capture-entry" type="button" onClick={onStartTask}>Add your first task →</button>}
       </div>
     </section>
   );
@@ -169,7 +169,7 @@ export function TodayPlan({ tasks, openTasks, completedTasks, newTaskId, taskTit
         </button>
         <form ref={composerRef} className="dayly-product-capture" id="today-task-form" onSubmit={onAddTask}>
           <Input ref={inputRef} id="today-task-title" label="Add a task" value={taskTitle} onChange={(event) => onTaskTitleChange(event.target.value)} onFocus={revealComposer} onKeyDown={handleComposerKeyDown} autoComplete="off" enterKeyHint="done" placeholder="What needs to move forward?" />
-          <Button aria-label="Add to Today" type="submit" size="sm" variant="ghost" disabled={!taskTitle.trim()}>Add</Button>
+          <Button aria-label="Add to Today" type="submit" size="sm" variant="primary" disabled={!taskTitle.trim()}>Add</Button>
         </form>
       </div>
       <p className="dayly-product-live-note" role="status" aria-live="polite">{notice}</p>

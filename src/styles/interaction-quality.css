@@ -1,0 +1,233 @@
+@layer components {
+  /* One interaction language for Dayly's product composers. */
+  .dayly-capture-entry,
+  .dayly-product-composer__trigger {
+    min-block-size: 2.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-3);
+    color: var(--color-text-secondary);
+    background: color-mix(in srgb, var(--color-surface-hover) 48%, transparent);
+    border: var(--border-width-default) solid var(--product-line);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+  }
+  .dayly-capture-entry:hover,
+  .dayly-product-composer__trigger:hover { color: var(--color-text-primary); background: var(--product-accent-soft); border-color: color-mix(in srgb, var(--product-accent) 52%, var(--product-line)); }
+  .dayly-capture-entry:active,
+  .dayly-product-composer__trigger:active { transform: translateY(1px); }
+
+  .dayly-task-composer,
+  .dayly-product-composer .dayly-product-capture,
+  .dayly-calendar-capture,
+  .dayly-habit-capture,
+  .dayly-project-capture {
+    --interaction-control-height: 2.875rem;
+  }
+
+  .dayly-task-composer,
+  .dayly-product-composer .dayly-product-capture {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--space-2);
+    inline-size: 100%;
+    max-inline-size: 48rem;
+    margin-block-start: var(--space-4);
+    padding: var(--space-2);
+    background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+    border: var(--border-width-default) solid var(--product-line);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 0 0 transparent;
+    transition: background-color 160ms var(--ease-standard), border-color 160ms var(--ease-standard), box-shadow 160ms var(--ease-standard);
+  }
+
+  .dayly-task-composer::before,
+  .dayly-product-composer .dayly-product-capture::before { display: none; }
+  .dayly-task-composer:focus-within,
+  .dayly-product-composer .dayly-product-capture:focus-within {
+    background: color-mix(in srgb, var(--color-surface-elevated) 88%, var(--color-background));
+    border-color: color-mix(in srgb, var(--product-accent) 72%, var(--product-line));
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--product-accent) 16%, transparent), 0 0.75rem 2rem color-mix(in srgb, var(--color-background) 28%, transparent);
+  }
+  .dayly-task-composer .dayly-field,
+  .dayly-product-composer .dayly-product-capture .dayly-field { min-inline-size: 0; margin: 0; }
+  .dayly-task-composer .dayly-field__label,
+  .dayly-product-composer .dayly-product-capture .dayly-field__label {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .dayly-task-composer .dayly-input,
+  .dayly-product-composer .dayly-product-capture .dayly-input {
+    min-block-size: var(--interaction-control-height);
+    padding-inline: var(--space-3);
+    color: var(--color-text-primary);
+    background: transparent;
+    border: 0;
+    border-radius: var(--radius-md);
+    box-shadow: none;
+  }
+  .dayly-task-composer .dayly-input:focus,
+  .dayly-task-composer .dayly-input:focus-visible,
+  .dayly-product-composer .dayly-product-capture .dayly-input:focus,
+  .dayly-product-composer .dayly-product-capture .dayly-input:focus-visible { outline: 0; box-shadow: none; }
+  .dayly-task-composer .dayly-button,
+  .dayly-product-composer .dayly-product-capture .dayly-button {
+    min-block-size: var(--interaction-control-height);
+    min-inline-size: 4.75rem;
+    margin: 0;
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-md);
+  }
+  .dayly-task-composer .dayly-button:disabled,
+  .dayly-product-composer .dayly-product-capture .dayly-button:disabled {
+    color: var(--color-text-disabled);
+    background: var(--color-surface-hover);
+    border-color: transparent;
+    opacity: 0.74;
+  }
+
+  /* Calendar, habit, and project forms share the same container and control geometry. */
+  .dayly-calendar-capture,
+  .dayly-habit-capture,
+  .dayly-project-capture {
+    gap: var(--space-2);
+    align-items: end;
+    margin-block-start: var(--space-5);
+    padding: var(--space-3);
+    background: color-mix(in srgb, var(--color-surface) 64%, transparent);
+    border: var(--border-width-default) solid var(--product-line);
+    border-radius: var(--radius-lg);
+    transition: border-color 160ms var(--ease-standard), background-color 160ms var(--ease-standard), box-shadow 160ms var(--ease-standard);
+  }
+  .dayly-calendar-capture:focus-within,
+  .dayly-habit-capture:focus-within,
+  .dayly-project-capture:focus-within {
+    background: color-mix(in srgb, var(--color-surface-elevated) 84%, var(--color-background));
+    border-color: color-mix(in srgb, var(--product-accent) 58%, var(--product-line));
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--product-accent) 12%, transparent);
+  }
+  .dayly-calendar-capture { grid-template-columns: minmax(0, 1fr) 7.5rem auto; }
+  .dayly-habit-capture { grid-template-columns: minmax(0, 1fr) auto; max-inline-size: 48rem; }
+  .dayly-project-capture { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); }
+  .dayly-project-capture__actions { grid-column: 1 / -1; padding-block-start: var(--space-1); }
+  .dayly-calendar-capture .dayly-input,
+  .dayly-habit-capture .dayly-input,
+  .dayly-project-capture .dayly-input {
+    min-block-size: var(--interaction-control-height);
+    background: color-mix(in srgb, var(--color-background) 34%, transparent);
+    border-color: var(--product-line);
+    border-radius: var(--radius-md);
+  }
+  .dayly-calendar-capture .dayly-button,
+  .dayly-habit-capture .dayly-button,
+  .dayly-project-capture .dayly-button { min-block-size: var(--interaction-control-height); border-radius: var(--radius-md); }
+  .dayly-calendar-capture .dayly-button,
+  .dayly-habit-capture .dayly-button { min-inline-size: 5rem; }
+
+  /* Habit completion remains quiet, but unmistakably interactive. */
+  .dayly-habit-marker {
+    inline-size: var(--control-size-touch-target);
+    block-size: var(--control-size-touch-target);
+    display: inline-grid;
+    place-items: center;
+    color: var(--color-text-secondary);
+    background: color-mix(in srgb, var(--color-surface-hover) 52%, transparent);
+    border: var(--border-width-default) solid var(--product-line);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-body);
+    transition: color 140ms var(--ease-standard), background-color 140ms var(--ease-standard), border-color 140ms var(--ease-standard), transform 120ms var(--ease-standard);
+  }
+  .dayly-habit-marker:hover { color: var(--color-text-primary); border-color: var(--product-accent); background: var(--product-accent-soft); }
+  .dayly-habit-marker:active { transform: scale(0.96); }
+  .dayly-habit-row[data-completed="true"] .dayly-habit-marker { color: var(--color-success); border-color: color-mix(in srgb, var(--color-success) 55%, var(--product-line)); }
+
+  /* Focus controls use one primary action and quieter supporting actions. */
+  .dayly-focus-mode__intention { display: grid; justify-items: center; gap: var(--space-2); max-inline-size: 36rem; margin-inline: auto; }
+  .dayly-focus-mode__intention > span { color: var(--color-text-muted); font-size: var(--font-size-caption); font-weight: var(--font-weight-medium); letter-spacing: var(--letter-spacing-wide); text-transform: uppercase; }
+  .dayly-focus-mode__intention h2,
+  .dayly-focus-mode__intention p { margin: 0; }
+  .dayly-focus-mode__intention p { max-inline-size: 32rem; color: var(--color-text-secondary); }
+  .dayly-focus-mode__actions { gap: var(--space-2); margin-block-start: var(--space-2); }
+  .dayly-focus-mode__actions .dayly-button,
+  .dayly-focus-task-action {
+    min-block-size: var(--control-size-touch-target);
+    padding-inline: var(--space-5);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-body-sm);
+    font-weight: var(--font-weight-semibold);
+  }
+  .dayly-focus-mode__actions .dayly-focus-primary { min-inline-size: 8.5rem; }
+  .dayly-focus-task-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: var(--border-width-default) solid transparent;
+    text-decoration: none;
+    transition: color 140ms var(--ease-standard), background-color 140ms var(--ease-standard), border-color 140ms var(--ease-standard), transform 120ms var(--ease-standard);
+  }
+  .dayly-focus-task-action:hover { color: var(--color-text-primary); background: var(--color-surface-hover); border-color: var(--product-line); }
+  .dayly-focus-task-action:active { transform: translateY(1px); }
+  .dayly-focus-task-action:focus-visible { outline: var(--focus-ring-width) solid var(--focus-ring-color); outline-offset: var(--focus-ring-offset); }
+
+  @media (max-width: 47.999rem) {
+    .dayly-capture-entry,
+    .dayly-product-composer__trigger { min-block-size: var(--control-size-touch-target); }
+    .dayly-task-composer,
+    .dayly-product-composer .dayly-product-capture,
+    .dayly-calendar-capture,
+    .dayly-habit-capture,
+    .dayly-project-capture { --interaction-control-height: var(--control-size-touch-target); }
+
+    .dayly-product-shell:has(.dayly-calendar-capture:focus-within) .dayly-mobile-nav { transform: translateY(120%); opacity: 0; pointer-events: none; }
+    .dayly-product-composer .dayly-product-capture { display: none; }
+    .dayly-product-composer[data-open="true"] .dayly-product-capture { display: grid; }
+    .dayly-task-composer,
+    .dayly-product-composer .dayly-product-capture { padding: var(--space-1); border-radius: var(--radius-md); }
+    .dayly-task-composer .dayly-button,
+    .dayly-product-composer .dayly-product-capture .dayly-button { min-inline-size: 4.5rem; padding-inline: var(--space-3); }
+
+    .dayly-calendar-capture { grid-template-columns: minmax(0, 1fr) 7rem; }
+    .dayly-calendar-capture .dayly-button { grid-column: 1 / -1; inline-size: 100%; }
+    .dayly-habit-capture { grid-template-columns: minmax(0, 1fr); }
+    .dayly-habit-capture .dayly-button { inline-size: 100%; }
+    .dayly-project-capture { grid-template-columns: minmax(0, 1fr); }
+    .dayly-project-capture__actions { grid-column: 1; }
+    .dayly-project-capture__actions .dayly-button { flex: 1 1 0; }
+
+    .dayly-focus-mode__actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); inline-size: 100%; }
+    .dayly-focus-mode__actions .dayly-focus-primary { grid-column: 1 / -1; inline-size: 100%; }
+    .dayly-focus-mode__actions .dayly-button,
+    .dayly-focus-task-action { min-inline-size: 0; inline-size: 100%; padding-inline: var(--space-3); }
+    .dayly-focus-mode[data-state="ready"] .dayly-focus-task-action,
+    .dayly-focus-mode[data-state="finished"] .dayly-focus-task-action { grid-column: 1 / -1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dayly-task-composer,
+    .dayly-product-composer .dayly-product-capture,
+    .dayly-calendar-capture,
+    .dayly-habit-capture,
+    .dayly-project-capture,
+    .dayly-habit-marker,
+    .dayly-focus-task-action { transition: none; }
+  }
+
+  :root[data-reduce-motion="true"] .dayly-task-composer,
+  :root[data-reduce-motion="true"] .dayly-product-composer .dayly-product-capture,
+  :root[data-reduce-motion="true"] .dayly-calendar-capture,
+  :root[data-reduce-motion="true"] .dayly-habit-capture,
+  :root[data-reduce-motion="true"] .dayly-project-capture,
+  :root[data-reduce-motion="true"] .dayly-habit-marker,
+  :root[data-reduce-motion="true"] .dayly-focus-task-action { transition: none; }
+}
