@@ -106,6 +106,31 @@ describe("product-facing foundations", () => {
     expect(screen.getByText("1 / 1 complete")).toBeInTheDocument();
   });
 
+  it("moves empty-state actions directly to their capture controls", () => {
+    const view = renderProduct(<TasksExperience />);
+    fireEvent.click(screen.getByRole("button", { name: "Add a task →" }));
+    expect(screen.getByRole("textbox", { name: "Add something to today" })).toHaveFocus();
+
+    view.rerender(<ProductSessionProvider><CalendarExperience /></ProductSessionProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Add a commitment →" }));
+    expect(screen.getByRole("textbox", { name: "Commitment" })).toHaveFocus();
+
+    view.rerender(<ProductSessionProvider><HabitsExperience /></ProductSessionProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Add your first habit →" }));
+    expect(screen.getByRole("textbox", { name: "Add a habit" })).toHaveFocus();
+  });
+
+  it("dismisses the project editor without retaining an abandoned draft", () => {
+    renderProduct(<ProjectsExperience />);
+    fireEvent.click(screen.getByRole("button", { name: "New project +" }));
+    const name = screen.getByRole("textbox", { name: "Project name" });
+    fireEvent.change(name, { target: { value: "Abandoned draft" } });
+    fireEvent.keyDown(name, { key: "Escape" });
+    expect(screen.queryByRole("textbox", { name: "Project name" })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "New project +" }));
+    expect(screen.getByRole("textbox", { name: "Project name" })).toHaveValue("");
+  });
+
   it("keeps project, calendar, habit, focus, search, and setting interactions coherent", () => {
     const view = renderProduct(<ProjectsExperience />);
     fireEvent.click(screen.getByRole("button", { name: "New project +" }));
